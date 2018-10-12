@@ -8,11 +8,11 @@ class ChatConsumer(WebsocketConsumer):
     def connect(self):
         #accept connection
         self.accept()
-        print("connected")
+        print("connected a client on websocket")
 
     def disconnect(self, close_code):
         # leave group room
-        print("disconnected")
+        print("disconnected a client from websocket")
 
     def receive(self, text_data):
         data = json.loads(text_data)
