@@ -1,4 +1,9 @@
-# ClasAact
+# ClassAct
+
+### Requirements
+Python 3.5ish or higher  
+Django 2.1.2 (pip install django)  
+Channels 2.1.3 (pip install channels)  
 
 ## Backend
 cd backend  
