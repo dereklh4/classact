@@ -123,7 +123,7 @@ STATIC_URL = '/static/'
 #channels
 import importlib
 #ASGI_APPLICATION = importlib.import_module("..classact_app.routing.application",package="classact")
-ASGI_APPLICATION = "classact.routing.application"
+ASGI_APPLICATION = "classact.channel_routing.application"
 
 CHANNEL_LAYERS = {
     "default": {
