@@ -10,7 +10,7 @@ def hello_world(request):
 	response_data = {"text": "ClassAct hello world!"}
 	return HttpResponse(json.dumps(response_data),content_type="application/json")
 
-class UserList(generics.ListCreateAPIView):
+class UserList(generics.ListAPIView):
 	serializer_class = UserSerializer
 	#TODO: Eventually won't let just any user see this
 	#permission_classes = (IsAdminUser,)
