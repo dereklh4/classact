@@ -53,9 +53,31 @@ INSTALLED_APPS = [
     'channels',
 ]
 
-#AUTH_USER_MODEL = "classact_app.CustomUser"
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+#authentication setup
 SITE_ID = 1
+ACCOUNT_AUTHENTICATION_METHOD = "username_email" #can use username or email
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+
+#Override rest_auth api for login,register to not send username
+REST_AUTH_SERIALIZERS = {
+    "LOGIN_SERIALIZER": 'classact_app.serializers.CustomLoginSerializer',
+}
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': "classact_app.serializers.CustomRegistrationSerializer",
+}
+
+ACCOUNT_USERNAME_REQUIRED = False
+#end authentication setup
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
