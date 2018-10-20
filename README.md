@@ -14,7 +14,7 @@ Django Rest Auth (pip install django-rest-auth[with_social]) #the with social al
 Django Rest Swagger (pip install django-rest-swagger) #for displaying api endpoints
 
 ### Notes
-You can view the current api endpoints at /api/v1/schema
+You can view the current api endpoints at /api/schema
   
 ## Frontend
 cd frontend  
