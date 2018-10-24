@@ -38,4 +38,6 @@ npm start
 
 
 ### Requirements
-Node.js (https://nodejs.org/en/download/)
+Node.js (https://nodejs.org/en/download/)  
+React  
+React router dom (npm install react-router-dom)
