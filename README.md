@@ -22,7 +22,7 @@ Django Rest Swagger (pip install django-rest-swagger) #for displaying api endpoi
 
 ### Notes
 You can view the current api endpoints at /api/schema
-  
+
 ## Frontend
 
 "npm install" installs packages for the project
