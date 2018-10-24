@@ -19,13 +19,20 @@ class App extends Component {
     constructor(props) {
         super(props);
         WebSocketInstance.connect()
-        alert("classAct testing: Connected to websocketat " + WebSocketInstance.socketRef.url);
+
+        this.state = {
+            loggedInUser: null,
+        }
+    }
+
+    onUserChange = (key) => {
+        this.setState({loggedInUser: key})
     }
     render() {
         return(
           <Router>
             <div>
-              <Navigation />
+              <Navigation loggedInUser={this.state.loggedInUser} />
 
               <hr/>
 
@@ -35,11 +42,11 @@ class App extends Component {
               />
               <Route
                 exact path={routes.SIGN_UP}
-                component={SignUpPage}
+                render= {(props) => <SignUpPage {...props} onUserChange={this.onUserChange} />}
               />
               <Route
                 exact path={routes.SIGN_IN}
-                component={SignInPage}
+                render= {(props) => <SignInPage {...props} onUserChange={this.onUserChange} />}
               />
               <Route
                 exact path={routes.PASSWORD_FORGET}
