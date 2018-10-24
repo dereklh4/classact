@@ -11,7 +11,6 @@ import SignUpPage from './SignUp';
 import SignInPage from './SignIn';
 import PasswordForgetPage from './PasswordForget';
 import HomePage from './Home';
-import AccountPage from './Account';
 
 import * as routes from '../constants/routes';
 
@@ -55,10 +54,6 @@ class App extends Component {
               <Route
                 exact path={routes.HOME}
                 component={HomePage}
-              />
-              <Route
-                exact path={routes.ACCOUNT}
-                component={AccountPage}
               />
             </div>
           </Router>
