@@ -1,21 +1,20 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import {SignUp} from '../functions/SignUpFunc.js'
+import { Link, withRouter } from 'react-router-dom';
 
 import * as routes from '../constants/routes';
 
-const SignUpPage = () =>
+const SignUpPage = ({history, onUserChange}) =>
   <div>
     <h1>SignUp</h1>
-    <SignUpForm />
+    <SignUpForm history={history} onUserChange={onUserChange}/>
   </div>
 
 const INITIAL_STATE = {
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     email: '',
-    passwordOne: '',
-    passwordTwo: '',
+    password1: '',
+    password2: '',
     error: null,
 };
 
@@ -28,51 +27,72 @@ class SignUpForm extends Component {
 
   onSubmit = (event) => {
     const {
-        firstName,
-        lastName,
+        first_name,
+        last_name,
         email,
-        passwordOne,
-        passwordTwo
+        password1,
+        password2
     } = this.state;
 
     const data = {
-        firstName,
-        lastName,
         email,
-        passwordOne,
-        passwordTwo
+        password1,
+        password2,
+        first_name,
+        last_name
     };
-      SignUp(data);
+
+    const {history} = this.props;
       event.preventDefault();
+      fetch('http://localhost:8000/api/auth/registration/', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+          },
+          body: JSON.stringify(data)
+      })
+      .then (response => response.json())
+      .then(response => {
+          if (response.key === undefined) {
+              throw Error(response.email[0]);
+          }
+          localStorage.setItem('token', response.key);
+          this.props.onUserChange(response.key);
+          history.push(routes.HOME);
+      })
+      .catch(error => {
+          this.setState({error: error})
+      });
   }
 
   render() {
       const {
-          firstName,
-          lastName,
+          first_name,
+          last_name,
           email,
-          passwordOne,
-          passwordTwo,
+          password1,
+          password2,
           error,
       } = this.state;
 
       const isInvalid =
-        passwordOne !== passwordTwo ||
-        passwordOne === '' ||
+        password1 !== password2 ||
+        password1 === '' ||
         email === '' ||
-        firstName === '' ||
-        lastName === '';
+        first_name === '' ||
+        last_name === '';
     return (
       <form onSubmit={this.onSubmit}>
           <input
-            value={firstName}
-            onChange={event => this.setState({firstName: event.target.value})}
+            value={first_name}
+            onChange={event => this.setState({first_name: event.target.value})}
             type="text"
             placeholder="First Name"
           />
           <input
-            value={lastName}
-            onChange={event => this.setState({lastName: event.target.value})}
+            value={last_name}
+            onChange={event => this.setState({last_name: event.target.value})}
             type="text"
             placeholder="Last Name"
           />
@@ -83,14 +103,14 @@ class SignUpForm extends Component {
             placeholder="Email Address"
           />
           <input
-            value={passwordOne}
-            onChange={event => this.setState({passwordOne: event.target.value})}
+            value={password1}
+            onChange={event => this.setState({password1: event.target.value})}
             type="password"
             placeholder="Password"
           />
           <input
-            value={passwordTwo}
-            onChange={event => this.setState({passwordTwo: event.target.value})}
+            value={password2}
+            onChange={event => this.setState({password2: event.target.value})}
             type="password"
             placeholder="Confirm Password"
           />
@@ -111,7 +131,7 @@ const SignUpLink = () =>
     <Link to={routes.SIGN_UP}>Sign Up</Link>
   </p>
 
-export default SignUpPage;
+export default withRouter(SignUpPage);
 
 export {
   SignUpForm,

@@ -1,8 +1,18 @@
 import React from 'react';
 
-const SignOut = () =>
-  <div>
-    <h1>Sign Out</h1>
-  </div>
+function logout() {
+    fetch('http://localhost:8000/api/auth/logout/', {
+        method: 'POST'
+    })
+    .catch(error => {});
+    localStorage.removeItem('token');
+}
+const SignOutButton = () =>
+  <button
+    type="button"
+    onClick={logout}
+  >
+    Sign Out
+  </button>
 
-export default SignOut;
+export  {SignOutButton};
