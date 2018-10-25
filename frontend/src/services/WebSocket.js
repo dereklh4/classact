@@ -21,7 +21,7 @@ class WebSocketService {
   }
 
   connect(chatroom_id) {
-    var path = config.API_PATH + "/" + chatroom_id
+    var path = config.API_PATH + "/" + chatroom_id + "/" + localStorage.getItem("token")
     console.log("connecting to " + path)
     this.socketRef = new WebSocket(path);
     this.socketRef.onopen = () => {

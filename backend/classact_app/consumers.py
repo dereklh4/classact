@@ -3,6 +3,7 @@ from channels.generic.websocket import WebsocketConsumer
 import json
 import channels
 from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
 from .models import Message
 from django.core import serializers
 
@@ -15,7 +16,18 @@ class ChatConsumer(WebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['chatroom_id']
         self.room_group_name = self.room_name
 
+        #check token
+        try:
+            token = Token.objects.get(key=self.scope['url_route']['kwargs']['token'])
+        except:
+            print("ERROR: Not a valid token for websocket connection")
+            return
+            
+        self.scope["user"] = token.user
+
         #TODO: Check that classroom exists in database
+
+        #TODO: Check that user is in that classroom
 
         #join room group
         async_to_sync(self.channel_layer.group_add)(
