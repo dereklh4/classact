@@ -60,13 +60,15 @@ class App extends Component {
                 exact path={routes.ACCOUNT}
                 component={Account}
               />
+
               <Route
                 exact path={routes.CHATROOM}
                 component={ChatRoom}
+              />
 
+              <Route
                 path={routes.TEST_CHATROOM}
                 component={TestChatroom}
-
               />
             </div>
           </Router>
