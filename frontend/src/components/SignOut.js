@@ -8,7 +8,7 @@ function logout() {
     .catch(error => {});
     localStorage.removeItem('token');
 }
-const SignOutButton = () =>
+const SignOutButton = ({history}) =>
   <button
     type="button"
     onClick={logout}

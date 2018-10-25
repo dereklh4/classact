@@ -1,13 +1,42 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-
+import {SignInLink} from './SignIn';
 import * as routes from '../constants/routes';
+import {CA_STYLE, INTRO_STYLE} from '../constants/styles';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import withStyles from '@material-ui/core/styles/withStyles';
 
-const SignUpPage = ({history, onUserChange}) =>
-  <div>
-    <h1>Sign Up</h1>
-    <SignUpForm history={history} onUserChange={onUserChange}/>
-  </div>
+const SignUpPage = ({history, onUserChange, classes}) =>
+    <React.Fragment>
+        <CssBaseline/>
+        <main className={classes.layout}>
+            <Paper className={classes.paper}>
+                <Avatar className={classes.avatar}>
+                    <img
+                        style={CA_STYLE}
+                        src={require('../images/ClassActLogo.png')}
+                        alt="CA Logo"
+                    />
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                    Sign Up
+                </Typography>
+                <SignUpForm
+                    history={history}
+                    onUserChange={onUserChange}
+                    classes={classes}
+                />
+                <SignInLink/>
+            </Paper>
+        </main>
+    </React.Fragment>
 
 const INITIAL_STATE = {
     first_name: '',
@@ -82,43 +111,69 @@ class SignUpForm extends Component {
         email === '' ||
         first_name === '' ||
         last_name === '';
-    return (
-      <form onSubmit={this.onSubmit}>
-          <input
-            value={first_name}
-            onChange={event => this.setState({first_name: event.target.value})}
-            type="text"
-            placeholder="First Name"
-          />
-          <input
-            value={last_name}
-            onChange={event => this.setState({last_name: event.target.value})}
-            type="text"
-            placeholder="Last Name"
-          />
-          <input
-            value={email}
-            onChange={event => this.setState({email: event.target.value})}
-            type="text"
-            placeholder="Email Address"
-          />
-          <input
-            value={password1}
-            onChange={event => this.setState({password1: event.target.value})}
-            type="password"
-            placeholder="Password"
-          />
-          <input
-            value={password2}
-            onChange={event => this.setState({password2: event.target.value})}
-            type="password"
-            placeholder="Confirm Password"
-          />
-          <button disabled={isInvalid} type="submit">
-            Sign Up
-          </button>
 
-          { error && <p>{error.message}</p> }
+        const {classes} = this.props;
+    return (
+      <form onSubmit={this.onSubmit} className={classes.form}>
+          <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="first_name">First Name</InputLabel>
+              <Input
+                value={first_name}
+                onChange={event => this.setState({first_name: event.target.value})}
+                type="text"
+                placeholder="First Name"
+              />
+          </FormControl>
+          <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="last_name">Last Name</InputLabel>
+              <Input
+                value={last_name}
+                onChange={event => this.setState({last_name: event.target.value})}
+                type="text"
+                placeholder="Last Name"
+              />
+          </FormControl>
+          <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="email">Email</InputLabel>
+              <Input
+                value={email}
+                onChange={event => this.setState({email: event.target.value})}
+                type="text"
+                placeholder="Email Address"
+              />
+          </FormControl>
+          <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="password1">Password</InputLabel>
+              <Input
+                value={password1}
+                onChange={event => this.setState({password1: event.target.value})}
+                type="password"
+                placeholder="Password"
+              />
+          </FormControl>
+          <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="password2">Re-enter Password</InputLabel>
+              <Input
+                value={password2}
+                onChange={event => this.setState({password2: event.target.value})}
+                type="password"
+                placeholder="Confirm Password"
+                error={password1 !== '' && password2 !== '' && password1 !== password2}
+              />
+          </FormControl>
+          <Button
+              disabled={isInvalid}
+              type="submit"
+              fullWidth
+              className={classes.submit}
+              variant="contained"
+          >
+              Sign Up
+          </Button>
+
+          <Typography color="error" align="center">
+              {error && <p>{error.message}</p>}
+          </Typography>
       </form>
     );
   }
@@ -131,7 +186,7 @@ const SignUpLink = () =>
     <Link to={routes.SIGN_UP}>Sign Up</Link>
   </p>
 
-export default withRouter(SignUpPage);
+export default withRouter(withStyles(INTRO_STYLE)(SignUpPage));
 
 export {
   SignUpForm,

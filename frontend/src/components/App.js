@@ -4,14 +4,13 @@ import {
   Route,
 } from 'react-router-dom';
 import WebSocketInstance from '../services/WebSocket'
-
-import Navigation from './Navigation';
 import LandingPage from './Landing';
 import SignUpPage from './SignUp';
 import SignInPage from './SignIn';
+import ChatRoom from './Chatroom';
+import Account from './Account'
 import PasswordForgetPage from './PasswordForget';
 import HomePage from './Home';
-
 import * as routes from '../constants/routes';
 
 class App extends Component {
@@ -31,9 +30,6 @@ class App extends Component {
         return(
           <Router>
             <div>
-              <Navigation loggedInUser={this.state.loggedInUser} />
-
-              <hr/>
 
               <Route
                 exact path={routes.LANDING}
@@ -54,6 +50,14 @@ class App extends Component {
               <Route
                 exact path={routes.HOME}
                 component={HomePage}
+              />
+              <Route
+                exact path={routes.ACCOUNT}
+                component={Account}
+              />
+              <Route
+                exact path={routes.CHATROOM}
+                component={ChatRoom}
               />
             </div>
           </Router>
