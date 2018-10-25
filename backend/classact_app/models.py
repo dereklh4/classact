@@ -8,6 +8,12 @@ class Classroom(models.Model):
     enabled = models.BooleanField()
 
 class UserInClassroom(models.Model):
-	user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-	classroom_id = models.ForeignKey(Classroom, on_delete=models.CASCADE)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
 	permission = models.IntegerField() #0 for blocked, 1 for normal, 2 for moderator, 3 for creator
+
+class Message(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	#classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE) #Add back in later once we have classroom stuff setup
+	text = models.CharField(max_length=1000)
+	creation_time = models.DateTimeField(auto_now=True)
