@@ -3,7 +3,9 @@ import {
   BrowserRouter as Router,
   Route,
 } from 'react-router-dom';
-import WebSocketInstance from '../services/WebSocket'
+
+import Navigation from './Navigation';
+
 import LandingPage from './Landing';
 import SignUpPage from './SignUp';
 import SignInPage from './SignIn';
@@ -11,12 +13,14 @@ import ChatRoom from './Chatroom';
 import Account from './Account'
 import PasswordForgetPage from './PasswordForget';
 import HomePage from './Home';
+
+import TestChatroom from './TestChatroom'
+
 import * as routes from '../constants/routes';
 
 class App extends Component {
     constructor(props) {
         super(props);
-        WebSocketInstance.connect()
 
         this.state = {
             loggedInUser: null,
@@ -52,12 +56,17 @@ class App extends Component {
                 component={HomePage}
               />
               <Route
+
                 exact path={routes.ACCOUNT}
                 component={Account}
               />
               <Route
                 exact path={routes.CHATROOM}
                 component={ChatRoom}
+
+                path={routes.TEST_CHATROOM}
+                component={TestChatroom}
+
               />
             </div>
           </Router>
