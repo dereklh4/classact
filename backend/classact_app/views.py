@@ -6,7 +6,7 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from .models import (Classroom, UserInClassroom)
 from datetime import datetime
-from classact_app.serializers import UserSerializer
+from classact_app.serializers import (UserSerializer, ClassroomSerializer)
 from rest_framework.response import Response
 
 # Create your views here.
@@ -30,12 +30,19 @@ class UserList(generics.ListAPIView):
 
 		return queryset
 
-class ClassroomView(generics.ListAPIView):
+class ClassroomView(APIView):
+	serializer_class = ClassroomSerializer
 
-	def create(title):
+	def get(self, request, format=None):
+		classrooms = [classroom.title for classroom in Classroom.objects.all()]
+		return Response(classrooms)
+
+	def post(self, request, *args, **kwargs):
 		"""Creates a new Classroom with provided title"""
 
 		time = datetime.now()
+
+		title = request.data['title']
 
 		classroom = Classroom.objects.create(title = title, 
 			creation_time = time, enabled = True)
