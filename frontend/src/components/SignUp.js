@@ -84,7 +84,12 @@ class SignUpForm extends Component {
       .then (response => response.json())
       .then(response => {
           if (response.key === undefined) {
-              throw Error(response.email[0]);
+              if (response.email !== undefined) {
+                  throw Error(response.email[0])
+              }
+              else {
+                  throw Error(response.password1[0])
+              }
           }
           localStorage.setItem('token', response.key);
           this.props.onUserChange(response.key);
