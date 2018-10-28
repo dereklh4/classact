@@ -30,7 +30,7 @@ class UserList(generics.ListAPIView):
 
 		return queryset
 
-class ClassroomView(APIView):
+class ClassroomView(generics.ListAPIView):
 
 	def create(title):
 		"""Creates a new Classroom with provided title"""
@@ -41,29 +41,42 @@ class ClassroomView(APIView):
 			creation_time = time, enabled = True)
 
 		return Response({
-			'status': 'SUCCESS', 'uri': classroom.uri,
+			'status': 'SUCCESS', 'url': classroom.url,
 			'message': 'New classroom created'
 			})
 
-	def enabled(status):
-		"""Allows user to enable/disable Classroom if they have permission"""
+	def enable(room):
+		"""Enables classroom if user has permission"""
 
 		try:
-            classroom = Classroom.objects.get(pk=self.room_group_name)
-        except:
-            pass
-        #     self._error_message("ERROR: Classroom does not exist")
+			classroom = Classroom.objects.get(title = room)
+		except:
+			pass
+		#     self._error_message("ERROR: Classroom does not exist")
 
-        permission = UserInClassroom.objects.get(pk=self.permission)
+		permission = UserInClassroom.objects.get(user = self)
 
-        if permission != 3:
-        	pass
-        #	self._error_message("ERROR: Insufficient Permissions")
+		if permission.permission != 3:
+			pass
+		#	self._error_message("ERROR: Insufficient Permissions")
 
-        if isinstance(status, int):
-        	Classroom.objects.set(pk=self.enabled = status)
+		classroom.enabled = True
+		classroom.save()
 
-        else:
-        	pass
-        #	self._error_message("ERROR: Incorrect data type, use int or bool")
+	def disable(room):
+		"""Disables classroom if user has permission"""
 
+		try:
+			classroom = Classroom.objects.get(title = room)
+		except:
+			pass
+		#     self._error_message("ERROR: Classroom does not exist")
+
+		permission = UserInClassroom.objects.get(user = self)
+
+		if permission.permission != 3:
+			pass
+		#	self._error_message("ERROR: Insufficient Permissions")
+
+		classroom.enabled = False
+		classroom.save()
