@@ -19,4 +19,5 @@ urlpatterns = [
 
     #api
     url(r'users/', views.UserList.as_view(),name="user-list"),
+    url(r'classroom/<uri>/', views.ClassroomView.as_view(),name="classrooms")
 ]

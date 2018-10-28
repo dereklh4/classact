@@ -1,8 +1,13 @@
 from django.shortcuts import render, HttpResponse
 import json
+from django.db import models
 from django.contrib.auth.models import User
 from rest_framework import generics
+from rest_framework.views import APIView
+from .models import (Classroom, UserInClassroom)
+from datetime import datetime
 from classact_app.serializers import UserSerializer
+from rest_framework.response import Response
 
 # Create your views here.
 def hello_world(request):
@@ -24,3 +29,41 @@ class UserList(generics.ListAPIView):
 			queryset = queryset.filter(email__startswith=starts_with)
 
 		return queryset
+
+class ClassroomView(APIView):
+
+	def create(title):
+		"""Creates a new Classroom with provided title"""
+
+		time = datetime.now()
+
+		classroom = Classroom.objects.create(title = title, 
+			creation_time = time, enabled = True)
+
+		return Response({
+			'status': 'SUCCESS', 'uri': classroom.uri,
+			'message': 'New classroom created'
+			})
+
+	def enabled(status):
+		"""Allows user to enable/disable Classroom if they have permission"""
+
+		try:
+            classroom = Classroom.objects.get(pk=self.room_group_name)
+        except:
+            pass
+        #     self._error_message("ERROR: Classroom does not exist")
+
+        permission = UserInClassroom.objects.get(pk=self.permission)
+
+        if permission != 3:
+        	pass
+        #	self._error_message("ERROR: Insufficient Permissions")
+
+        if isinstance(status, int):
+        	Classroom.objects.set(pk=self.enabled = status)
+
+        else:
+        	pass
+        #	self._error_message("ERROR: Incorrect data type, use int or bool")
+
