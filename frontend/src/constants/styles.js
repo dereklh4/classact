@@ -4,6 +4,37 @@ export const CA_STYLE = {
   marginRight: 8,
 };
 
+export const CARD_STYLE = theme => ({
+    layout_tiles: {
+        width: 'auto',
+        marginLeft: theme.spacing.unit * 3,
+        marginRight: theme.spacing.unit * 3,
+        [theme.breakpoints.up(1400 + theme.spacing.unit * 3 * 2)]: {
+            width: 1400,
+            marginLeft: 'auto',
+            marginRight: 'auto'
+        }
+    },
+    submit: {
+        marginTop: theme.spacing.unit * 3,
+        backgroundColor: '#3f51b5',
+        color: '#ffffff',
+        '&:hover': {
+            backgroundColor: '#2d46d1'
+        },
+    },
+    cardGrid: {
+        padding: `${theme.spacing.unit * 2}px 0`,
+    },
+    card: {
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    cardContent: {
+        flexGrow: 1,
+    },
+})
 export const INTRO_STYLE = theme => ({
     layout: {
         width: 'auto',
