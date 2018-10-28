@@ -7,6 +7,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
@@ -16,10 +17,12 @@ const TileBasic = ({name, professor, numenrolled, status, classes}) =>
           <CssBaseline/>
               <Grid item sm={6} md={4} lg={3}>
                   <Card className={classes.card}>
+                      <CardHeader
+                          title={name}
+                          titleTypographyProps={{ align: 'center' }}
+                          className={classes.cardHeader}
+                      />
                       <CardContent className={classes.cardContent}>
-                            <Typography className={classes.tileText}>
-                                 Name: {name}
-                             </Typography>
                             <Typography className={classes.tileText}>
                                 Professor: {professor}
                             </Typography>
@@ -33,11 +36,10 @@ const TileBasic = ({name, professor, numenrolled, status, classes}) =>
                      <CardActions>
                         <Link to={routes.CHATROOM}>
                             <Button
-                                type="button"
+                                type="submit"
                                 onClick={() => console.log('yo')}
-                                className={classes.submit}
+                                fullWidth className={classes.submit}
                                 variant="contained"
-                                fullWidth
                             >
                                     Enter: {name}
                             </Button>

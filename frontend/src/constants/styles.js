@@ -16,12 +16,13 @@ export const CARD_STYLE = theme => ({
         }
     },
     submit: {
-        marginTop: theme.spacing.unit * 3,
+        marginTop: theme.spacing.unit,
         backgroundColor: '#3f51b5',
         color: '#ffffff',
         '&:hover': {
             backgroundColor: '#2d46d1'
         },
+
     },
     cardGrid: {
         padding: `${theme.spacing.unit * 2}px 0`,
@@ -33,6 +34,9 @@ export const CARD_STYLE = theme => ({
     },
     cardContent: {
         flexGrow: 1,
+    },
+    cardHeader: {
+        backgroundColor: theme.palette.grey[200],
     },
 })
 export const INTRO_STYLE = theme => ({
