@@ -19,6 +19,7 @@ urlpatterns = [
 
     #api
     url(r'users/', views.UserList.as_view(),name="user-list"),
-    url(r'classroom/<url>/', views.ClassroomView.as_view()),
-    url(r'classroom/', views.ClassroomView.as_view()),
+
+    url(r'classroom/$', views.ClassroomView.as_view()),
+    url(r'classroom/(?P<url>.*)/$', views.ClassroomView.as_view()),
 ]

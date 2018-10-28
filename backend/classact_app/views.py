@@ -2,11 +2,11 @@ from django.shortcuts import render, HttpResponse
 import json
 from django.db import models
 from django.contrib.auth.models import User
-from rest_framework import generics
+from rest_framework import generics, serializers
 from rest_framework.views import APIView
 from .models import (Classroom, UserInClassroom)
 from datetime import datetime
-from classact_app.serializers import (UserSerializer, ClassroomSerializer)
+from classact_app.serializers import (UserSerializer, ClassroomViewSerializer,ClassroomPostSerializer)
 from rest_framework.response import Response
 
 # Create your views here.
@@ -30,16 +30,26 @@ class UserList(generics.ListAPIView):
 
 		return queryset
 
-class ClassroomView(APIView):
-	serializer_class = ClassroomSerializer
+class ClassroomView(generics.ListAPIView):
 
-	def get(self, request, format=None):
-		classrooms = [classroom.title for classroom in Classroom.objects.all()]
-		return Response(classrooms)
+	def get_serializer_class(self):
+		if self.request.method == "POST":
+			return ClassroomPostSerializer
+		else:
+			return ClassroomViewSerializer
+
+	def get_queryset(self):
+		data_dict = self.request.data
+		url = self.kwargs['url'] if 'url' in self.kwargs else None
+		print(url)
+		if url:
+			return Classroom.objects.filter(url=url)
+		else:
+			return Classroom.objects.all()
 
 	def post(self, request, *args, **kwargs):
 		"""Creates a new Classroom with provided title"""
-
+		serializer_class = ClassroomPostSerializer
 		time = datetime.now()
 
 		title = request.data['title']

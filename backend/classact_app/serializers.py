@@ -30,7 +30,12 @@ class UserSerializer(serializers.Serializer):
 		fields = ('email','first_name','last_name')
 
 
-class ClassroomSerializer(serializers.ModelSerializer):
+class ClassroomViewSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Classroom
+		fields = ('title','creation_time','url','enabled')
+
+class ClassroomPostSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Classroom
 		fields = ('title',)
