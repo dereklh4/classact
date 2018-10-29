@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CARD_STYLE} from '../constants/styles'
 import * as routes from '../constants/routes';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -9,8 +8,10 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Typography from '@material-ui/core/Typography';
+import { CARD_STYLE} from '../constants/styles'
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
+import SettingsIcon from '@material-ui/icons/SettingsOutlined';
 
 const TileBasic = ({name, professor, numenrolled, status, classes}) =>
       <React.Fragment>
@@ -21,6 +22,7 @@ const TileBasic = ({name, professor, numenrolled, status, classes}) =>
                           title={name}
                           titleTypographyProps={{ align: 'center' }}
                           className={classes.cardHeader}
+                          action={<SettingsIcon fontSize="small"/>}
                       />
                       <CardContent className={classes.cardContent}>
                             <Typography className={classes.tileText}>
@@ -34,7 +36,7 @@ const TileBasic = ({name, professor, numenrolled, status, classes}) =>
                              </Typography>
                      </CardContent>
                      <CardActions>
-                        <Link to={routes.CHATROOM}>
+                        <Link to={routes.CHATROOM} className={classes.link}>
                             <Button
                                 type="submit"
                                 onClick={() => console.log('yo')}
