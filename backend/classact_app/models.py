@@ -11,7 +11,9 @@ class Classroom(models.Model):
     title = models.CharField(max_length=100)
     creation_time = models.DateField(auto_now=True)
     enabled = models.BooleanField()
+    users = models.ManyToManyField(User, through='UserInClassroom')
     url = models.URLField(default=_generate_url)
+
 
 class UserInClassroom(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -23,3 +25,12 @@ class Message(models.Model):
 	#classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE) #Add back in later once we have classroom stuff setup
 	text = models.CharField(max_length=1000)
 	creation_time = models.DateTimeField(auto_now=True)
+
+class ClassroomUpdate(models.Model):
+	classroom = models.CharField(max_length=1000)
+	new_title = models.CharField(max_length=1000)
+
+class PermissionUpdate(models.Model):
+	classroom = models.CharField(max_length=1000)
+	user = models.CharField(max_length=1000)
+	new_permission = models.IntegerField()

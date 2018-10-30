@@ -4,9 +4,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from rest_framework import generics, serializers
 from rest_framework.views import APIView
-from .models import (Classroom, UserInClassroom)
+from .models import (Classroom, UserInClassroom, ClassroomUpdate, PermissionUpdate)
 from datetime import datetime
-from classact_app.serializers import (UserSerializer, ClassroomViewSerializer,ClassroomPostSerializer)
+from classact_app.serializers import (UserSerializer, ClassroomViewSerializer,ClassroomPostSerializer,ClassroomUpdateSerializer,UserInClassroomSerializer,PermissionUpdateSerializer)
 from rest_framework.response import Response
 
 # Create your views here.
@@ -57,6 +57,10 @@ class ClassroomView(generics.ListAPIView):
 		classroom = Classroom.objects.create(title = title, 
 			creation_time = time, enabled = True)
 
+		user = request.user
+		user_in_classroom = UserInClassroom(user=user, classroom=classroom, permission=3)
+		user_in_classroom.save()
+
 		return Response({
 			'status': 'SUCCESS', 'url': classroom.url,
 			'message': 'New classroom created'
@@ -97,3 +101,84 @@ class ClassroomView(generics.ListAPIView):
 
 		classroom.enabled = False
 		classroom.save()
+
+class ClassroomUpdateView(generics.ListAPIView):
+	def get_serializer_class(self):
+		return ClassroomUpdateSerializer
+
+	def get_queryset(self):
+		data_dict = self.request.data
+		return ClassroomUpdate.objects.all()
+
+	def post(self, request, *args, **kwargs):
+		"""Updates Classroom title"""
+		serializer_class = ClassroomUpdateSerializer
+
+		room = request.data['classroom']
+		try:
+			classroom = Classroom.objects.get(title = room)
+		except:
+			pass
+		#	self._error_message("ERROR: Classroom does not exist")
+
+		new_title = request.data['new_title']
+
+		#user = request.user
+		#userinclass = UserInClassroom.objects.get(user=user,classroom=classroom)
+		#if userinclass.permission != 3:
+			#self._error_message("ERROR: Insufficient Permissions")
+
+		classroom.title = new_title
+		classroom.save()
+
+		return Response({
+			'status': 'SUCCESS', 'url': classroom.url,
+			'message': 'Classroom Updated Successfully'
+			})
+
+class UserInClassroomList(generics.ListAPIView):
+	"""Displays a list of the UserInClassroom relations"""
+	serializer_class = UserInClassroomSerializer
+
+	def get_queryset(self):
+		queryset = UserInClassroom.objects.all()
+		return queryset
+
+class PermissionUpdateView(generics.ListAPIView):
+	def get_serializer_class(self):
+		return PermissionUpdateSerializer
+
+	def get_queryset(self):
+		data_dict = self.request.data
+		return PermissionUpdate.objects.all()
+
+	def post(self, request, *args, **kwargs):
+		"""Changes permission of given user in given class"""
+		serializer_class = PermissionUpdateSerializer
+
+		room = request.data['classroom']
+		try:
+			classroom = Classroom.objects.get(title = room)
+		except:
+			pass
+		#	self._error_message("ERROR: Classroom does not exist")
+
+		user_name = request.data['user']
+		try:
+			user = User.objects.get(first_name = user_name)#User must input just first name; Will change
+		except:
+			pass
+		#	self._error_message("ERROR: User does not exist")
+
+		new_permission = request.data['new_permission']
+
+		user_in_classroom = UserInClassroom.objects.get(classroom=classroom,user=user)
+
+		user_in_classroom.permission = new_permission
+
+		user_in_classroom.save()
+
+		return Response({
+			'status': 'SUCCESS', 'url': classroom.url,
+			'message': 'Permission Updated Successfully'
+			})
