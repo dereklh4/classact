@@ -13,6 +13,7 @@ class Classroom(models.Model):
     enabled = models.BooleanField()
     url = models.URLField(default=_generate_url)
 
+
 class UserInClassroom(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
