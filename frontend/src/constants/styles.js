@@ -4,11 +4,23 @@ export const CA_STYLE = {
   marginRight: 8,
 };
 
-export const FORM_STYLE = {
+export const FORM_STYLE = theme => ({
     formTitle: {
         textAlign: 'center',
-    }
-}
+    },
+    submit: {
+        marginTop: theme.spacing.unit,
+        backgroundColor: '#3f51b5',
+        color: '#ffffff',
+        '&:hover': {
+            backgroundColor: '#2d46d1'
+        },
+    },
+    form: {
+        width: '100%', // Fix IE 11 issue.
+        marginTop: theme.spacing.unit
+    },
+})
 export const CARD_STYLE = theme => ({
     layout_tiles: {
         width: 'auto',
@@ -27,7 +39,6 @@ export const CARD_STYLE = theme => ({
         '&:hover': {
             backgroundColor: '#2d46d1'
         },
-
     },
     cardGrid: {
         padding: `${theme.spacing.unit * 2}px 0`,

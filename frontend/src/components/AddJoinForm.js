@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import {withRouter} from 'react-router-dom';
+import * as routes from '../constants/routes';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
@@ -7,7 +9,6 @@ import Dialog from '@material-ui/core/Dialog';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -19,8 +20,6 @@ class AddJoinFormBasic extends Component {
         super(props);
         this.state = {
             currTab: 0,
-            className: '',
-            classID: '',
         };
     }
 
@@ -28,11 +27,8 @@ class AddJoinFormBasic extends Component {
         this.setState({currTab: value})
     }
 
-    onSubmit = () => {
-        console.log('yoyoy')
-    }
     render() {
-        const {formOpen, onPlusClickAway, classes} = this.props;
+        const {formOpen, onPlusClickAway, classes, history} = this.props;
         return (
             <div>
                <Dialog
@@ -58,70 +54,100 @@ class AddJoinFormBasic extends Component {
                     </Paper>
 
                     {this.state.currTab === 0 ?
-                        <AddClassForm
-                            classes={classes}
-                            onSubmit={this.onSubmit}
-                            className={this.state.className}/>
+                        <JoinClassForm classes={classes} history={history}/>
                         :
-                        <JoinClassForm
-                            classes={classes}
-                            onSubmit={this.onSubmit}
-                            classID={this.state.classID}/>
+                        <AddClassForm classes={classes} history={history}/>
                     }
                  </DialogContent>
-                 <DialogActions>
-                     <Button></Button>
-                 </DialogActions>
                </Dialog>
              </div>
         );
     }
 }
 
-const AddClassForm = ({classes, onSubmit, className}) =>
-    <form onSubmit={onSubmit} className={classes.form}>
-        <FormControl margin="normal" required fullWidth>
-            <InputLabel>Class Name</InputLabel>
-            <Input
-              value={className}
-              onChange={event => this.setState({className: event.target.value})}
-              type="text"
-              placeholder="Class Name"
-            />
-        </FormControl>
-        <Button
-            type="submit"
-            fullWidth
-            className={classes.submit}
-            variant="contained"
-        >
-            ADD
-        </Button>
-    </form>
+class JoinClassForm extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            classID: '',
+            error: null,
+        };
+    }
 
-//TODO: Change to class with its own state
-const JoinClassForm = ({classes, onSubmit, classID}) =>
-    <form onSubmit={onSubmit} className={classes.form}>
-        <FormControl margin="normal" required fullWidth>
-            <InputLabel>Class ID</InputLabel>
-            <Input
-              value={classID}
-              onChange={event => this.setState({classID: event.target.value})}
-              type="text"
-              placeholder="Class ID"
-            />
-        </FormControl>
-        <Button
-            type="submit"
-            fullWidth
-            className={classes.submit}
-            variant="contained"
-        >
-            JOIN
-        </Button>
-    </form>
+    onSubmit = (event) => {
+        this.props.history.push(routes.CHATROOM);
+        event.preventDefault();
+        console.log('TODO: API CALL');
+    }
 
+    render() {
+        const {classes} = this.props;
+        return (
+            <form onSubmit={this.onSubmit} className={classes.form}>
+                <FormControl margin="normal" required fullWidth>
+                    <InputLabel>Class ID</InputLabel>
+                    <Input
+                      value={this.state.classID}
+                      onChange={event => this.setState({classID: event.target.value})}
+                      type="text"
+                      placeholder="Class ID"
+                      autoFocus
+                    />
+                </FormControl>
+                <Button
+                    type="submit"
+                    fullWidth
+                    className={classes.submit}
+                    variant="contained"
+                >
+                    JOIN
+                </Button>
+            </form>
+        );
+    }
+}
 
+class AddClassForm extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            courseName: '',
+            error: null,
+        };
+    }
+    onSubmit = (event) => {
+        this.props.history.push(routes.CHATROOM);
+        event.preventDefault();
+        console.log('TODO: API CALL');
+    }
 
-const AddJoinForm = withStyles(FORM_STYLE)(AddJoinFormBasic);
+    render() {
+        const {classes} = this.props;
+        return (
+            <form onSubmit={this.onSubmit} className={classes.form}>
+                <FormControl margin="normal" required fullWidth>
+                    <InputLabel>Class Name</InputLabel>
+                    <Input
+                      value={this.state.courseName}
+                      onChange={event => this.setState({courseName: event.target.value})}
+                      type="text"
+                      placeholder="Class Name"
+                      autoFocus
+                      error={this.state.error}
+                    />
+                </FormControl>
+                <Button
+                    type="submit"
+                    fullWidth
+                    className={classes.submit}
+                    variant="contained"
+                >
+                    CREATE
+                </Button>
+            </form>
+        );
+    }
+}
+
+const AddJoinForm = withRouter(withStyles(FORM_STYLE)(AddJoinFormBasic));
 export {AddJoinForm}
