@@ -4,6 +4,87 @@ export const CA_STYLE = {
   marginRight: 8,
 };
 
+export const FORM_STYLE = theme => ({
+    formTitle: {
+        textAlign: 'center',
+    },
+    submit: {
+        marginTop: theme.spacing.unit,
+        backgroundColor: '#3f51b5',
+        color: '#ffffff',
+        '&:hover': {
+            backgroundColor: '#2d46d1'
+        },
+    },
+    form: {
+        width: '100%', // Fix IE 11 issue.
+        marginTop: theme.spacing.unit
+    },
+})
+export const CARD_STYLE = theme => ({
+    layout_tiles: {
+        width: 'auto',
+        marginLeft: theme.spacing.unit * 5,
+        marginRight: theme.spacing.unit * 5,
+        [theme.breakpoints.up(1400 + theme.spacing.unit * 3 * 2)]: {
+            width: 1400,
+            marginLeft: 'auto',
+            marginRight: 'auto'
+        }
+    },
+    submit: {
+        marginTop: theme.spacing.unit,
+        backgroundColor: '#3f51b5',
+        color: '#ffffff',
+        '&:hover': {
+            backgroundColor: '#2d46d1'
+        },
+    },
+    cardGrid: {
+        padding: `${theme.spacing.unit * 2}px 0`,
+    },
+    card: {
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    cardContent: {
+        flexGrow: 1,
+    },
+    cardHeader: {
+        backgroundColor: theme.palette.grey[200],
+    },
+    tileText: {
+        borderWidth: 1,
+        padding: '20px 0',
+        margin: '5px 0',
+        textAlign: 'center',
+        fontSize: '17px',
+        fontWeight: 'bold',
+        borderColor: '#dfdfdf',
+        borderStyle: 'solid'
+    },
+    link: {
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        textDecoration: 'none'
+    },
+    addButton : {
+        backgroundColor: '#3f51b5',
+        height: '100px',
+        width: '100px',
+        marginLeft: '85px',
+        marginTop: '120px',
+        color: 'white',
+        '&:hover': {
+            backgroundColor: '#2d46d1'
+        },
+    },
+    addIcon: {
+        height: '80px',
+        width: '80px',
+    }
+})
 export const INTRO_STYLE = theme => ({
     layout: {
         width: 'auto',
