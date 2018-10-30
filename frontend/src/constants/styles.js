@@ -32,6 +32,14 @@ export const CARD_STYLE = theme => ({
             marginRight: 'auto'
         }
     },
+    settingButton: {
+        height: '5px',
+        width: '35px',
+        marginRight: '5px',
+        '&:hover': {
+            backgroundColor: '#2d46d1'
+        },
+    },
     submit: {
         marginTop: theme.spacing.unit,
         backgroundColor: '#3f51b5',
