@@ -9,10 +9,10 @@ import {AddTile} from './AddTile.js';
 const TileGridBasic = ({courses, classes, onPlusClick}) =>
     <div className={classNames(classes.layout_tiles, classes.cardGrid)}>
         <Grid container spacing={40}>
-            <AddTile onPlusClick={onPlusClick}/>
             {courses.map(a =>
                 <Tile name={a.name} professor={a.professor} numenrolled={a.enrolled} status={a.status}/>
             )}
+            <AddTile onPlusClick={onPlusClick}/>
         </Grid>
 
     </div>
