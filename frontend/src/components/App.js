@@ -14,8 +14,6 @@ import Account from './Account'
 import PasswordForgetPage from './PasswordForget';
 import HomePage from './Home';
 
-import TestChatroom from './TestChatroom'
-
 import * as routes from '../constants/routes';
 
 class App extends Component {
@@ -64,11 +62,6 @@ class App extends Component {
               <Route
                 exact path={routes.CHATROOM}
                 component={ChatRoom}
-              />
-
-              <Route
-                path={routes.TEST_CHATROOM}
-                component={TestChatroom}
               />
             </div>
           </Router>

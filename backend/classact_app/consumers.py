@@ -4,7 +4,7 @@ import json
 import channels
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
-from .models import Message
+from .models import Message, UserInClassroom, Classroom
 from django.core import serializers
 
 class ChatConsumer(WebsocketConsumer):
@@ -13,8 +13,9 @@ class ChatConsumer(WebsocketConsumer):
     def connect(self):
         #set chatroom name
         print(self.scope['url_route'])
-        self.room_name = self.scope['url_route']['kwargs']['chatroom_id']
+        self.room_name = self.scope['url_route']['kwargs']['chatroom_url']
         self.room_group_name = self.room_name
+        classroom_url = self.room_name
 
         #check token
         try:
@@ -25,9 +26,18 @@ class ChatConsumer(WebsocketConsumer):
             
         self.scope["user"] = token.user
 
-        #TODO: Check that classroom exists in database
+        try:
+            classroom = Classroom.objects.get(url = classroom_url)
+        except:
+            self._error_message("ERROR: Not a valid classroom url")
+            return
 
-        #TODO: Check that user is in that classroom
+        #TODO: Add this back in once can add users to a classroom
+        # try:
+        #     user = UserInClassroom.objects.get(user = user)
+        # except:
+        #     self._error_message("ERROR: User is not a part of this classroom")
+        #     return
 
         #join room group
         async_to_sync(self.channel_layer.group_add)(
@@ -65,16 +75,20 @@ class ChatConsumer(WebsocketConsumer):
             self._error_message("Not a valid user: " + str(username))
             return
 
-        #TODO: Check that user is part of chatroom they are posting to
-
-        #TODO: Check that chatroom exists
         try:
-            classroom = Classroom.objects.get(pk=self.room_group_name)
+            classroom = Classroom.objects.get(url=self.room_group_name)
         except:
-            pass
-        #     self._error_message("ERROR: Classroom does not exist")
+            self._error_message("ERROR: Classroom does not exist")
+            return
 
-        message = Message.objects.create(user=user, text=text) #TODO: Add classroom
+        #TODO: Add this back in once can add users to a classroom
+        # try:
+        #     user = UserInClassroom.objects.get(user = user)
+        # except:
+        #     self._error_message("ERROR: User is not a part of this classroom")
+        #     return
+
+        message = Message.objects.create(user=user, text=text, classroom=classroom)
 
         self._post_message({
             'id': message.id,

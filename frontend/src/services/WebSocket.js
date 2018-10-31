@@ -20,8 +20,8 @@ class WebSocketService {
     this.callbacks['error_message'] = errorMessageCallback;
   }
 
-  connect(chatroom_id) {
-    var path = config.API_PATH + "/" + chatroom_id + "/" + localStorage.getItem("token")
+  connect(chatroom_url) {
+    var path = config.API_PATH + "/" + chatroom_url + "/" + localStorage.getItem("token")
     console.log("connecting to " + path)
     this.socketRef = new WebSocket(path);
     this.socketRef.onopen = () => {
@@ -31,12 +31,12 @@ class WebSocketService {
       this.handleMessage(e.data);
     };
     this.socketRef.onerror = e => {
-      console.log(e.message);
+      alert("Error occurred")
     };
-    this.socketRef.onclose = () => {
-      //console.log("WebSocket closed. Attempting to reopen");
-      //this.connect();
+    this.socketRef.onclose = e => {
+      alert("Web socket closed")
     };
+
   }
 
   handleMessage(data) {

@@ -21,6 +21,6 @@ class UserInClassroom(models.Model):
 
 class Message(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
-	#classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE) #Add back in later once we have classroom stuff setup
+	classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, default=None)
 	text = models.CharField(max_length=1000)
 	creation_time = models.DateTimeField(auto_now=True)
