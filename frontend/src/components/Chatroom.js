@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import WebSocketInstance from '../services/WebSocket'
+import queryString from 'query-string';
 
 export default class Chatroom extends Component {
 	constructor(props) {
     	super(props);
     	this.state = {}
     	this.state = { message: '', messages: []};
-    	WebSocketInstance.connect(props.match.params.chatroom_url)
+      var params = queryString.parse(this.props.location.search)
+    	WebSocketInstance.connect(params.url)
     	WebSocketInstance.addCallbacks(this.newMessage.bind(this),this.errorMessage.bind(this))
     };
 

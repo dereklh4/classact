@@ -9,6 +9,8 @@ from datetime import datetime
 from classact_app.serializers import (UserSerializer, ClassroomViewSerializer,ClassroomPostSerializer,ClassroomUpdateSerializer,UserInClassroomSerializer,PermissionUpdateSerializer,ClassroomJoinSerializer,ClassroomLeaveSerializer)
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication,TokenAuthentication
 
 # Create your views here.
 def hello_world(request):
@@ -17,6 +19,7 @@ def hello_world(request):
 	return HttpResponse(json.dumps(response_data),content_type="application/json")
 
 class UserList(generics.ListAPIView):
+
 	serializer_class = UserSerializer
 	#TODO: Eventually won't let just any user see this
 	#permission_classes = (IsAdminUser,)
@@ -32,6 +35,8 @@ class UserList(generics.ListAPIView):
 		return queryset
 
 class ClassroomView(generics.ListAPIView):
+	permission_classes = (IsAuthenticated,)
+	authentication_classes = (SessionAuthentication, TokenAuthentication,)
 
 	def get_serializer_class(self):
 		if self.request.method == "POST":
@@ -58,6 +63,7 @@ class ClassroomView(generics.ListAPIView):
 		classroom = Classroom.objects.create(title = title, 
 			creation_time = time, enabled = True)
 
+		print("Creation user: " + str(request.user))
 		user = request.user
 		user_in_classroom = UserInClassroom(user=user, classroom=classroom, permission=3)
 		user_in_classroom.save()
@@ -100,6 +106,9 @@ class ClassroomView(generics.ListAPIView):
 		classroom.save()
 
 class ClassroomUpdateView(generics.CreateAPIView):
+	permission_classes = (IsAuthenticated,)
+	authentication_classes = (SessionAuthentication, TokenAuthentication,)
+
 	def get_serializer_class(self):
 		return ClassroomUpdateSerializer
 
@@ -132,6 +141,9 @@ class UserInClassroomList(generics.ListAPIView):
 		return queryset
 
 class PermissionUpdateView(generics.CreateAPIView):
+	permission_classes = (IsAuthenticated,)
+	authentication_classes = (SessionAuthentication, TokenAuthentication,)
+
 	def get_serializer_class(self):
 		return PermissionUpdateSerializer
 
@@ -168,6 +180,9 @@ class PermissionUpdateView(generics.CreateAPIView):
 			})
 
 class ClassroomJoinView(generics.CreateAPIView):
+	permission_classes = (IsAuthenticated,)
+	authentication_classes = (SessionAuthentication, TokenAuthentication,)
+
 	def get_serializer_class(self):
 		return ClassroomJoinSerializer
 
@@ -191,6 +206,9 @@ class ClassroomJoinView(generics.CreateAPIView):
 			})
 
 class ClassroomLeaveView(generics.CreateAPIView):
+	permission_classes = (IsAuthenticated,)
+	authentication_classes = (SessionAuthentication, TokenAuthentication,)
+
 	def get_serializer_class(self):
 		return ClassroomLeaveSerializer
 
