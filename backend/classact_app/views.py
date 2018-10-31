@@ -172,7 +172,7 @@ class ClassroomJoinView(generics.CreateAPIView):
 		return ClassroomJoinSerializer
 
 	def post(self, request, *args, **kwargs):
-		"""Updates Classroom title"""
+		"""Allows user to join an already existing classroom"""
 		serializer_class = ClassroomJoinSerializer
 
 		url = request.data['url']
@@ -195,7 +195,7 @@ class ClassroomLeaveView(generics.CreateAPIView):
 		return ClassroomLeaveSerializer
 
 	def post(self, request, *args, **kwargs):
-		"""Updates Classroom title"""
+		"""Allows user to leave a classroom they have previously joined"""
 		serializer_class = ClassroomLeaveSerializer
 
 		url = request.data['url']
@@ -205,7 +205,11 @@ class ClassroomLeaveView(generics.CreateAPIView):
 			raise APIException("ERROR: Classroom does not exist")
 
 		user = request.user
-		user_in_classroom = UserInClassroom.objects.get(classroom=classroom,user=user)
+		try:
+			user_in_classroom = UserInClassroom.objects.get(classroom=classroom,user=user)
+		except:
+			raise APIException("ERROR: User does not exist in this classroom")
+			
 		user_in_classroom.delete()
 		
 		return Response({
