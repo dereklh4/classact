@@ -45,7 +45,7 @@ class ClassroomUpdateSerializer(serializers.ModelSerializer):
 		model = Classroom
 		fields = ('url','new_title')
 
-class UserInClassroomSerializer(serializers.Serializer):
+class UserInClassroomSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = UserInClassroom
 		fields = ('user','classroom','permission')
@@ -60,6 +60,13 @@ class PermissionUpdateSerializer(serializers.ModelSerializer):
 		fields = ('url','user_email','new_permission')
 
 class ClassroomJoinSerializer(serializers.ModelSerializer):
+	url = serializers.CharField(max_length=100)
+
+	class Meta:
+		model = UserInClassroom
+		fields = ('url',)
+
+class ClassroomLeaveSerializer(serializers.ModelSerializer):
 	url = serializers.CharField(max_length=100)
 
 	class Meta:
