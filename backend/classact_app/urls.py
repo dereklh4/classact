@@ -19,4 +19,11 @@ urlpatterns = [
 
     #api
     url(r'users/', views.UserList.as_view(),name="user-list"),
+
+    url(r'classroom/$', views.ClassroomView.as_view()),
+    url(r'classroom/update/$', views.ClassroomUpdateView.as_view()),
+    url(r'classroom/permission-update/$', views.PermissionUpdateView.as_view()),
+    url(r'classroom/(?P<url>.*)/$', views.ClassroomView.as_view()),
+
+    url(r'userclassroomrelations/$', views.UserInClassroomList.as_view()),
 ]

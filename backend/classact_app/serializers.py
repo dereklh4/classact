@@ -2,6 +2,7 @@ from rest_auth.registration.serializers import RegisterSerializer
 from rest_auth.serializers import LoginSerializer
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from .models import (Classroom, UserInClassroom)
 
 
 #override rest_auth's default registration serializer so can add first and last names, and remove username
@@ -27,3 +28,35 @@ class UserSerializer(serializers.Serializer):
 	class Meta:
 		model = User
 		fields = ('email','first_name','last_name')
+
+
+class ClassroomViewSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Classroom
+		fields = ('title','creation_time','url','enabled')
+
+class ClassroomPostSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Classroom
+		fields = ('title',)
+
+class ClassroomUpdateSerializer(serializers.ModelSerializer):
+	new_title = serializers.CharField(max_length=100)
+	class Meta:
+		model = Classroom
+		fields = ('url','new_title')
+
+class UserInClassroomSerializer(serializers.Serializer):
+	class Meta:
+		model = UserInClassroom
+		fields = ('user','classroom','permission')
+
+class PermissionUpdateSerializer(serializers.ModelSerializer):
+	new_permission = serializers.IntegerField()
+	url = serializers.CharField(max_length=100)
+	user_email = serializers.CharField(max_length=100)
+
+	class Meta:
+		model = UserInClassroom
+		fields = ('url','user_email','new_permission')
+

@@ -1,11 +1,18 @@
 from django.db import models
+from uuid import uuid4
 from django.contrib.auth.models import User
 
 # Create your models here.
+def _generate_url():
+    """Generates a unique uri for the chat session."""
+    return str(uuid4()).replace('-', '')[:15]
+
 class Classroom(models.Model):
     title = models.CharField(max_length=100)
     creation_time = models.DateField(auto_now=True)
     enabled = models.BooleanField()
+    url = models.URLField(default=_generate_url)
+
 
 class UserInClassroom(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
