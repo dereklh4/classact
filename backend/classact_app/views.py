@@ -6,7 +6,7 @@ from rest_framework import generics, serializers
 from rest_framework.views import APIView
 from .models import (Classroom, UserInClassroom)
 from datetime import datetime
-from classact_app.serializers import (UserSerializer, ClassroomViewSerializer,ClassroomPostSerializer,ClassroomUpdateSerializer,UserInClassroomSerializer,PermissionUpdateSerializer)
+from classact_app.serializers import (UserSerializer, ClassroomViewSerializer,ClassroomPostSerializer,ClassroomUpdateSerializer,UserInClassroomSerializer,PermissionUpdateSerializer,ClassroomJoinSerializer,ClassroomLeaveSerializer)
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
 
@@ -165,4 +165,54 @@ class PermissionUpdateView(generics.CreateAPIView):
 		return Response({
 			'status': 'SUCCESS', 'url': classroom.url,
 			'message': 'Permission Updated Successfully'
+			})
+
+class ClassroomJoinView(generics.CreateAPIView):
+	def get_serializer_class(self):
+		return ClassroomJoinSerializer
+
+	def post(self, request, *args, **kwargs):
+		"""Allows user to join an already existing classroom"""
+		serializer_class = ClassroomJoinSerializer
+
+		url = request.data['url']
+		try:
+			classroom = Classroom.objects.get(url = url)
+		except:
+			raise APIException("ERROR: Classroom does not exist")
+
+		user = request.user
+		user_in_classroom = UserInClassroom(user=user, classroom=classroom, permission=1)
+		user_in_classroom.save()
+		
+		return Response({
+			'status': 'SUCCESS', 'url': classroom.url,
+			'message': 'User Joined Classroom Successfully'
+			})
+
+class ClassroomLeaveView(generics.CreateAPIView):
+	def get_serializer_class(self):
+		return ClassroomLeaveSerializer
+
+	def post(self, request, *args, **kwargs):
+		"""Allows user to leave a classroom they have previously joined"""
+		serializer_class = ClassroomLeaveSerializer
+
+		url = request.data['url']
+		try:
+			classroom = Classroom.objects.get(url = url)
+		except:
+			raise APIException("ERROR: Classroom does not exist")
+
+		user = request.user
+		try:
+			user_in_classroom = UserInClassroom.objects.get(classroom=classroom,user=user)
+		except:
+			raise APIException("ERROR: User does not exist in this classroom")
+			
+		user_in_classroom.delete()
+		
+		return Response({
+			'status': 'SUCCESS', 'url': classroom.url,
+			'message': 'User Left Classroom Successfully'
 			})
