@@ -18,8 +18,6 @@ urlpatterns = [
     path(r'schema/',schema_view),
 
     #api
-    url(r'users/', views.UserList.as_view(),name="user-list"),
-
     url(r'classroom/$', views.ClassroomView.as_view()),
     url(r'classroom/update/$', views.ClassroomUpdateView.as_view()),
     url(r'classroom/permission-update/$', views.PermissionUpdateView.as_view()),
@@ -27,5 +25,7 @@ urlpatterns = [
     url(r'classroom/leave/$', views.ClassroomLeaveView.as_view()),
     url(r'classroom/(?P<url>.*)/$', views.ClassroomView.as_view()),
 
-    url(r'userclassroomrelations/$', views.UserInClassroomList.as_view()),
+    #debug api
+    url(r'debug/users/', views.UserList.as_view(),name="user-list"),
+    url(r'debug/usersinclassroom/$', views.UserInClassroomList.as_view()),
 ]

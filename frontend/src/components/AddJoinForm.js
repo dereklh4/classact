@@ -116,10 +116,27 @@ class AddClassForm extends Component {
         };
     }
     onSubmit = (event) => {
-        this.props.history.push(routes.CHATROOM);
-        event.preventDefault();
-        console.log('TODO: API CALL');
-    }
+       const {courseName} = this.state;
+       const {history} = this.props;
+       const data = {
+           title: courseName
+       };
+       const token = 'Token ' + localStorage.getItem('token')
+       console.log(token)
+       fetch('http://localhost:8000/api/classroom/', {
+           method: 'POST',
+           headers: {
+               'Authorization': token,
+               'Content-Type': 'application/json',
+               'Accept': 'application/json'
+           },
+           body: JSON.stringify(data)
+       })
+       .then(response => console.log(response))
+       .catch(error => console.log(error))
+       history.push(routes.CHATROOM);
+       event.preventDefault();
+   }
 
     render() {
         const {classes} = this.props;
