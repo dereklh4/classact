@@ -68,6 +68,13 @@ AUTHENTICATION_BACKENDS = (
     "allauth.account.auth_backends.AuthenticationBackend",
 )
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
+
 #Override rest_auth api for login,register to not send username
 REST_AUTH_SERIALIZERS = {
     "LOGIN_SERIALIZER": 'classact_app.serializers.CustomLoginSerializer',
