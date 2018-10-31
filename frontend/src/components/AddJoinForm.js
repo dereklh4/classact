@@ -132,9 +132,9 @@ class AddClassForm extends Component {
            },
            body: JSON.stringify(data)
        })
-       .then(response => console.log(response))
+       .then(response => response.json())
+       .then(response => history.push(routes.CHATROOM + "?url=" + response.url))
        .catch(error => console.log(error))
-       history.push(routes.CHATROOM);
        event.preventDefault();
    }
 

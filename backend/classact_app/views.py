@@ -107,6 +107,7 @@ class ClassroomView(generics.ListAPIView):
 
 class ClassroomUpdateView(generics.CreateAPIView):
 	permission_classes = (IsAuthenticated,)
+	authentication_classes = (SessionAuthentication, TokenAuthentication,)
 
 	def get_serializer_class(self):
 		return ClassroomUpdateSerializer
@@ -141,6 +142,7 @@ class UserInClassroomList(generics.ListAPIView):
 
 class PermissionUpdateView(generics.CreateAPIView):
 	permission_classes = (IsAuthenticated,)
+	authentication_classes = (SessionAuthentication, TokenAuthentication,)
 
 	def get_serializer_class(self):
 		return PermissionUpdateSerializer
@@ -179,6 +181,7 @@ class PermissionUpdateView(generics.CreateAPIView):
 
 class ClassroomJoinView(generics.CreateAPIView):
 	permission_classes = (IsAuthenticated,)
+	authentication_classes = (SessionAuthentication, TokenAuthentication,)
 
 	def get_serializer_class(self):
 		return ClassroomJoinSerializer
@@ -204,6 +207,7 @@ class ClassroomJoinView(generics.CreateAPIView):
 
 class ClassroomLeaveView(generics.CreateAPIView):
 	permission_classes = (IsAuthenticated,)
+	authentication_classes = (SessionAuthentication, TokenAuthentication,)
 
 	def get_serializer_class(self):
 		return ClassroomLeaveSerializer
