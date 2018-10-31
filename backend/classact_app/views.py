@@ -6,7 +6,7 @@ from rest_framework import generics, serializers
 from rest_framework.views import APIView
 from .models import (Classroom, UserInClassroom)
 from datetime import datetime
-from classact_app.serializers import (UserSerializer, ClassroomViewSerializer,ClassroomPostSerializer,ClassroomUpdateSerializer,UserInClassroomSerializer,PermissionUpdateSerializer)
+from classact_app.serializers import (UserSerializer, ClassroomViewSerializer,ClassroomPostSerializer,ClassroomUpdateSerializer,UserInClassroomSerializer,PermissionUpdateSerializer,ClassroomJoinSerializer)
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
 
@@ -165,4 +165,27 @@ class PermissionUpdateView(generics.CreateAPIView):
 		return Response({
 			'status': 'SUCCESS', 'url': classroom.url,
 			'message': 'Permission Updated Successfully'
+			})
+
+class ClassroomJoinView(generics.CreateAPIView):
+	def get_serializer_class(self):
+		return ClassroomJoinSerializer
+
+	def post(self, request, *args, **kwargs):
+		"""Updates Classroom title"""
+		serializer_class = ClassroomJoinSerializer
+
+		url = request.data['url']
+		try:
+			classroom = Classroom.objects.get(url = url)
+		except:
+			raise APIException("ERROR: Classroom does not exist")
+
+		user = request.user
+		user_in_classroom = UserInClassroom(user=user, classroom=classroom, permission=1)
+		user_in_classroom.save()
+		
+		return Response({
+			'status': 'SUCCESS', 'url': classroom.url,
+			'message': 'User Joined Successfully'
 			})
