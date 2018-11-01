@@ -7,9 +7,6 @@ from . import views
 schema_view = get_swagger_view(title="ClassAct API")
 
 urlpatterns = [
-	#hello world
-    path('', views.hello_world, name='hello_world'),
-
     #rest-auth api for login/logout/registration (see https://django-rest-auth.readthedocs.io/en/latest/api_endpoints.html)
     path(r'auth/', include('rest_auth.urls')),
     path(r'auth/registration/',include('rest_auth.registration.urls')),

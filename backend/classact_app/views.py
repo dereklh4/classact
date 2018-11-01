@@ -12,14 +12,8 @@ from rest_framework.exceptions import APIException
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication,TokenAuthentication
 
-# Create your views here.
-def hello_world(request):
-	#Note: This isn't quite how we will do it since we will use Django REST
-	response_data = {"text": "ClassAct hello world!"}
-	return HttpResponse(json.dumps(response_data),content_type="application/json")
-
 class UserList(generics.ListAPIView):
-
+	"""Shows a list of all users"""
 	serializer_class = UserSerializer
 	#TODO: Eventually won't let just any user see this
 	#permission_classes = (IsAdminUser,)
@@ -36,7 +30,6 @@ class UserList(generics.ListAPIView):
 
 class ClassroomView(generics.ListAPIView):
 	permission_classes = (IsAuthenticated,)
-	authentication_classes = (SessionAuthentication, TokenAuthentication,)
 
 	def get_serializer_class(self):
 		if self.request.method == "POST":
@@ -107,7 +100,6 @@ class ClassroomView(generics.ListAPIView):
 
 class ClassroomUpdateView(generics.CreateAPIView):
 	permission_classes = (IsAuthenticated,)
-	authentication_classes = (SessionAuthentication, TokenAuthentication,)
 
 	def get_serializer_class(self):
 		return ClassroomUpdateSerializer
@@ -142,7 +134,6 @@ class UserInClassroomList(generics.ListAPIView):
 
 class PermissionUpdateView(generics.CreateAPIView):
 	permission_classes = (IsAuthenticated,)
-	authentication_classes = (SessionAuthentication, TokenAuthentication,)
 
 	def get_serializer_class(self):
 		return PermissionUpdateSerializer
@@ -181,7 +172,6 @@ class PermissionUpdateView(generics.CreateAPIView):
 
 class ClassroomJoinView(generics.CreateAPIView):
 	permission_classes = (IsAuthenticated,)
-	authentication_classes = (SessionAuthentication, TokenAuthentication,)
 
 	def get_serializer_class(self):
 		return ClassroomJoinSerializer
@@ -207,7 +197,6 @@ class ClassroomJoinView(generics.CreateAPIView):
 
 class ClassroomLeaveView(generics.CreateAPIView):
 	permission_classes = (IsAuthenticated,)
-	authentication_classes = (SessionAuthentication, TokenAuthentication,)
 
 	def get_serializer_class(self):
 		return ClassroomLeaveSerializer
