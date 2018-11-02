@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
 import {Question} from './Question'
+import withStyles from '@material-ui/core/styles/withStyles';
+import {QUESTION_STYLE} from '../constants/styles';
 
-export class QuestionList extends Component {
+class QuestionListBasic extends Component {
     render() {
-        const {questions} = this.props;
+        const {questions, classes} = this.props;
         // TODO: const newQ = _.sortBy(questions, ['upvotes']);
         return (
-            <div>
+            <div label="yo" className={classes.questionContainer}>
                 {questions.map(question =>
                     <Question question={question.text}/>
                 )}
@@ -14,3 +16,6 @@ export class QuestionList extends Component {
         );
     }
 }
+
+const QuestionList = withStyles(QUESTION_STYLE)(QuestionListBasic);
+export {QuestionList}

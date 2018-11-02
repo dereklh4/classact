@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
+import {QUESTION_STYLE} from '../constants/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
-//TODO: Add appropriate styling for chatroom component
-import {INTRO_STYLE} from '../constants/styles';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
@@ -37,26 +36,35 @@ class QuestionBasic extends Component {
         </ul>
         */
         const {question, classes} = this.props;
+        var questionShortened = question;
+        if (question.length > 50) {
+            questionShortened = question.substr(0,49) + '...'
+        }
         return (
-            <ExpansionPanel>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-                    <Typography className={classes.lines}>
-                        {question}
+            <ExpansionPanel className={classes.expansionPanel}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>} className={classes.questionSummary}>
+                    <Typography className={classes.questionSummaryText}>
+                        {questionShortened}
                     </Typography>
                 </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                    <Typography className={classes.lines}>
-                        {question}
-                    </Typography>
-                    <form onSubmit={this.onSubmit} className={classes.form}>
-                        <FormControl margin="normal" required>
+                <ExpansionPanelDetails className={classes.details}>
+                    <div className={classes.fullQuestionContainer}>
+                        <Typography className={classes.fullQuestionText}>
+                            {question}
+                        </Typography>
+                    </div>
+                    <form onSubmit={this.onSubmit} className={classes.questionForm}>
+                        <FormControl margin="normal" fullWidth required>
                             <TextField
+                                label="Enter Answer"
+                                multiline
+                                rows="3"
 								value={this.state.userAnswer}
 								onChange={event => this.setState({userAnswer: event.target.value})}
 								type="text"
 								placeholder="Enter Answer Here"
-                                multiline
                                 fullWidth
+                                variant="outlined"
 							/>
                             <Button
                                 disabled={this.state.userAnswer === ''}
@@ -74,5 +82,5 @@ class QuestionBasic extends Component {
         );
     }
 }
-const Question = withStyles(INTRO_STYLE)(QuestionBasic);
+const Question = withStyles(QUESTION_STYLE)(QuestionBasic);
 export {Question}

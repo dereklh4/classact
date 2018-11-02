@@ -1,4 +1,65 @@
-
+export const QUESTION_STYLE = theme => ({
+    questionContainer: {
+        marginTop: 10,
+        width: '100%',
+    },
+    layout: {
+        width: 'auto',
+        display: 'block',
+        marginLeft: theme.spacing.unit * 3,
+        marginRight: theme.spacing.unit * 3,
+        [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+            width: 600,
+            marginLeft: 'auto',
+            marginRight: 'auto'
+        }
+    },
+    paper: {
+        marginTop: theme.spacing.unit * 20,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: `${theme.spacing.unit * 4}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`
+    },
+    postQuestion: {
+        width: '100%',
+        marginTop: theme.spacing.unit
+    },
+    submit: {
+        backgroundColor: '#3f51b5',
+        color: '#ffffff',
+        '&:hover': {
+            backgroundColor: '#2d46d1'
+        },
+    },
+    expansionPanel: {
+        marginTop: 3,
+        borderWidth: 2,
+        borderColor: '#3f51b5',
+        borderStyle: 'solid'
+    },
+    questionSummary: {
+        borderBottomWidth: 1,
+        borderColor: '#000000',
+        borderStyle: 'solid'
+    },
+    questionSummaryText: {
+        color: '#505050',
+        fontWeight: 'bold'
+    },
+    details: {
+        display: 'flex',
+        flexDirection: 'column',
+        padding: 0,
+    },
+    fullQuestionContainer: {
+        borderBottom: '1px solid #dfdfdf',
+        wordWrap: 'break-word',
+    },
+    fullQuestionText: {
+        margin: '10px 15px 10px 15px'
+    },
+});
 export const CA_STYLE = {
   width: '60px',
   marginRight: 8,
@@ -17,7 +78,7 @@ export const FORM_STYLE = theme => ({
         },
     },
     form: {
-        width: '100%', // Fix IE 11 issue.
+        width: '100%',
         marginTop: theme.spacing.unit
     },
 })
@@ -96,7 +157,7 @@ export const CARD_STYLE = theme => ({
 export const INTRO_STYLE = theme => ({
     layout: {
         width: 'auto',
-        display: 'block', // Fix IE 11 issue.
+        display: 'block',
         marginLeft: theme.spacing.unit * 3,
         marginRight: theme.spacing.unit * 3,
         [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
@@ -122,7 +183,7 @@ export const INTRO_STYLE = theme => ({
         backgroundColor: '#ffffff'
     },
     form: {
-        width: '100%', // Fix IE 11 issue.
+        width: '100%',
         marginTop: theme.spacing.unit
     },
     submit: {

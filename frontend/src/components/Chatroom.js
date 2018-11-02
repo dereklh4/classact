@@ -3,7 +3,7 @@ import WebSocketInstance from '../services/WebSocket'
 import queryString from 'query-string';
 import {QuestionList} from './QuestionList';
 //TODO: Add appropriate styling for chatroom component
-import {INTRO_STYLE} from '../constants/styles';
+import {QUESTION_STYLE} from '../constants/styles';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
@@ -74,17 +74,20 @@ class Chatroom extends Component {
 					<Typography component="h1" variant="h5">
 						{this.state.chatName}
 					</Typography>
-					<QuestionList questions={messages} classes={classes}/>
-					<form onSubmit={(e) => this.postChatMessageHandler(e, this.state.message)} className={classes.questionForm}>
-						<FormControl margin="normal" required>
+					<QuestionList questions={messages}/>
+					<form onSubmit={(e) => this.postChatMessageHandler(e, this.state.message)} className={classes.postQuestion}>
+						<FormControl margin="normal" fullWidth required>
 							<TextField
+								label="Enter Question"
+								multiline
+								rows="3"
 								value={this.state.message}
 								onChange={event => this.setState({message: event.target.value})}
 								type="text"
 								placeholder="Enter Question Here"
 								autoFocus
-								multiline
 								fullWidth
+								variant="outlined"
 							/>
 							<Button
 								disabled={this.state.message === ''}
@@ -103,4 +106,4 @@ class Chatroom extends Component {
   }
 }
 
-export default withStyles(INTRO_STYLE)(Chatroom);
+export default withStyles(QUESTION_STYLE)(Chatroom);
