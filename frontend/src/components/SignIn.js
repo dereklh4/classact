@@ -106,6 +106,7 @@ class SignInForm extends Component {
                         type="text"
                         placeholder="Email Address"
                         autoComplete="email"
+                        autoFocus
                     />
                 </FormControl>
                 <FormControl margin="normal" required fullWidth>
