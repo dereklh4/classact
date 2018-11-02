@@ -223,3 +223,21 @@ class ClassroomLeaveView(generics.CreateAPIView):
 			'status': 'SUCCESS', 'url': classroom.url,
 			'message': 'User Left Classroom Successfully'
 			})
+
+class UserClassroomList(generics.ListAPIView):
+	serializer_class = ClassroomViewSerializer
+	def get_queryset(self):
+		user_email = self.kwargs['email'] #User's email is passed in through the url
+
+		try:
+			user = User.objects.get(email = user_email)
+		except:
+			raise APIException("ERROR: User does not exist")
+
+		user_in_classrooms = UserInClassroom.objects.filter(user=user)
+		classrooms = []
+		for user_in_classroom in user_in_classrooms:
+			classrooms.append(user_in_classroom.classroom.url) #Create a list of urls of the classrooms the user is in
+
+		queryset = Classroom.objects.filter(url__in=classrooms)
+		return queryset

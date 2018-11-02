@@ -22,6 +22,9 @@ urlpatterns = [
     url(r'classroom/leave/$', views.ClassroomLeaveView.as_view()),
     url(r'classroom/(?P<url>.*)/$', views.ClassroomView.as_view()),
 
+    url(r'user/(?P<email>[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4})/$', views.UserClassroomList.as_view()),#Example: user/eric@gmail.com/ would
+                                                                                                         #display the classrooms for a user with
+                                                                                                         #the email 'eric@gmail.com'
     #debug api
     url(r'debug/users/', views.UserList.as_view(),name="user-list"),
     url(r'debug/usersinclassroom/$', views.UserInClassroomList.as_view()),

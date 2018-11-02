@@ -75,4 +75,3 @@ class ClassroomLeaveSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = UserInClassroom
 		fields = ('url',)
-
