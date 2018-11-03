@@ -75,3 +75,8 @@ class ClassroomLeaveSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = UserInClassroom
 		fields = ('url',)
+
+class ClassroomEnableSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Classroom
+		fields = ('url',)

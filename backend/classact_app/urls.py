@@ -20,6 +20,8 @@ urlpatterns = [
     url(r'classroom/permission-update/$', views.PermissionUpdateView.as_view()),
     url(r'classroom/join/$', views.ClassroomJoinView.as_view()),
     url(r'classroom/leave/$', views.ClassroomLeaveView.as_view()),
+    url(r'classroom/enable/$', views.ClassroomEnableView.as_view()),
+    url(r'classroom/disable/$', views.ClassroomDisableView.as_view()),
     url(r'classroom/(?P<url>.*)/$', views.ClassroomView.as_view()),
 
     url(r'user/(?P<email>[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4})/$', views.UserClassroomList.as_view()),#Example: user/eric@gmail.com/ would
