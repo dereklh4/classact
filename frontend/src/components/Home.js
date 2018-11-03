@@ -41,7 +41,7 @@ class HomePage extends Component {
             <h2>Classrooms</h2>
             <AddJoinForm formOpen={this.state.formOpen} onPlusClickAway={this.onPlusClickAway}/>
             <TileGrid courses={dummyData} onPlusClick={this.onPlusClick}/>
-            <SignOutButton/>
+            <SignOutButton onUserChange={this.props.onUserChange}/>
           </div>
         )
     }

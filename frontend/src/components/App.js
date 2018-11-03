@@ -2,10 +2,8 @@ import React, {Component} from 'react';
 import {
   BrowserRouter as Router,
   Route,
+  Redirect,
 } from 'react-router-dom';
-
-import Navigation from './Navigation';
-
 import LandingPage from './Landing';
 import SignUpPage from './SignUp';
 import SignInPage from './SignIn';
@@ -24,18 +22,29 @@ class App extends Component {
             loggedInUser: null,
         }
     }
-
+    componentDidMount() {
+        const userKey = localStorage.getItem('token');
+        this.setState({loggedInUser: userKey});
+    }
     onUserChange = (key) => {
         this.setState({loggedInUser: key})
     }
     render() {
+        const {loggedInUser} = this.state;
         return(
           <Router>
             <div>
 
               <Route
                 exact path={routes.LANDING}
-                component={LandingPage}
+                render={() => (
+                    (loggedInUser !== null) ? (
+                        <Redirect to={routes.HOME}/>
+                    ) :
+                    (
+                        <LandingPage/>
+                    )
+                )}
               />
               <Route
                 exact path={routes.SIGN_UP}
@@ -51,10 +60,17 @@ class App extends Component {
               />
               <Route
                 exact path={routes.HOME}
-                component={HomePage}
+                render={(props) => (
+                    (loggedInUser !== null) ? (
+                        <HomePage {...props} onUserChange={this.onUserChange}/>
+                    ) :
+                    (
+                        <Redirect to={routes.LANDING}/>
+                    )
+                )}
+
               />
               <Route
-
                 exact path={routes.ACCOUNT}
                 component={Account}
               />
