@@ -1,12 +1,14 @@
 import React from 'react';
 import {CA_STYLE, INTRO_STYLE} from '../constants/styles'
 import * as routes from '../constants/routes';
+import {withRouter} from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
+
 
 const LandingPage = ({history, classes}) =>
     <React.Fragment>
@@ -43,4 +45,4 @@ const LandingPage = ({history, classes}) =>
           </main>
     </React.Fragment>
 
-export default withStyles(INTRO_STYLE)(LandingPage);
+export default withRouter(withStyles(INTRO_STYLE)(LandingPage));
