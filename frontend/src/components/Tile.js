@@ -29,8 +29,9 @@ class TileBasic extends Component {
     handleClose = () => {
         this.setState({anchorEl: null});
     }
-    removeClass = () => {
-        console.log('//TODO: Remove Class')
+    removeClass = (courseName) => {
+        console.log('//TODO: remove by url not name')
+        this.props.onRemoveCourse(this.props.name);
         this.setState({anchorEl: null});
     }
 

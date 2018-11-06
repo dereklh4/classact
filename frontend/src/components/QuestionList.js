@@ -8,7 +8,7 @@ class QuestionListBasic extends Component {
         const {questions, classes} = this.props;
         // TODO: const newQ = _.sortBy(questions, ['upvotes']);
         return (
-            <div label="yo" className={classes.questionContainer}>
+            <div className={classes.questionContainer}>
                 {questions.map(question =>
                     <Question question={question.text}/>
                 )}
