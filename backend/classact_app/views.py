@@ -6,7 +6,7 @@ from rest_framework import generics, serializers
 from rest_framework.views import APIView
 from .models import (Classroom, UserInClassroom)
 from datetime import datetime
-from classact_app.serializers import (UserSerializer, ClassroomViewSerializer,ClassroomPostSerializer,ClassroomUpdateSerializer,UserInClassroomSerializer,PermissionUpdateSerializer,ClassroomJoinSerializer,ClassroomLeaveSerializer)
+from classact_app.serializers import *
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
 from rest_framework.permissions import IsAuthenticated
@@ -66,37 +66,83 @@ class ClassroomView(generics.ListAPIView):
 			'message': 'New classroom created'
 			})
 
-	def enable(room):
-		"""Enables classroom if user has permission"""
+class ClassroomEnableView(generics.CreateAPIView):
+	permission_classes = (IsAuthenticated,)
 
+	def get_serializer_class(self):
+		return ClassroomEnableSerializer
+
+	def post(self, request, *args, **kwargs):
+		"""Enables classroom if user has permission"""
+		serializer_class = ClassroomEnableSerializer
+
+		url = request.data['url']
 		try:
-			classroom = Classroom.objects.get(title = room)
+			classroom = Classroom.objects.get(url = url)
 		except:
 			raise APIException("ERROR: Classroom does not exist")
 
-		permission = UserInClassroom.objects.get(user = self)
+		try:
+			user = request.user
+		except:
+			raise APIException("ERROR: User does not exist")
 
-		if permission.permission != 3:
-			raise APIException("ERROR: Insufficient permissions")
+		try:
+			user_in_classroom = UserInClassroom.objects.get(classroom=classroom,user=user)
+		except:
+			raise APIException("ERROR: User does not exist in this classroom")			
+
+		permission = user_in_classroom.permission
+
+		if permission != 3:
+			raise APIException("ERROR: User does not have sufficient permissions")
 
 		classroom.enabled = True
 		classroom.save()
 
-	def disable(room):
-		"""Disables classroom if user has permission"""
+		return Response({
+			'status': 'SUCCESS', 'url': classroom.url,
+			'message': 'Classroom Enabled Successfully'
+			})
 
+class ClassroomDisableView(generics.CreateAPIView):
+	permission_classes = (IsAuthenticated,)
+
+	def get_serializer_class(self):
+		return ClassroomEnableSerializer
+
+	def post(self, request, *args, **kwargs):
+		"""Enables classroom if user has permission"""
+		serializer_class = ClassroomEnableSerializer
+
+		url = request.data['url']
 		try:
-			classroom = Classroom.objects.get(title = room)
+			classroom = Classroom.objects.get(url = url)
 		except:
 			raise APIException("ERROR: Classroom does not exist")
 
-		permission = UserInClassroom.objects.get(user = self)
+		try:
+			user = request.user
+		except:
+			raise APIException("ERROR: User does not exist")
 
-		if permission.permission != 3:
-			raise APIException("ERROR: Insufficient permissions")
+		try:
+			user_in_classroom = UserInClassroom.objects.get(classroom=classroom,user=user)
+		except:
+			raise APIException("ERROR: User does not exist in this classroom")			
+
+		permission = user_in_classroom.permission
+
+		if permission != 3:
+			raise APIException("ERROR: User does not have sufficient permissions")
 
 		classroom.enabled = False
 		classroom.save()
+
+		return Response({
+			'status': 'SUCCESS', 'url': classroom.url,
+			'message': 'Classroom Disabled Successfully'
+			})
 
 class ClassroomUpdateView(generics.CreateAPIView):
 	permission_classes = (IsAuthenticated,)
@@ -223,3 +269,21 @@ class ClassroomLeaveView(generics.CreateAPIView):
 			'status': 'SUCCESS', 'url': classroom.url,
 			'message': 'User Left Classroom Successfully'
 			})
+
+class UserClassroomList(generics.ListAPIView):
+	serializer_class = ClassroomViewSerializer
+	def get_queryset(self):
+		user_email = self.kwargs['email'] #User's email is passed in through the url
+
+		try:
+			user = User.objects.get(email = user_email)
+		except:
+			raise APIException("ERROR: User does not exist")
+
+		user_in_classrooms = UserInClassroom.objects.filter(user=user)
+		classrooms = []
+		for user_in_classroom in user_in_classrooms:
+			classrooms.append(user_in_classroom.classroom.url) #Create a list of urls of the classrooms the user is in
+
+		queryset = Classroom.objects.filter(url__in=classrooms)
+		return queryset
