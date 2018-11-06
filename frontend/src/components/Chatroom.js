@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import WebSocketInstance from '../services/WebSocket'
+import {withRouter} from 'react-router-dom';
+import * as routes from '../constants/routes';
 import queryString from 'query-string';
 import {QuestionList} from './QuestionList';
 //TODO: Add appropriate styling for chatroom component
@@ -65,10 +67,17 @@ class Chatroom extends Component {
 
   render() {
     const messages = this.state.messages;
-	const {classes} = this.props;
+	const {classes, history} = this.props;
     return (
 		<React.Fragment>
 			<CssBaseline/>
+			<Button
+				type="button"
+				onClick={() => history.push(routes.HOME)}
+				className={classes.submit}
+			>
+				Back To Home
+			</Button>
 			<main className={classes.layout}>
 				<Paper className={classes.paper}>
 					<Typography component="h1" variant="h5">
@@ -106,4 +115,4 @@ class Chatroom extends Component {
   }
 }
 
-export default withStyles(QUESTION_STYLE)(Chatroom);
+export default withRouter(withStyles(QUESTION_STYLE)(Chatroom));

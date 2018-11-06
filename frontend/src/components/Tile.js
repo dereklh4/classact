@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import * as routes from '../constants/routes';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
@@ -30,12 +30,12 @@ class TileBasic extends Component {
         this.setState({anchorEl: null});
     }
     removeClass = () => {
-        console.log('//TODO: Remove Class')
+        this.props.onRemoveCourse(this.props.url);
         this.setState({anchorEl: null});
     }
 
     render() {
-        const {name, professor, numenrolled, status, classes} = this.props;
+        const {name, url, numenrolled, status, classes, history} = this.props;
         return (
             <React.Fragment>
                 <CssBaseline/>
@@ -65,7 +65,7 @@ class TileBasic extends Component {
 
                             <CardContent className={classes.cardContent}>
                                   <Typography className={classes.tileText}>
-                                      Professor: {professor}
+                                      URL: {url}
                                   </Typography>
                                   <Typography className={classes.tileText}>
                                       Number Enrolled: {numenrolled}
@@ -75,16 +75,14 @@ class TileBasic extends Component {
                                    </Typography>
                            </CardContent>
                            <CardActions>
-                              <Link to={routes.CHATROOM} className={classes.link}>
                                   <Button
                                       type="submit"
-                                      onClick={() => console.log('yo')}
+                                      onClick={() => history.push(routes.CHATROOM + "?url=" + url, {url: url})}
                                       fullWidth className={classes.submit}
                                       variant="contained"
                                   >
                                           Enter: {name}
                                   </Button>
-                              </Link>
                           </CardActions>
                       </Card>
                   </Grid>
@@ -94,5 +92,5 @@ class TileBasic extends Component {
 }
 
 
-const Tile = withStyles(CARD_STYLE)(TileBasic);
+const Tile = withRouter(withStyles(CARD_STYLE)(TileBasic));
 export {Tile}

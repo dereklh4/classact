@@ -41,6 +41,7 @@ class WebSocketService {
 
   handleMessage(data) {
     const parsedData = JSON.parse(data);
+    console.log(parsedData)
     const command = parsedData.type;
     if (Object.keys(this.callbacks).length === 0) {
       return;
@@ -85,7 +86,7 @@ class WebSocketService {
     }
     catch(err) {
       console.log(err.message);
-    }  
+    }
   }
 
 }
