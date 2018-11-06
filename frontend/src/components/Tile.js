@@ -29,14 +29,13 @@ class TileBasic extends Component {
     handleClose = () => {
         this.setState({anchorEl: null});
     }
-    removeClass = (courseName) => {
-        console.log('//TODO: remove by url not name')
-        this.props.onRemoveCourse(this.props.name);
+    removeClass = () => {
+        this.props.onRemoveCourse(this.props.url);
         this.setState({anchorEl: null});
     }
 
     render() {
-        const {name, professor, numenrolled, status, classes} = this.props;
+        const {name, url, numenrolled, status, classes} = this.props;
         return (
             <React.Fragment>
                 <CssBaseline/>
@@ -66,7 +65,7 @@ class TileBasic extends Component {
 
                             <CardContent className={classes.cardContent}>
                                   <Typography className={classes.tileText}>
-                                      Professor: {professor}
+                                      URL: {url}
                                   </Typography>
                                   <Typography className={classes.tileText}>
                                       Number Enrolled: {numenrolled}

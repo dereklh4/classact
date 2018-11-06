@@ -82,7 +82,6 @@ class JoinClassForm extends Component {
            url: classID
        };
        const token = 'Token ' + localStorage.getItem('token')
-       console.log(token)
        fetch('http://localhost:8000/api/classroom/join/', {
            method: 'POST',
            headers: {
@@ -152,7 +151,6 @@ class AddClassForm extends Component {
            title: courseName
        };
        const token = 'Token ' + localStorage.getItem('token')
-       console.log(token)
        fetch('http://localhost:8000/api/classroom/', {
            method: 'POST',
            headers: {
