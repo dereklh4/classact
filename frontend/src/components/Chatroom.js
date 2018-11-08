@@ -26,7 +26,10 @@ class Chatroom extends Component {
 
       var params = queryString.parse(this.props.location.search)
     	WebSocketInstance.connect(params.url)
-    	WebSocketInstance.addCallbacks(this.newMessage.bind(this),this.errorMessage.bind(this))
+    	WebSocketInstance.addCallbacks(this.initChat.bind(this),
+    									this.errorMessage.bind(this),
+    									this.newMessage.bind(this),
+    									this.upvotedMessage.bind(this))
     };
 
 	// TODO: Fetch other information about particlular chatroom
@@ -48,6 +51,11 @@ class Chatroom extends Component {
 		})
 		.catch(error => this.setState({error: error}))
 	}
+
+	initChat(inMessages) {
+		this.setState({messages: inMessages})
+	}
+
     newMessage(message) {
     	this.setState({ messages: [...this.state.messages, message]});
   	}
@@ -56,6 +64,11 @@ class Chatroom extends Component {
   		alert("ERROR: " + error)
   	}
 
+  	//TODO: Update upvoted message upvote count
+  	upvotedMessage(content) {
+  		//format is {message_id: 7, upvotes: 1}
+  		console.log(content)
+  	}
 
   	postChatMessageHandler = (e, text) => {
 	    WebSocketInstance.postChatMessage(text);
