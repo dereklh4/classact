@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
-
+import Upvotes from './Upvotes'
 class QuestionBasic extends Component {
     constructor(props) {
         super(props);
@@ -35,7 +35,7 @@ class QuestionBasic extends Component {
             )}
         </ul>
         */
-        const {question, classes} = this.props;
+        const {question, classes, id, upvotes} = this.props;
         var questionShortened = question;
         if (question.length > 50) {
             questionShortened = question.substr(0,49) + '...'
@@ -76,6 +76,7 @@ class QuestionBasic extends Component {
                             </Button>
                         </FormControl>
                     </form>
+                    <Upvotes id={id} numUpvotes={upvotes} upvoteThisMessage={this.props.upvoteThisMessage}/>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
 

@@ -5,12 +5,18 @@ import {QUESTION_STYLE} from '../constants/styles';
 
 class QuestionListBasic extends Component {
     render() {
-        const {questions, classes} = this.props;
+        const {questions, classes, upvoteThisMessage} = this.props;
         // TODO: const newQ = _.sortBy(questions, ['upvotes']);
         return (
             <div className={classes.questionContainer}>
                 {questions.map(question =>
-                    <Question question={question.text}/>
+                    <Question
+                        question={question.text}
+                        id={question.id}
+                        key={question.id}
+                        upvotes={question.upvotes}
+                        upvoteThisMessage={upvoteThisMessage}
+                    />
                 )}
             </div>
         );
