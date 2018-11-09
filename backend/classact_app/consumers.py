@@ -152,7 +152,7 @@ class ChatConsumer(WebsocketConsumer):
         upvotes = len(UserMessageUpvotes.objects.filter(message=message))
         self._fire_event("upvoted_message",
                             {
-                                "message_id:":message_id,
+                                "message_id":message_id,
                                 "upvotes":upvotes
                             }
                         )
