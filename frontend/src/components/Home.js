@@ -96,7 +96,7 @@ class HomePage extends Component {
           <div>
             <h1>Home</h1>
             <h2>Classrooms belonging to {userInfo.first_name}</h2>
-            <AddJoinForm formOpen={this.state.formOpen} onPlusClickAway={this.onPlusClickAway}/>
+            <AddJoinForm formOpen={this.state.formOpen} onPlusClickAway={this.onPlusClickAway} courses={this.state.courses}/>
             <TileGrid onPlusClick={this.onPlusClick} courses={this.state.courses} onRemoveCourse={this.onRemoveCourse}/>
             <SignOutButton onUserChange={this.props.onUserChange}/>
           </div>

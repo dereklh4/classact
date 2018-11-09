@@ -29,7 +29,7 @@ class AddJoinFormBasic extends Component {
     }
 
     render() {
-        const {formOpen, onPlusClickAway, classes, history} = this.props;
+        const {formOpen, onPlusClickAway, classes, history, courses} = this.props;
         return (
             <div>
                <Dialog
@@ -55,7 +55,7 @@ class AddJoinFormBasic extends Component {
                     </Paper>
 
                     {this.state.currTab === 0 ?
-                        <JoinClassForm classes={classes} history={history}/>
+                        <JoinClassForm classes={classes} history={history} courses={courses}/>
                         :
                         <AddClassForm classes={classes} history={history}/>
                     }
@@ -77,7 +77,12 @@ class JoinClassForm extends Component {
 
     onSubmit = (event) => {
        const {classID} = this.state;
-       const {history} = this.props;
+       const {history, courses} = this.props;
+       const index = courses.findIndex((course) => course.url === classID)
+       if (index >= 0) {
+           history.push(routes.CHATROOM + "?url=" + classID, {state: classID});
+           return;
+       }
        const data = {
            url: classID
        };
