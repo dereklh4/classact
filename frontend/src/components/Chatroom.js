@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import WebSocketInstance from '../services/WebSocket'
-import update from 'immutability-helper'
 import {withRouter} from 'react-router-dom';
 import * as routes from '../constants/routes';
 import queryString from 'query-string';
@@ -58,7 +57,6 @@ class Chatroom extends Component {
 	}
 
     newMessage(message) {
-		console.log(message)
     	this.setState({ messages: [...this.state.messages, message]});
   	}
 
@@ -66,7 +64,6 @@ class Chatroom extends Component {
   		alert("ERROR: " + error)
   	}
 
-  	//TODO: Update upvoted message upvote count
   	upvotedMessage(content) {
 		const messages = this.state.messages;
 		const index = messages.findIndex((message) => message.id === content.message_id);
@@ -97,15 +94,20 @@ class Chatroom extends Component {
 	upvoteThisMessage = (id) => {
 		WebSocketInstance.upvoteMessage(id);
 	}
+
+	handleHomeClick = () => {
+		WebSocketInstance.close();
+		this.props.history.push(routes.HOME)
+	}
   render() {
     const messages = this.state.messages;
-	const {classes, history} = this.props;
+	const {classes} = this.props;
     return (
 		<React.Fragment>
 			<CssBaseline/>
 			<Button
 				type="button"
-				onClick={() => history.push(routes.HOME)}
+				onClick={this.handleHomeClick}
 				className={classes.submit}
 			>
 				Back To Home
