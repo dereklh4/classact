@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import ThumbsUp from '@material-ui/icons/ThumbUpOutlined'
 import ThumbsUpFilled from '@material-ui/icons/ThumbUp'
+import Typography from '@material-ui/core/Typography';
 
 class Upvotes extends Component {
     constructor(props) {
@@ -16,13 +17,13 @@ class Upvotes extends Component {
             //Call un upvote
         }
         else {
-            this.props.upvoteMessage(this.props.id);
+            this.props.upvoteThisMessage(this.props.id);
         }
         this.setState({upvoted: !this.state.upvoted})
     }
     render() {
                     //    <button onClick={() => upvoteThisMessage(id)}>{numUpvotes}</button>
-        const {numUpvotes, upvoteThisMessage, id} = this.props;
+        const {numUpvotes} = this.props;
         return (
             <div>
                 <IconButton
@@ -34,7 +35,9 @@ class Upvotes extends Component {
                     <ThumbsUp color="primary"/>
                     }
                 </IconButton>
-
+                <Typography>
+                    {numUpvotes}
+                </Typography>
             </div>
         );
     }

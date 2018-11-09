@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import WebSocketInstance from '../services/WebSocket'
 import update from 'immutability-helper'
-import _ from 'lodash'
 import {withRouter} from 'react-router-dom';
 import * as routes from '../constants/routes';
 import queryString from 'query-string';
@@ -69,17 +68,22 @@ class Chatroom extends Component {
 
   	//TODO: Update upvoted message upvote count
   	upvotedMessage(content) {
-		console.log(content.message_id)
 		const messages = this.state.messages;
-		const check = _.find(messages, function(m) {return m.id === content.message_id})
 		const index = messages.findIndex((message) => message.id === content.message_id);
-		console.log(index)
 		const updatedMessages = [...this.state.messages]
-		console.log(updatedMessages[index])
-		updatedMessages[index].upvotes = content.upvotes
+		const newMessage =  {
+			hour: updatedMessages[index].hour,
+			id: updatedMessages[index].id,
+			minutes: updatedMessages[index].minute,
+			second:updatedMessages[index].second,
+			text: updatedMessages[index].text,
+			upvotes: content.upvotes,
+			user: updatedMessages[index].user,
+
+		}
+		updatedMessages[index] = newMessage
 		this.setState({messages: updatedMessages})
   		//format is {message_id: 7, upvotes: 1}
-  		console.log(content)
   	}
 
   	postChatMessageHandler = (e, text) => {
