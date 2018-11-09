@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import WebSocketInstance from '../services/WebSocket'
+import update from 'immutability-helper'
 import {withRouter} from 'react-router-dom';
 import * as routes from '../constants/routes';
 import queryString from 'query-string';
@@ -57,6 +58,7 @@ class Chatroom extends Component {
 	}
 
     newMessage(message) {
+		console.log(message)
     	this.setState({ messages: [...this.state.messages, message]});
   	}
 
@@ -66,8 +68,22 @@ class Chatroom extends Component {
 
   	//TODO: Update upvoted message upvote count
   	upvotedMessage(content) {
+		const messages = this.state.messages;
+		const index = messages.findIndex((message) => message.id === content.message_id);
+		const updatedMessages = [...this.state.messages]
+		const newMessage =  {
+			hour: updatedMessages[index].hour,
+			id: updatedMessages[index].id,
+			minutes: updatedMessages[index].minute,
+			second:updatedMessages[index].second,
+			text: updatedMessages[index].text,
+			upvotes: content.upvotes,
+			user: updatedMessages[index].user,
+
+		}
+		updatedMessages[index] = newMessage
+		this.setState({messages: updatedMessages})
   		//format is {message_id: 7, upvotes: 1}
-  		console.log(content)
   	}
 
   	postChatMessageHandler = (e, text) => {
@@ -78,6 +94,9 @@ class Chatroom extends Component {
 	    e.preventDefault();
   	}
 
+	upvoteThisMessage = (id) => {
+		WebSocketInstance.upvoteMessage(id);
+	}
   render() {
     const messages = this.state.messages;
 	const {classes, history} = this.props;
@@ -96,7 +115,7 @@ class Chatroom extends Component {
 					<Typography component="h1" variant="h5">
 						{this.state.chatName}
 					</Typography>
-					<QuestionList questions={messages}/>
+					<QuestionList questions={messages} upvoteThisMessage={this.upvoteThisMessage}/>
 					<form onSubmit={(e) => this.postChatMessageHandler(e, this.state.message)} className={classes.postQuestion}>
 						<FormControl margin="normal" fullWidth required>
 							<TextField
