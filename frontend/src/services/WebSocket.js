@@ -43,6 +43,12 @@ class WebSocketService {
 
   }
 
+  close() {
+    if (this.socketRef != null) {
+      this.socketRef.close();
+    }
+  }
+
   handleMessage(data) {
     const parsedData = JSON.parse(data);
     console.log(parsedData)
