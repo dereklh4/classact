@@ -30,7 +30,8 @@ class Chatroom extends Component {
     	WebSocketInstance.addCallbacks(this.initChat.bind(this),
     									this.errorMessage.bind(this),
     									this.newMessage.bind(this),
-    									this.upvotedMessage.bind(this))
+    									this.upvotedMessage.bind(this),
+    									this.newResponse.bind(this))
     };
 
 	// TODO: Fetch other information about particlular chatroom
@@ -84,6 +85,11 @@ class Chatroom extends Component {
 		updatedMessages[index] = newMessage
 		this.setState({messages: updatedMessages})
   		//format is {message_id: 7, upvotes: 1}
+  	}
+
+  	//TODO
+  	newResponse(response) {
+  		console.log(response)
   	}
 
   	postChatMessageHandler = (e, text) => {

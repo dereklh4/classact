@@ -4,7 +4,7 @@ import json
 import channels
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
-from .models import Message, UserInClassroom, Classroom, UserMessageUpvotes
+from .models import *
 from django.core import serializers
 
 class ChatConsumer(WebsocketConsumer):
@@ -70,7 +70,7 @@ class ChatConsumer(WebsocketConsumer):
                 'content': error_text
             }
         )
-        raise 
+        raise Exception(error_text)
 
     """
     Checks that user exists, classroom exists, and that user is part of the classroom
@@ -103,7 +103,9 @@ class ChatConsumer(WebsocketConsumer):
         return user, classroom
 
     def message_to_json(self, message):
-        upvotes = len(UserMessageUpvotes.objects.filter(message=message))
+        message_upvotes = UserMessageUpvotes.objects.filter(message=message)
+        upvoted_by_user = len(message_upvotes.filter(user=self.scope["user"])) >= 1
+        responses = Response.objects.filter(message=message)
         return {
             'id': message.id,
             'user': message.user.username,
@@ -111,7 +113,20 @@ class ChatConsumer(WebsocketConsumer):
             'hour': message.creation_time.hour,
             'minute':message.creation_time.minute,
             'second':message.creation_time.second,
-            'upvotes':upvotes
+            'upvotes':len(message_upvotes),
+            'upvoted_by_user':upvoted_by_user,
+            'responses': list(map(lambda x: self.response_to_json(x), responses))
+        }
+
+    def response_to_json(self, response):
+        return {
+            'message_id': response.message.id,
+            'response_id': response.id,
+            'user': response.user.username,
+            'text': response.text,
+            'hour': response.creation_time.hour,
+            'minute':response.creation_time.minute,
+            'second':response.creation_time.second,
         }
 
     def init_chat(self,data):
@@ -157,12 +172,28 @@ class ChatConsumer(WebsocketConsumer):
                             }
                         )
 
+    def post_response(self, data):
+        user, classroom = self._validate_user()
+
+        text = data['text']
+
+        message_id = data["message_id"]
+        try:
+            message = Message.objects.get(id=message_id)
+        except:
+            self._error_message("Not a valid message id")
+
+        response = Response.objects.create(user=user, message=message, text=text)
+
+        self._fire_event("new_response",self.response_to_json(response))
+
     ## COMMANDS
 
     commands = {
         'init_chat': init_chat,
         'post_message': post_message,
-        'upvote_message':upvote_message
+        'upvote_message':upvote_message,
+        'post_response':post_response
     }
 
     ## EVENT HANDLERS
@@ -177,4 +208,7 @@ class ChatConsumer(WebsocketConsumer):
     # error message event handler
     def error_message(self, event):
         # Send message to WebSocket
+        self.send(text_data=json.dumps(event))
+
+    def new_response(self, event):
         self.send(text_data=json.dumps(event))

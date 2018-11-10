@@ -15,12 +15,13 @@ class WebSocketService {
     this.socketRef = null;
   }
 
-  addCallbacks(initChatCallback,errorMessageCallback,newMessageCallback,upvotedMessageCallback) {
+  addCallbacks(initChatCallback,errorMessageCallback,newMessageCallback,upvotedMessageCallback,newResponseCallback) {
     this.callbacks['init_chat'] = initChatCallback;
     this.callbacks['error_message'] = errorMessageCallback;
 
     this.callbacks['new_message'] = newMessageCallback;
     this.callbacks['upvoted_message'] = upvotedMessageCallback
+    this.callbacks['new_response'] = newResponseCallback
   }
 
   connect(chatroom_url) {
@@ -96,6 +97,10 @@ class WebSocketService {
 
   upvoteMessage(in_message_id) {
     this._sendMessage({command: 'upvote_message', message_id: in_message_id})
+  }
+
+  postResponse(in_message_id, text) {
+    this._sendMessage({ command: 'post_response', message_id: in_message_id, text: text});
   }
 
   _sendMessage(data) {
