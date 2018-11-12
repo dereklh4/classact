@@ -66,6 +66,7 @@ class Chatroom extends Component {
   	}
 
   	upvotedMessage(content) {
+		console.log(this.state.messages)
 		const messages = this.state.messages;
 		const index = messages.findIndex((message) => message.id === content.message_id);
 		const updatedMessages = [...this.state.messages]
@@ -77,11 +78,12 @@ class Chatroom extends Component {
 			text: updatedMessages[index].text,
 			upvotes: content.upvotes,
 			user: updatedMessages[index].user,
+			upvoted_by_user: true,
+			responses: updatedMessages[index].responses
 
 		}
 		updatedMessages[index] = newMessage
 		this.setState({messages: updatedMessages})
-  		//format is {message_id: 7, upvotes: 1}
   	}
 
   	//TODO

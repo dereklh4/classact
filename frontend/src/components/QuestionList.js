@@ -16,6 +16,7 @@ class QuestionListBasic extends Component {
                         key={question.id}
                         upvotes={question.upvotes}
                         upvoteThisMessage={upvoteThisMessage}
+                        upvotedByUser={question.upvoted_by_user}
                     />
                 )}
             </div>

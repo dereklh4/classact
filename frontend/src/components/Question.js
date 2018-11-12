@@ -35,7 +35,7 @@ class QuestionBasic extends Component {
             )}
         </ul>
         */
-        const {question, classes, id, upvotes} = this.props;
+        const {question, classes, id, upvotes, upvotedByUser} = this.props;
         var questionShortened = question;
         if (question.length > 50) {
             questionShortened = question.substr(0,49) + '...'
@@ -76,7 +76,7 @@ class QuestionBasic extends Component {
                             </Button>
                         </FormControl>
                     </form>
-                    <Upvotes id={id} numUpvotes={upvotes} upvoteThisMessage={this.props.upvoteThisMessage}/>
+                    <Upvotes id={id} upvotedByUser={upvotedByUser} numUpvotes={upvotes} upvoteThisMessage={this.props.upvoteThisMessage}/>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
 

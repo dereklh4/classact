@@ -12,24 +12,22 @@ class Upvotes extends Component {
         };
     }
 
-    handleClick = () => {
-        if (this.state.upvoted) {
-            //Call un upvote
+    handleClick = (upvotedByUser) => {
+        if (upvotedByUser) {
+            return;
         }
         else {
             this.props.upvoteThisMessage(this.props.id);
         }
-        this.setState({upvoted: !this.state.upvoted})
     }
     render() {
-                    //    <button onClick={() => upvoteThisMessage(id)}>{numUpvotes}</button>
-        const {numUpvotes} = this.props;
+        const {numUpvotes, upvotedByUser} = this.props;
         return (
             <div>
                 <IconButton
-                    onClick={this.handleClick}
+                    onClick={() => this.handleClick(upvotedByUser)}
                 >
-                    {this.state.upvoted ?
+                    {upvotedByUser ?
                     <ThumbsUpFilled color="primary"/>
                     :
                     <ThumbsUp color="primary"/>
