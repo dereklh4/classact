@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_nose',
 
     'rest_framework',
 
@@ -86,6 +87,14 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 
 ACCOUNT_USERNAME_REQUIRED = False
 #end authentication setup
+
+#testing setup
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=classact_app',
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

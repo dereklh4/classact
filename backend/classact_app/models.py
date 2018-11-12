@@ -27,3 +27,9 @@ class Message(models.Model):
 class UserMessageUpvotes(models.Model):
 	user = models.ForeignKey(User,on_delete=models.CASCADE)
 	message = models.ForeignKey(Message,on_delete=models.CASCADE)
+
+class Response(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	message = models.ForeignKey(Message,on_delete=models.CASCADE)
+	text = models.CharField(max_length=1000)
+	creation_time = models.DateTimeField(auto_now=True)

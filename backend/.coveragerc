@@ -1,0 +1,16 @@
+[run]
+branch = True
+omit =
+        *__init__*
+        *migrations*
+	*admin*
+
+[report]
+include =
+        classact_app/*
+omit =
+        *__init__*
+        *migrations*
+        *admin*
+
+
