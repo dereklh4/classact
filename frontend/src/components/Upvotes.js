@@ -2,45 +2,33 @@ import React, {Component} from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import ThumbsUp from '@material-ui/icons/ThumbUpOutlined'
 import ThumbsUpFilled from '@material-ui/icons/ThumbUp'
-import Typography from '@material-ui/core/Typography';
+import withStyles from '@material-ui/core/styles/withStyles';
+import {QUESTION_STYLE} from '../constants/styles';
 
 class Upvotes extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            upvoted: false
-        };
-    }
-
-    handleClick = () => {
-        if (this.state.upvoted) {
-            //Call un upvote
+    handleClick = (upvotedByUser) => {
+        if (upvotedByUser) {
+            return;
         }
         else {
             this.props.upvoteThisMessage(this.props.id);
         }
-        this.setState({upvoted: !this.state.upvoted})
     }
     render() {
-                    //    <button onClick={() => upvoteThisMessage(id)}>{numUpvotes}</button>
-        const {numUpvotes} = this.props;
+        const {upvotedByUser, classes} = this.props;
         return (
-            <div>
                 <IconButton
-                    onClick={this.handleClick}
+                    onClick={() => this.handleClick(upvotedByUser)}
+                    className={classes.upvoteButton}
                 >
-                    {this.state.upvoted ?
-                    <ThumbsUpFilled color="primary"/>
+                    {upvotedByUser ?
+                    <ThumbsUpFilled fontSize="small" color="primary"/>
                     :
-                    <ThumbsUp color="primary"/>
+                    <ThumbsUp fontSize="small" color="primary"/>
                     }
                 </IconButton>
-                <Typography>
-                    {numUpvotes}
-                </Typography>
-            </div>
         );
     }
 }
 
-export default Upvotes
+export default withStyles(QUESTION_STYLE)(Upvotes)

@@ -39,7 +39,7 @@ class WebSocketService {
       alert("Error occurred")
     };
     this.socketRef.onclose = e => {
-      alert("Web socket closed")
+      console.log("Web socket closed")
     };
 
   }

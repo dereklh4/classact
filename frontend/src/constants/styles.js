@@ -44,6 +44,17 @@ export const QUESTION_STYLE = theme => ({
         borderColor: '#000000',
         borderStyle: 'solid'
     },
+    upvoteButton: {
+        padding: '0px 3px 0px 0px'
+    },
+    upvotesText: {
+        color: '#505050',
+        fontWeight: 'bold',
+        borderRight: '2px solid #dfdfdf',
+        paddingRight: 3,
+        marginRight: 12,
+
+    },
     questionSummaryText: {
         color: '#505050',
         fontWeight: 'bold'

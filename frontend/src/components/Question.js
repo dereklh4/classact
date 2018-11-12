@@ -35,14 +35,18 @@ class QuestionBasic extends Component {
             )}
         </ul>
         */
-        const {question, classes, id, upvotes} = this.props;
+        const {question, classes, id, upvotes, upvotedByUser} = this.props;
         var questionShortened = question;
-        if (question.length > 50) {
-            questionShortened = question.substr(0,49) + '...'
+        if (question.length > 45) {
+            questionShortened = question.substr(0,44) + '...'
         }
         return (
             <ExpansionPanel className={classes.expansionPanel}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>} className={classes.questionSummary}>
+                    <Upvotes id={id} upvotedByUser={upvotedByUser} numUpvotes={upvotes} upvoteThisMessage={this.props.upvoteThisMessage}/>
+                    <Typography className={classes.upvotesText}>
+                        {upvotes}
+                    </Typography>
                     <Typography className={classes.questionSummaryText}>
                         {questionShortened}
                     </Typography>
@@ -76,7 +80,6 @@ class QuestionBasic extends Component {
                             </Button>
                         </FormControl>
                     </form>
-                    <Upvotes id={id} numUpvotes={upvotes} upvoteThisMessage={this.props.upvoteThisMessage}/>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
 
