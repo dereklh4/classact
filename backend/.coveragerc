@@ -3,7 +3,8 @@ branch = True
 omit =
         *__init__*
         *migrations*
-	*admin*
+		*admin*
+		classact_app/models.py
 
 [report]
 include =
@@ -12,5 +13,6 @@ omit =
         *__init__*
         *migrations*
         *admin*
+        classact_app/models.py
 
 
