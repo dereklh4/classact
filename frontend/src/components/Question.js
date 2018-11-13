@@ -18,7 +18,8 @@ class QuestionBasic extends Component {
         };
     }
     onSubmit = (event) => {
-        alert('TODO: MAKE API CALL HERE A answer: ' + this.state.userAnswer);
+        this.props.postResponseHandler(this.props.id, this.state.userAnswer)
+        this.setState({userAnswer:''})
         event.preventDefault();
     }
 
@@ -35,7 +36,7 @@ class QuestionBasic extends Component {
             )}
         </ul>
         */
-        const {question, classes, id, upvotes, upvotedByUser} = this.props;
+        const {question, classes, id, upvotes, upvotedByUser, upvoteThisMessage, answers} = this.props;
         var questionShortened = question;
         if (question.length > 45) {
             questionShortened = question.substr(0,44) + '...'
@@ -43,7 +44,7 @@ class QuestionBasic extends Component {
         return (
             <ExpansionPanel className={classes.expansionPanel}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>} className={classes.questionSummary}>
-                    <Upvotes id={id} upvotedByUser={upvotedByUser} numUpvotes={upvotes} upvoteThisMessage={this.props.upvoteThisMessage}/>
+                    <Upvotes id={id} upvotedByUser={upvotedByUser} numUpvotes={upvotes} upvoteThisMessage={upvoteThisMessage}/>
                     <Typography className={classes.upvotesText}>
                         {upvotes}
                     </Typography>

@@ -5,7 +5,7 @@ import {QUESTION_STYLE} from '../constants/styles';
 
 class QuestionListBasic extends Component {
     render() {
-        const {questions, classes, upvoteThisMessage} = this.props;
+        const {questions, classes, upvoteThisMessage, postResponseHandler} = this.props;
         // TODO: const newQ = _.sortBy(questions, ['upvotes']);
         return (
             <div className={classes.questionContainer}>
@@ -17,6 +17,8 @@ class QuestionListBasic extends Component {
                         upvotes={question.upvotes}
                         upvoteThisMessage={upvoteThisMessage}
                         upvotedByUser={question.upvoted_by_user}
+                        postResponseHandler={postResponseHandler}
+                        answers= {question.answers}
                     />
                 )}
             </div>

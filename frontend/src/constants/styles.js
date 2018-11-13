@@ -51,6 +51,7 @@ export const QUESTION_STYLE = theme => ({
         color: '#505050',
         fontWeight: 'bold',
         borderRight: '2px solid #dfdfdf',
+        borderBottom: '2px solid #dfdfdf',
         paddingRight: 3,
         marginRight: 12,
 
