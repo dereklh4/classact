@@ -103,7 +103,7 @@ class Chatroom extends Component {
 			responses: updatedResponses,
 		}
   		updatedMessages[index] = newMessage
-		this.setState({messages: updatedMessages})
+		this.setState({messages: updatedMessages })
   	}
 
 	postResponseHandler = (id, text) => {

@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {AnswerList} from './AnswerList'
 import withStyles from '@material-ui/core/styles/withStyles';
 import {QUESTION_STYLE} from '../constants/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -28,14 +29,6 @@ class QuestionBasic extends Component {
     }
 
     render() {
-        /*
-        TODO: Add for answers
-        <ul>
-            {_.reverse(question.answers).map(answer =>
-                <Answer answer={answer}/>
-            )}
-        </ul>
-        */
         const {question, classes, id, upvotes, upvotedByUser, upvoteThisMessage, answers} = this.props;
         var questionShortened = question;
         if (question.length > 45) {
@@ -58,6 +51,7 @@ class QuestionBasic extends Component {
                             {question}
                         </Typography>
                     </div>
+                    <AnswerList answers={answers}/>
                     <form onSubmit={this.onSubmit} className={classes.questionForm}>
                         <FormControl margin="normal" fullWidth required>
                             <TextField

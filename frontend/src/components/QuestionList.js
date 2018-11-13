@@ -18,7 +18,7 @@ class QuestionListBasic extends Component {
                         upvoteThisMessage={upvoteThisMessage}
                         upvotedByUser={question.upvoted_by_user}
                         postResponseHandler={postResponseHandler}
-                        answers= {question.answers}
+                        answers= {question.responses}
                     />
                 )}
             </div>
