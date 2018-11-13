@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import * as routes from '../constants/routes';
+import {FORM_STYLE} from '../constants/styles'
+import withStyles from '@material-ui/core/styles/withStyles';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
@@ -13,8 +15,6 @@ import Typography from '@material-ui/core/Typography';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {FORM_STYLE} from '../constants/styles'
-import withStyles from '@material-ui/core/styles/withStyles';
 
 class AddJoinFormBasic extends Component {
     constructor(props) {

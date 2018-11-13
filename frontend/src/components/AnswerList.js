@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
 const AnswerList = ({answers, classes}) =>
     <div>
