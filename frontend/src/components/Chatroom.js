@@ -83,7 +83,6 @@ class Chatroom extends Component {
 		this.setState({messages: updatedMessages})
   	}
 
-  	//TODO
   	newResponse(response) {
 		const messages = this.state.messages;
 		const index = messages.findIndex((message) => message.id === response.message_id);
