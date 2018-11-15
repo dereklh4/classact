@@ -109,7 +109,6 @@ class Chatroom extends Component {
 		this.setState({messages: updatedMessages })
   	}
 
-<<<<<<< HEAD
   	deleteResponse(response) {
   		console.log(this.state.messages)
   	}
@@ -126,11 +125,10 @@ class Chatroom extends Component {
   	editMessage(message) {
   		console.log(this.state.messages)
   	}
-=======
+
 	postResponseHandler = (id, text) => {
 		WebSocketInstance.postResponse(id, text);
 	}
->>>>>>> master
 
   	postChatMessageHandler = (e, text) => {
 	    WebSocketInstance.postChatMessage(text);
