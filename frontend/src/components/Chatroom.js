@@ -32,8 +32,8 @@ class Chatroom extends Component {
     									this.newResponse.bind(this),
     									this.editResponse.bind(this),
     									this.deleteResponse.bind(this),
-    									this.deleteMessage.bind(this),
-    									this.editMessage.bind(this))
+    									this.editMessage.bind(this),
+    									this.deleteMessage.bind(this))
 
     };
 
@@ -117,18 +117,19 @@ class Chatroom extends Component {
   		console.log(this.state.messages)
   	}
 
-	editMessage(message) {
-		console.log(message)
-	}
-
-	deleteMessage(message) {
-		console.log('fuck')
-	}
 	handleDeleteMessage = (message_id) => {
 		console.log(message_id)
 		WebSocketInstance.deleteMessage(message_id);
 	}
 
+
+  	editMessage(message) {
+  		console.log("edit")
+  	}
+
+	deleteMessage(message) {
+		console.log("delete")
+	}
 	postResponseHandler = (id, text) => {
 		WebSocketInstance.postResponse(id, text);
 	}
