@@ -117,19 +117,18 @@ class Chatroom extends Component {
   		console.log(this.state.messages)
   	}
 
+	editMessage(message) {
+		console.log(message)
+	}
+
+	deleteMessage(message) {
+		console.log('fuck')
+	}
 	handleDeleteMessage = (message_id) => {
 		console.log(message_id)
 		WebSocketInstance.deleteMessage(message_id);
 	}
 
-
-  	editMessage(message) {
-  		console.log(message)
-  	}
-
-	deleteMessage(message) {
-
-	}
 	postResponseHandler = (id, text) => {
 		WebSocketInstance.postResponse(id, text);
 	}
