@@ -28,7 +28,8 @@ class QuestionListBasic extends Component {
     }
 
     render() {
-        const {questions, classes, upvoteThisMessage, unUpvoteThisMessage} = this.props;
+
+        const {questions, classes, upvoteThisMessage, postResponseHandler, unUpvoteThisMessage} = this.props;
         // TODO: const newQ = _.sortBy(questions, ['upvotes']);
         return (
             <div className={classes.questionContainer}>
@@ -42,6 +43,10 @@ class QuestionListBasic extends Component {
                         upvoteThisMessage={upvoteThisMessage}
                         unUpvoteThisMessage={unUpvoteThisMessage}
                         upvotedByUser={question.upvoted_by_user}
+
+                        postResponseHandler={postResponseHandler}
+                        answers= {question.responses}
+
                         currentUser={this.state.currentUser}
                     />
                 )}

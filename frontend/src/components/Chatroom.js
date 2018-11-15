@@ -4,7 +4,6 @@ import {withRouter} from 'react-router-dom';
 import * as routes from '../constants/routes';
 import queryString from 'query-string';
 import {QuestionList} from './QuestionList';
-//TODO: Add appropriate styling for chatroom component
 import {QUESTION_STYLE} from '../constants/styles';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -67,7 +66,6 @@ class Chatroom extends Component {
   	}
 
   	upvotedMessage(content) {
-		console.log(this.state.messages)
 		const messages = this.state.messages;
 		const index = messages.findIndex((message) => message.id === content.message_id);
 		const updatedMessages = [...this.state.messages]
@@ -81,16 +79,35 @@ class Chatroom extends Component {
 			user: updatedMessages[index].user,
 			upvoted_by_user: true,
 			responses: updatedMessages[index].responses
-
 		}
 		updatedMessages[index] = newMessage
 		this.setState({messages: updatedMessages})
   	}
 
-  	//TODO
   	newResponse(response) {
-  		console.log(response)
+		const messages = this.state.messages;
+		const index = messages.findIndex((message) => message.id === response.message_id);
+		const updatedMessages = [...this.state.messages]
+		const updatedResponses = updatedMessages[index].responses
+		updatedResponses.push(response)
+		const newMessage =  {
+			hour: updatedMessages[index].hour,
+			id: updatedMessages[index].id,
+			minutes: updatedMessages[index].minute,
+			second:updatedMessages[index].second,
+			text: updatedMessages[index].text,
+			upvotes: updatedMessages[index].upvotes,
+			user: updatedMessages[index].user,
+			upvoted_by_user: updatedMessages[index].upvoted_by_user,
+			responses: updatedResponses,
+		}
+  		updatedMessages[index] = newMessage
+		this.setState({messages: updatedMessages })
   	}
+
+	postResponseHandler = (id, text) => {
+		WebSocketInstance.postResponse(id, text);
+	}
 
   	postChatMessageHandler = (e, text) => {
 	    WebSocketInstance.postChatMessage(text);
@@ -130,7 +147,8 @@ class Chatroom extends Component {
 					<Typography component="h1" variant="h5">
 						{this.state.chatName}
 					</Typography>
-					<QuestionList questions={messages} upvoteThisMessage={this.upvoteThisMessage} unUpvoteThisMessage={this.unUpvoteThisMessage}/>
+
+					<QuestionList questions={messages} upvoteThisMessage={this.upvoteThisMessage} unUpvoteThisMessage={this.unUpvoteThisMessage} postResponseHandler={this.postResponseHandler}/>
 					<form onSubmit={(e) => this.postChatMessageHandler(e, this.state.message)} className={classes.postQuestion}>
 						<FormControl margin="normal" fullWidth required>
 							<TextField

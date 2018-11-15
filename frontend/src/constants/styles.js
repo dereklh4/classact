@@ -56,6 +56,7 @@ export const QUESTION_STYLE = theme => ({
         color: '#505050',
         fontWeight: 'bold',
         borderRight: '2px solid #dfdfdf',
+        borderBottom: '2px solid #dfdfdf',
         paddingRight: 3,
         marginRight: 12,
 
@@ -212,3 +213,24 @@ export const INTRO_STYLE = theme => ({
         },
     },
 });
+
+export const RESPONSE_STYLE = theme => ({
+    answerBox: {
+        marginTop: theme.spacing.unit * 2,
+        paddingLeft: 0
+    },
+    title: {
+        textAlign: 'center',
+        fontSize: 15,
+        fontWeight: 'bold',
+    },
+    list: {
+        listStyleImage: 'url(../images/ListArrow.png)',
+    },
+    avatar: {
+        backgroundColor: 'white'
+    },
+    image: {
+        paddingBottom: 3
+    },
+})
