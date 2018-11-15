@@ -115,6 +115,7 @@ class ChatConsumer(WebsocketConsumer):
             'second':message.creation_time.second,
             'upvotes':len(message_upvotes),
             'upvoted_by_user':upvoted_by_user,
+            'anonymous':message.anonymous,
             'responses': list(map(lambda x: self.response_to_json(x), responses))
         }
 
@@ -127,6 +128,7 @@ class ChatConsumer(WebsocketConsumer):
             'hour': response.creation_time.hour,
             'minute':response.creation_time.minute,
             'second':response.creation_time.second,
+            'anonymous':response.anonymous,
         }
 
     def init_chat(self,data):
@@ -146,9 +148,45 @@ class ChatConsumer(WebsocketConsumer):
 
         text = data['text']
 
-        message = Message.objects.create(user=user, text=text, classroom=classroom)
+        anonymous = data['anonymous']
+
+        message = Message.objects.create(user=user, text=text, classroom=classroom, anonymous=anonymous)
 
         self._fire_event("new_message",self.message_to_json(message))
+
+    def edit_message(self, data):
+        user, classroom = self._validate_user()
+
+        text = data['text']
+
+        anonymous = data['anonymous']
+
+        message_id = data['message_id']
+
+        try:
+            message = Message.objects.get(user=user, message_id=message_id)
+        except:
+            self._error_message("Message does not exist")
+
+        message.text = text
+        message.anonymous = anonymous
+        message.save()
+
+        self._fire_event("edit_message",self.message_to_json(message))
+
+    def delete_message(self, data):
+        user, classroom = self._validate_user()
+
+        message_id = data['message_id']
+
+        try:
+            message = Message.objects.get(user=user, message_id=message_id)
+        except:
+            self._error_message("Message does not exist")
+
+        message.delete()
+
+        self._fire_event("delete_message",self.message_to_json(message))
 
     def upvote_message(self,data):
         user, classroom = self._validate_user()
@@ -177,23 +215,77 @@ class ChatConsumer(WebsocketConsumer):
 
         text = data['text']
 
+        anonymous = data['anonymous']
+
         message_id = data["message_id"]
         try:
             message = Message.objects.get(id=message_id)
         except:
             self._error_message("Not a valid message id")
 
-        response = Response.objects.create(user=user, message=message, text=text)
+        response = Response.objects.create(user=user, message=message, text=text, anonymous=anonymous)
 
         self._fire_event("new_response",self.response_to_json(response))
+
+    def edit_response(self, data):
+        user, classroom = self._validate_user()
+
+        text = data['text']
+
+        anonymous = data['anonymous']
+
+        message_id = data["message_id"]
+
+        response_id = data["response_id"]
+
+        try:
+            message = Message.objects.get(id=message_id)
+        except:
+            self._error_message("Not a valid message id")
+
+        try:
+            response = Response.objects.get(user=user, response_id=response_id)
+        except:
+            self._error_message("Response does not exist")
+
+        response.text = text
+        response.anonymous = anonymous
+        response.save()
+
+        self._fire_event("edit_response",self.response_to_json(response))
+
+    def delete_response(self, data):
+        user, classroom = self._validate_user()
+
+        message_id = data["message_id"]
+
+        response_id = data["response_id"]
+
+        try:
+            message = Message.objects.get(id=message_id)
+        except:
+            self._error_message("Not a valid message id")
+
+        try:
+            response = Response.objects.get(user=user, response_id=response_id)
+        except:
+            self._error_message("Response does not exist")
+
+        response.delete()
+
+        self._fire_event("delete_response",self.response_to_json(response))
 
     ## COMMANDS
 
     commands = {
         'init_chat': init_chat,
         'post_message': post_message,
-        'upvote_message':upvote_message,
-        'post_response':post_response
+        'upvote_message': upvote_message,
+        'post_response': post_response,
+        'delete_message': delete_message,
+        'edit_message': edit_message,
+        'delete_response': delete_response,
+        'edit_response': edit_response
     }
 
     ## EVENT HANDLERS
@@ -211,4 +303,16 @@ class ChatConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps(event))
 
     def new_response(self, event):
+        self.send(text_data=json.dumps(event))
+
+    def edit_message(self, event):
+        self.send(text_data=json.dumps(event))
+
+    def delete_message(self, event):
+        self.send(text_data=json.dumps(event))
+
+    def edit_response(self, event):
+        self.send(text_data=json.dumps(event))
+
+    def delete_response(self, event):
         self.send(text_data=json.dumps(event))

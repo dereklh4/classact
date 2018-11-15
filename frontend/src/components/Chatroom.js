@@ -30,7 +30,12 @@ class Chatroom extends Component {
     									this.errorMessage.bind(this),
     									this.newMessage.bind(this),
     									this.upvotedMessage.bind(this),
-    									this.newResponse.bind(this))
+    									this.newResponse.bind(this),
+    									this.editResponse.bind(this),
+    									this.deleteResponse.bind(this),
+    									this.deleteMessage.bind(this),
+    									this.editMessage.bind(this))
+
     };
 
 	// TODO: Fetch other information about particlular chatroom
@@ -89,6 +94,22 @@ class Chatroom extends Component {
   	//TODO
   	newResponse(response) {
   		console.log(response)
+  	}
+
+  	deleteResponse(response) {
+  		console.log(this.state.messages)
+  	}
+
+  	editResponse(response) {
+  		console.log(this.state.messages)
+  	}
+
+  	deleteMessage(message) {
+  		console.log(this.state.messages)
+  	}
+
+  	editMessage(message) {
+  		console.log(this.state.messages)
   	}
 
   	postChatMessageHandler = (e, text) => {
