@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import * as routes from '../constants/routes';
+import {FORM_STYLE} from '../constants/styles'
+import withStyles from '@material-ui/core/styles/withStyles';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
@@ -9,11 +11,10 @@ import Dialog from '@material-ui/core/Dialog';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {FORM_STYLE} from '../constants/styles'
-import withStyles from '@material-ui/core/styles/withStyles';
 
 class AddJoinFormBasic extends Component {
     constructor(props) {
@@ -28,7 +29,7 @@ class AddJoinFormBasic extends Component {
     }
 
     render() {
-        const {formOpen, onPlusClickAway, classes, history} = this.props;
+        const {formOpen, onPlusClickAway, classes, history, courses} = this.props;
         return (
             <div>
                <Dialog
@@ -54,7 +55,7 @@ class AddJoinFormBasic extends Component {
                     </Paper>
 
                     {this.state.currTab === 0 ?
-                        <JoinClassForm classes={classes} history={history}/>
+                        <JoinClassForm classes={classes} history={history} courses={courses}/>
                         :
                         <AddClassForm classes={classes} history={history}/>
                     }
@@ -64,7 +65,7 @@ class AddJoinFormBasic extends Component {
         );
     }
 }
-
+const ERROR_JOIN_MESSAGE = 'Something went wrong, please ensure you have the correct ClassID and are logged in'
 class JoinClassForm extends Component {
     constructor(props) {
         super(props);
@@ -75,13 +76,41 @@ class JoinClassForm extends Component {
     }
 
     onSubmit = (event) => {
-        this.props.history.push(routes.CHATROOM);
-        event.preventDefault();
-        console.log('TODO: API CALL');
-    }
-
+       const {classID} = this.state;
+       const {history, courses} = this.props;
+       const index = courses.findIndex((course) => course.url === classID)
+       if (index >= 0) {
+           history.push(routes.CHATROOM + "?url=" + classID, {state: classID});
+           return;
+       }
+       const data = {
+           url: classID
+       };
+       const token = 'Token ' + localStorage.getItem('token')
+       fetch('http://localhost:8000/api/classroom/join/', {
+           method: 'POST',
+           headers: {
+               'Authorization': token,
+               'Content-Type': 'application/json',
+               'Accept': 'application/json'
+           },
+           body: JSON.stringify(data)
+       })
+       .then(response => response.json())
+       .then(response => {
+           if (response.status !== undefined && response.status === "SUCCESS") {
+               history.push(routes.CHATROOM + "?url=" + response.url, {state: response.url});
+            }
+           else {
+               throw Error(ERROR_JOIN_MESSAGE)
+           }
+       })
+       .catch(error => this.setState({error: error}))
+       event.preventDefault();
+   }
     render() {
         const {classes} = this.props;
+        const {error} = this.state;
         return (
             <form onSubmit={this.onSubmit} className={classes.form}>
                 <FormControl margin="normal" required fullWidth>
@@ -92,6 +121,7 @@ class JoinClassForm extends Component {
                       type="text"
                       placeholder="Class ID"
                       autoFocus
+                      error={error}
                     />
                 </FormControl>
                 <Button
@@ -102,11 +132,15 @@ class JoinClassForm extends Component {
                 >
                     JOIN
                 </Button>
+                <Typography color="error" align="center">
+                    {error && <p>{error.message}</p>}
+                </Typography>
             </form>
         );
     }
 }
 
+const ERROR_ADD_MESSAGE = 'Something went wrong, please make sure you are logged in and try again'
 class AddClassForm extends Component {
     constructor(props) {
         super(props);
@@ -116,13 +150,37 @@ class AddClassForm extends Component {
         };
     }
     onSubmit = (event) => {
-        this.props.history.push(routes.CHATROOM);
-        event.preventDefault();
-        console.log('TODO: API CALL');
-    }
+       const {courseName} = this.state;
+       const {history} = this.props;
+       const data = {
+           title: courseName
+       };
+       const token = 'Token ' + localStorage.getItem('token')
+       fetch('http://localhost:8000/api/classroom/', {
+           method: 'POST',
+           headers: {
+               'Authorization': token,
+               'Content-Type': 'application/json',
+               'Accept': 'application/json'
+           },
+           body: JSON.stringify(data)
+       })
+       .then(response => response.json())
+       .then(response => {
+           if (response.status !== undefined && response.status === "SUCCESS") {
+               history.push(routes.CHATROOM + "?url=" + response.url, {url: response.url});
+            }
+           else {
+               throw Error(ERROR_ADD_MESSAGE)
+           }
+       })
+       .catch(error => this.setState({error: error}))
+       event.preventDefault();
+   }
 
     render() {
         const {classes} = this.props;
+        const {error} = this.state;
         return (
             <form onSubmit={this.onSubmit} className={classes.form}>
                 <FormControl margin="normal" required fullWidth>
@@ -133,7 +191,7 @@ class AddClassForm extends Component {
                       type="text"
                       placeholder="Class Name"
                       autoFocus
-                      error={this.state.error}
+                      error={error}
                     />
                 </FormControl>
                 <Button
@@ -144,6 +202,9 @@ class AddClassForm extends Component {
                 >
                     CREATE
                 </Button>
+                <Typography color="error" align="center">
+                    {error && <p>{error.message}</p>}
+                </Typography>
             </form>
         );
     }

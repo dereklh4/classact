@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_nose',
 
     'rest_framework',
 
@@ -68,6 +69,13 @@ AUTHENTICATION_BACKENDS = (
     "allauth.account.auth_backends.AuthenticationBackend",
 )
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
+
 #Override rest_auth api for login,register to not send username
 REST_AUTH_SERIALIZERS = {
     "LOGIN_SERIALIZER": 'classact_app.serializers.CustomLoginSerializer',
@@ -79,6 +87,14 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 
 ACCOUNT_USERNAME_REQUIRED = False
 #end authentication setup
+
+#testing setup
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=classact_app',
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -101,6 +117,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'APP_DIRS': True,
+        'DIRS': ['.'],
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',

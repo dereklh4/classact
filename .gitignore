@@ -2,6 +2,8 @@
 *.pyc
 .idea*
 *.sqlite3
+*.coverage
+backend/htmlcov
 
 #react app
 frontend/.DS_STORE

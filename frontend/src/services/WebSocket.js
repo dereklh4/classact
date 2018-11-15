@@ -15,32 +15,44 @@ class WebSocketService {
     this.socketRef = null;
   }
 
-  addCallbacks(newMessageCallback,errorMessageCallback) {
-    this.callbacks['new_message'] = newMessageCallback;
+  addCallbacks(initChatCallback,errorMessageCallback,newMessageCallback,upvotedMessageCallback,newResponseCallback) {
+    this.callbacks['init_chat'] = initChatCallback;
     this.callbacks['error_message'] = errorMessageCallback;
+
+    this.callbacks['new_message'] = newMessageCallback;
+    this.callbacks['upvoted_message'] = upvotedMessageCallback
+    this.callbacks['new_response'] = newResponseCallback
   }
 
-  connect(chatroom_id) {
-    var path = config.API_PATH + "/" + chatroom_id + "/" + localStorage.getItem("token")
+  connect(chatroom_url) {
+    var path = config.API_PATH + "/" + chatroom_url + "/" + localStorage.getItem("token")
     console.log("connecting to " + path)
     this.socketRef = new WebSocket(path);
     this.socketRef.onopen = () => {
       console.log('WebSocket open');
+      this.initChat(50);
     };
     this.socketRef.onmessage = e => {
       this.handleMessage(e.data);
     };
     this.socketRef.onerror = e => {
-      console.log(e.message);
+      alert("Error occurred")
     };
-    this.socketRef.onclose = () => {
-      //console.log("WebSocket closed. Attempting to reopen");
-      //this.connect();
+    this.socketRef.onclose = e => {
+      console.log("Web socket closed")
     };
+
+  }
+
+  close() {
+    if (this.socketRef != null) {
+      this.socketRef.close();
+    }
   }
 
   handleMessage(data) {
     const parsedData = JSON.parse(data);
+    console.log(parsedData)
     const command = parsedData.type;
     if (Object.keys(this.callbacks).length === 0) {
       return;
@@ -79,13 +91,25 @@ class WebSocketService {
     this._sendMessage({ command: 'post_message', text: text});
   }
 
+  initChat(load_count) {
+    this._sendMessage({ command: 'init_chat', message_count: load_count});
+  }
+
+  upvoteMessage(in_message_id) {
+    this._sendMessage({command: 'upvote_message', message_id: in_message_id})
+  }
+
+  postResponse(in_message_id, text) {
+    this._sendMessage({ command: 'post_response', message_id: in_message_id, text: text});
+  }
+
   _sendMessage(data) {
     try {
       this.socketRef.send(JSON.stringify({ ...data }));
     }
     catch(err) {
       console.log(err.message);
-    }  
+    }
   }
 
 }

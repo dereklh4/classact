@@ -11,9 +11,47 @@ class HomePage extends Component {
         super(props);
         this.state = {
             formOpen: false,
+            userInfo: '',
+            error: null,
+            courses: []
         };
     }
 
+    componentWillMount() {
+        const token = 'Token ' + localStorage.getItem('token')
+        fetch('http://localhost:8000/api/auth/user/', {
+            method: 'GET',
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+        })
+        .then(response => response.json())
+        .then(response => {
+            this.setState({userInfo: response});
+            this.getCourses(response.email);
+        })
+        .catch(error => this.setState({error: error}))
+    }
+
+    getCourses = (email) => {
+        const token = 'Token ' + localStorage.getItem('token')
+        const url = 'http://localhost:8000/api/user/' + email + '/'
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+        })
+        .then(response => response.json())
+        .then(response => {
+            this.setState({courses: response})
+        })
+        .catch(error => this.setState({error: error}))
+    }
     onPlusClick = () => {
         this.setState({
             formOpen: true,
@@ -26,22 +64,41 @@ class HomePage extends Component {
         })
     }
 
+    onRemoveCourse = (url) => {
+        const {courses} = this.state;
+        const isNotId = item => item.url !== url;
+        const updatedCourses = courses.filter(isNotId);
+        this.setState({courses: updatedCourses})
+
+        const data = {
+            url: url
+        }
+        const token = 'Token ' + localStorage.getItem('token')
+        fetch('http://localhost:8000/api/classroom/leave/', {
+            method: 'POST',
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(response => {
+            console.log('TODO: ERROR HANDLE?' + response)
+        })
+        .catch(error => this.setState({error: error}))
+    }
+
     render() {
-      //TODO: Add api call for real data
-        const dummyData = [
-          {name: 'intro to algos', professor: 'dr Algo', enrolled: 10, status: 'Student'},
-          {name: 'intro to balgos', professor: 'dr Balgo', enrolled: 100, status: 'Prof'},
-          {name: 'intro to Calalgos', professor: 'dr CAlgo', enrolled: 999, status: 'Student'},
-          {name: 'intro to Calalgos', professor: 'dr CAlgo', enrolled: 999, status: 'Student'},
-          {name: 'intro to Calalgos', professor: 'dr CAlgo', enrolled: 999, status: 'Student'},
-        ];
+        const {userInfo} = this.state;
         return (
           <div>
             <h1>Home</h1>
-            <h2>Classrooms</h2>
-            <AddJoinForm formOpen={this.state.formOpen} onPlusClickAway={this.onPlusClickAway}/>
-            <TileGrid courses={dummyData} onPlusClick={this.onPlusClick}/>
-            <SignOutButton/>
+            <h2>Classrooms belonging to {userInfo.first_name}</h2>
+            <AddJoinForm formOpen={this.state.formOpen} onPlusClickAway={this.onPlusClickAway} courses={this.state.courses}/>
+            <TileGrid onPlusClick={this.onPlusClick} courses={this.state.courses} onRemoveCourse={this.onRemoveCourse}/>
+            <SignOutButton onUserChange={this.props.onUserChange}/>
           </div>
         )
     }

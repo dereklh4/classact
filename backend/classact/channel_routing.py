@@ -8,7 +8,7 @@ from classact_app import consumers
 
 websocket_urlpatterns = [
     #url(r'ws/chat$', consumers.ChatConsumer),
-    path("ws/chat/<chatroom_id>/<token>", consumers.ChatConsumer)
+    path("ws/chat/<chatroom_url>/<token>", consumers.ChatConsumer)
 ]
 
 application = ProtocolTypeRouter({

@@ -1,9 +1,9 @@
 import React from 'react';
-import {CARD_STYLE} from '../constants/styles'
+import {CARD_STYLE} from '../constants/styles';
+import withStyles from '@material-ui/core/styles/withStyles';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
 import AddIcon from '@material-ui/icons/Add';
 

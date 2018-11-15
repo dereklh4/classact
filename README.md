@@ -2,43 +2,33 @@
 
 ## Backend
 
-Apply migrations (like actually creating the database)
+The backend requires python 3.6 or higher to run. You can install the required packages by running:
+```
+pip install -r requirements.txt 
+
+```
+The requirements.txt file specifies the required packages for this project.
+
+Next, apply the migrations (which actually creates the database)
 ```
 cd backend  
 python manage.py migrate
 ```
-Start the server on localhost 8000
+Then start the server on localhost 8000
 ```
 python manage.py runserver
-```
+``` 
 
-### Requirements
-Python 3.5ish or higher  
-Django 2.1.2 (pip install django)  
-Channels 2.1.3 (pip install channels)  
-Django Rest Framework 3.8.2 (pip install djangorestframework)  
-Django Rest Auth (pip install django-rest-auth[with_social]) -- the with social allows us to use it for registration, not just login  
-Django Rest Swagger (pip install django-rest-swagger) #for displaying api endpoints  
-Django cors headers (pip install django-cors-headers) -- allow cross domain requests  
-hello
-
-### Notes
-You can view the current api endpoints at /api/schema
+You can view the current api endpoints at localhost:8000/api/schema
 
 ## Frontend
 
-"npm install" installs packages for the project
+The front requires Node.js (https://nodejs.org/en/download/) to run. It uses npm to install all the necessary packages for the project, including React.
 ```
 cd frontend  
 npm install
 ```
-Run the frontend
+You can then run the frontend on localhost:3000
 ```
 npm start
 ```
-
-
-### Requirements
-Node.js (https://nodejs.org/en/download/)  
-React  
-React router dom (npm install react-router-dom)
