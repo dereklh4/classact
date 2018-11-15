@@ -23,7 +23,7 @@ class ChatConsumer(WebsocketConsumer):
         except:
             print("ERROR: Not a valid token for websocket connection")
             return
-            
+
         self.scope["user"] = token.user
 
         self._validate_user()
@@ -136,7 +136,7 @@ class ChatConsumer(WebsocketConsumer):
         messages = Message.objects.filter(classroom=classroom).order_by('creation_time')[:count]
 
         messages_json = list(map(lambda x: self.message_to_json(x), messages))
-        
+
         self.send(text_data=json.dumps({"type":"init_chat","content":messages_json}))
 
     ## COMMAND METHODS
@@ -163,6 +163,29 @@ class ChatConsumer(WebsocketConsumer):
             UserMessageUpvotes.objects.create(user=user,message=message)
         else:
             self._error_message("User " + user.username + "already upvoted that message")
+
+        upvotes = len(UserMessageUpvotes.objects.filter(message=message))
+        self._fire_event("upvoted_message",
+                            {
+                                "message_id":message_id,
+                                "upvotes":upvotes
+                            }
+                        )
+
+    def un_upvote_message(self,data):
+        user, classroom = self._validate_user()
+
+        message_id = data["message_id"]
+
+        print(message_id)
+
+        try:
+            message = Message.objects.get(id=message_id)
+        except:
+            self._error_message("Not a valid message id")
+
+        if len(UserMessageUpvotes.objects.filter(user=user,message=message)) > 0:
+            UserMessageUpvotes.objects.filter(user=user, message=message).delete()
 
         upvotes = len(UserMessageUpvotes.objects.filter(message=message))
         self._fire_event("upvoted_message",
@@ -203,6 +226,9 @@ class ChatConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps(event))
 
     def upvoted_message(self,event):
+        self.send(text_data=json.dumps(event))
+
+    def un_upvote_message(self,event):
         self.send(text_data=json.dumps(event))
 
     # error message event handler

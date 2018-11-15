@@ -10,6 +10,7 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
 import Upvotes from './Upvotes'
+import Edit from './Edit'
 class QuestionBasic extends Component {
     constructor(props) {
         super(props);
@@ -35,21 +36,28 @@ class QuestionBasic extends Component {
             )}
         </ul>
         */
-        const {question, classes, id, upvotes, upvotedByUser} = this.props;
+        const {currentUser, question, classes, id, upvotes, user, upvotedByUser} = this.props;
         var questionShortened = question;
         if (question.length > 45) {
             questionShortened = question.substr(0,44) + '...'
         }
+
         return (
             <ExpansionPanel className={classes.expansionPanel}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>} className={classes.questionSummary}>
-                    <Upvotes id={id} upvotedByUser={upvotedByUser} numUpvotes={upvotes} upvoteThisMessage={this.props.upvoteThisMessage}/>
+                    <Upvotes id={id} upvotedByUser={upvotedByUser} numUpvotes={upvotes}
+                        upvoteThisMessage={this.props.upvoteThisMessage} unUpvoteThisMessage={this.props.unUpvoteThisMessage}/>
                     <Typography className={classes.upvotesText}>
                         {upvotes}
                     </Typography>
                     <Typography className={classes.questionSummaryText}>
                         {questionShortened}
                     </Typography>
+                    { currentUser === user ?
+                      <Edit id={id} />
+                      :
+                      null
+                    }
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails className={classes.details}>
                     <div className={classes.fullQuestionContainer}>

@@ -99,6 +99,10 @@ class WebSocketService {
     this._sendMessage({command: 'upvote_message', message_id: in_message_id})
   }
 
+  unUpvoteMessage(in_message_id) {
+    this._sendMessage({command: 'un_upvote_message', message_id: in_message_id})
+  }
+
   postResponse(in_message_id, text) {
     this._sendMessage({ command: 'post_response', message_id: in_message_id, text: text});
   }

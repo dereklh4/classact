@@ -30,6 +30,7 @@ class Chatroom extends Component {
     									this.errorMessage.bind(this),
     									this.newMessage.bind(this),
     									this.upvotedMessage.bind(this),
+											this.unUpvoteThisMessage.bind(this),
     									this.newResponse.bind(this))
     };
 
@@ -103,6 +104,10 @@ class Chatroom extends Component {
 		WebSocketInstance.upvoteMessage(id);
 	}
 
+	unUpvoteThisMessage = (id) => {
+		WebSocketInstance.unUpvoteMessage(id);
+	}
+
 	handleHomeClick = () => {
 		WebSocketInstance.close();
 		this.props.history.push(routes.HOME)
@@ -125,7 +130,7 @@ class Chatroom extends Component {
 					<Typography component="h1" variant="h5">
 						{this.state.chatName}
 					</Typography>
-					<QuestionList questions={messages} upvoteThisMessage={this.upvoteThisMessage}/>
+					<QuestionList questions={messages} upvoteThisMessage={this.upvoteThisMessage} unUpvoteThisMessage={this.unUpvoteThisMessage}/>
 					<form onSubmit={(e) => this.postChatMessageHandler(e, this.state.message)} className={classes.postQuestion}>
 						<FormControl margin="normal" fullWidth required>
 							<TextField
