@@ -1,9 +1,4 @@
 import React, {Component} from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Redirect,
-} from 'react-router-dom';
 import LandingPage from './Landing';
 import SignUpPage from './SignUp';
 import SignInPage from './SignIn';
@@ -12,7 +7,13 @@ import Account from './Account'
 import PasswordForgetPage from './PasswordForget';
 import HomePage from './Home';
 import * as routes from '../constants/routes';
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+} from 'react-router-dom';
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
+
 const theme = createMuiTheme({
   typography: {
     useNextVariants: true,
