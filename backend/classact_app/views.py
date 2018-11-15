@@ -8,7 +8,7 @@ from .models import (Classroom, UserInClassroom)
 from datetime import datetime
 from classact_app.serializers import *
 from rest_framework.response import Response
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import APIException, PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication,TokenAuthentication
 
@@ -194,6 +194,15 @@ class PermissionUpdateView(generics.CreateAPIView):
 		except:
 			raise APIException("ERROR: Classroom does not exist")
 
+		authority_user = request.user
+		try:
+			authority_permission = UserInClassroom.objects.get(classroom=classroom,user=authority_user).permission
+		except:
+			raise APIException("ERROR: The user requesting a change is not a member of the classroom")
+		
+		if authority_permission <= 1:
+			raise PermissionDenied("ERROR: This user does not have requisite permissions to change others permissions")
+
 		email = request.data['user_email']
 		try:
 			user = User.objects.get(email = email)
@@ -205,7 +214,7 @@ class PermissionUpdateView(generics.CreateAPIView):
 		try:
 			user_in_classroom = UserInClassroom.objects.get(classroom=classroom,user=user)
 		except:
-			raise APIException("ERROR: User does not exist in this classroom")			
+			raise APIException("ERROR: User does not exist in this classroom")
 
 		user_in_classroom.permission = new_permission
 
