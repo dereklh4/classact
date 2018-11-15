@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import {AnswerList} from './AnswerList'
+import {DeleteButton} from './DeleteButton'
+import {EditButton} from './EditButton'
 import withStyles from '@material-ui/core/styles/withStyles';
 import {QUESTION_STYLE} from '../constants/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -24,16 +26,19 @@ class QuestionBasic extends Component {
         event.preventDefault();
     }
 
+    editMessage = () => {
+        this.props.handleEditMessage(this.props.id)
+    }
     deleteMessage = () => {
         this.props.handleDeleteMessage(this.props.id)
     }
-    
+
     handleChange = (event) => {
         this.setState({userAnswer: event.target.value});
     }
 
     render() {
-        const {question, classes, id, upvotes, upvotedByUser, upvoteThisMessage, answers} = this.props;
+        const {currUser, user, question, classes, id, upvotes, upvotedByUser, upvoteThisMessage, answers} = this.props;
         var questionShortened = question;
         if (question.length > 45) {
             questionShortened = question.substr(0,44) + '...'
@@ -48,7 +53,15 @@ class QuestionBasic extends Component {
                     <Typography className={classes.questionSummaryText}>
                         {questionShortened}
                     </Typography>
-                    <button onClick={this.deleteMessage}/>
+                    {currUser === user ? (
+                        <div>
+                            <EditButton editMessage={this.editMessage}/>
+                            <DeleteButton deleteMessage={this.deleteMessage}/>
+                        </div>
+                    )
+                        :
+                        null
+                    }
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails className={classes.details}>
                     <div className={classes.fullQuestionContainer}>

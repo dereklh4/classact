@@ -72,6 +72,16 @@ export const QUESTION_STYLE = theme => ({
     fullQuestionText: {
         margin: '10px 15px 10px 15px'
     },
+    EditButton: {
+        padding: '0px!important',
+        position: 'absolute',
+        right: '80px',
+    },
+    deleteButton: {
+        padding: '0px!important',
+        position: 'absolute',
+        right: '45px',
+    },
 });
 export const CA_STYLE = {
   width: '60px',
