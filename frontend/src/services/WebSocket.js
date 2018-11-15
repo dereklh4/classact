@@ -117,11 +117,11 @@ class WebSocketService {
   }
 
   deleteResponse(in_message_id, response_id) {
-    this._sendMessage({ command: 'edit_response', message_id: in_message_id, response_id: response_id});
+    this._sendMessage({ command: 'delete_response', message_id: in_message_id, response_id: response_id});
   }
 
   deleteMessage(in_message_id) {
-    this._sendMessage({ command: 'edit_message', message_id: in_message_id});
+    this._sendMessage({ command: 'delete_message', message_id: in_message_id});
   }
 
 

@@ -117,15 +117,19 @@ class Chatroom extends Component {
   		console.log(this.state.messages)
   	}
 
-  	deleteMessage(message) {
-  		console.log(this.state.messages)
-  		this.setState({messages: [...this.state.messages]})
-  	}
+	handleDeleteMessage = (message_id) => {
+		console.log(message_id)
+		WebSocketInstance.deleteMessage(message_id);
+	}
+
 
   	editMessage(message) {
-  		console.log(this.state.messages)
+  		console.log(message)
   	}
 
+	deleteMessage(message) {
+
+	}
 	postResponseHandler = (id, text) => {
 		WebSocketInstance.postResponse(id, text);
 	}
@@ -164,7 +168,12 @@ class Chatroom extends Component {
 					<Typography component="h1" variant="h5">
 						{this.state.chatName}
 					</Typography>
-					<QuestionList questions={messages} upvoteThisMessage={this.upvoteThisMessage} postResponseHandler={this.postResponseHandler}/>
+					<QuestionList
+						questions={messages}
+						upvoteThisMessage={this.upvoteThisMessage}
+						postResponseHandler={this.postResponseHandler}
+						handleDeleteMessage={this.handleDeleteMessage}
+					/>
 					<form onSubmit={(e) => this.postChatMessageHandler(e, this.state.message)} className={classes.postQuestion}>
 						<FormControl margin="normal" fullWidth required>
 							<TextField

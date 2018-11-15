@@ -24,6 +24,10 @@ class QuestionBasic extends Component {
         event.preventDefault();
     }
 
+    deleteMessage = () => {
+        this.props.handleDeleteMessage(this.props.id)
+    }
+    
     handleChange = (event) => {
         this.setState({userAnswer: event.target.value});
     }
@@ -44,6 +48,7 @@ class QuestionBasic extends Component {
                     <Typography className={classes.questionSummaryText}>
                         {questionShortened}
                     </Typography>
+                    <button onClick={this.deleteMessage}/>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails className={classes.details}>
                     <div className={classes.fullQuestionContainer}>
