@@ -32,8 +32,8 @@ class Chatroom extends Component {
     									this.newResponse.bind(this),
     									this.editResponse.bind(this),
     									this.deleteResponse.bind(this),
-    									this.deleteMessage.bind(this),
-    									this.editMessage.bind(this))
+    									this.editMessage.bind(this),
+    									this.deleteMessage.bind(this))
 
     };
 
@@ -124,11 +124,11 @@ class Chatroom extends Component {
 
 
   	editMessage(message) {
-  		console.log(message)
+  		console.log("edit")
   	}
 
 	deleteMessage(message) {
-
+		console.log("delete")
 	}
 	postResponseHandler = (id, text) => {
 		WebSocketInstance.postResponse(id, text);
