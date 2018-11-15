@@ -148,9 +148,10 @@ class ChatConsumer(WebsocketConsumer):
 
         text = data['text']
 
-        anonymous = data['anonymous']
+        #anonymous = data['anonymous']
 
-        message = Message.objects.create(user=user, text=text, classroom=classroom, anonymous=anonymous)
+        message = Message.objects.create(user=user, text=text, classroom=classroom, anonymous=False)
+        print(str(message.id))
 
         self._fire_event("new_message",self.message_to_json(message))
 
@@ -159,7 +160,7 @@ class ChatConsumer(WebsocketConsumer):
 
         text = data['text']
 
-        anonymous = data['anonymous']
+        #anonymous = data['anonymous']
 
         message_id = data['message_id']
 
@@ -169,7 +170,7 @@ class ChatConsumer(WebsocketConsumer):
             self._error_message("Message does not exist")
 
         message.text = text
-        message.anonymous = anonymous
+        message.anonymous = False
         message.save()
 
         self._fire_event("edit_message",self.message_to_json(message))
@@ -180,7 +181,7 @@ class ChatConsumer(WebsocketConsumer):
         message_id = data['message_id']
 
         try:
-            message = Message.objects.get(user=user, message_id=message_id)
+            message = Message.objects.get(user=user, id=message_id)
         except:
             self._error_message("Message does not exist")
 
@@ -215,7 +216,7 @@ class ChatConsumer(WebsocketConsumer):
 
         text = data['text']
 
-        anonymous = data['anonymous']
+        #anonymous = data['anonymous']
 
         message_id = data["message_id"]
         try:
@@ -223,7 +224,7 @@ class ChatConsumer(WebsocketConsumer):
         except:
             self._error_message("Not a valid message id")
 
-        response = Response.objects.create(user=user, message=message, text=text, anonymous=anonymous)
+        response = Response.objects.create(user=user, message=message, text=text, anonymous=False)
 
         self._fire_event("new_response",self.response_to_json(response))
 
@@ -232,7 +233,7 @@ class ChatConsumer(WebsocketConsumer):
 
         text = data['text']
 
-        anonymous = data['anonymous']
+        #anonymous = data['anonymous']
 
         message_id = data["message_id"]
 
@@ -249,7 +250,7 @@ class ChatConsumer(WebsocketConsumer):
             self._error_message("Response does not exist")
 
         response.text = text
-        response.anonymous = anonymous
+        #response.anonymous = anonymous
         response.save()
 
         self._fire_event("edit_response",self.response_to_json(response))
@@ -267,7 +268,7 @@ class ChatConsumer(WebsocketConsumer):
             self._error_message("Not a valid message id")
 
         try:
-            response = Response.objects.get(user=user, response_id=response_id)
+            response = Response.objects.get(user=user, id=response_id)
         except:
             self._error_message("Response does not exist")
 

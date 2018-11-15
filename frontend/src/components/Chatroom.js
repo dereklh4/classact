@@ -106,6 +106,7 @@ class Chatroom extends Component {
 
   	deleteMessage(message) {
   		console.log(this.state.messages)
+  		this.setState({messages: [...this.state.messages]})
   	}
 
   	editMessage(message) {
