@@ -8,7 +8,8 @@ import {QUESTION_STYLE} from '../constants/styles';
 class Upvotes extends Component {
     handleClick = (upvotedByUser) => {
         if (upvotedByUser) {
-            return;
+            this.props.unUpvoteThisMessage(this.props.id);
+            //alert("UnUpvote" + this.props.id);
         }
         else {
             this.props.upvoteThisMessage(this.props.id);

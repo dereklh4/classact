@@ -12,12 +12,12 @@ const TileGridBasic = ({classes, onPlusClick, courses, onRemoveCourse}) =>
         <Grid container spacing={40}>
             {courses.map(a =>
                 <Tile
-                    name={a.title}
-                    url={a.url}
-                    numenrolled={a.enrolled}
-                    status={a.status}
+                    name={a.classroom.title}
+                    url={a.classroom.url}
+                    numenrolled={a.classroom.enrolled}
                     onRemoveCourse={onRemoveCourse}
-                    key={a.url}
+                    key={a.classroom.url}
+                    permission={a.permission}
                 />
             )}
             <AddTile onPlusClick={onPlusClick}/>

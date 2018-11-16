@@ -23,7 +23,7 @@ class ChatConsumer(WebsocketConsumer):
         except:
             print("ERROR: Not a valid token for websocket connection")
             return
-            
+
         self.scope["user"] = token.user
 
         self._validate_user()
@@ -115,6 +115,7 @@ class ChatConsumer(WebsocketConsumer):
             'second':message.creation_time.second,
             'upvotes':len(message_upvotes),
             'upvoted_by_user':upvoted_by_user,
+            'anonymous':message.anonymous,
             'responses': list(map(lambda x: self.response_to_json(x), responses))
         }
 
@@ -127,6 +128,7 @@ class ChatConsumer(WebsocketConsumer):
             'hour': response.creation_time.hour,
             'minute':response.creation_time.minute,
             'second':response.creation_time.second,
+            'anonymous':response.anonymous,
         }
 
     def init_chat(self,data):
@@ -136,7 +138,7 @@ class ChatConsumer(WebsocketConsumer):
         messages = Message.objects.filter(classroom=classroom).order_by('creation_time')[:count]
 
         messages_json = list(map(lambda x: self.message_to_json(x), messages))
-        
+
         self.send(text_data=json.dumps({"type":"init_chat","content":messages_json}))
 
     ## COMMAND METHODS
@@ -146,9 +148,51 @@ class ChatConsumer(WebsocketConsumer):
 
         text = data['text']
 
-        message = Message.objects.create(user=user, text=text, classroom=classroom)
+        #anonymous = data['anonymous']
+
+        message = Message.objects.create(user=user, text=text, classroom=classroom, anonymous=False)
+        print(str(message.id))
 
         self._fire_event("new_message",self.message_to_json(message))
+
+    def edit_message(self, data):
+        user, classroom = self._validate_user()
+
+        text = data['text']
+
+        #anonymous = data['anonymous']
+
+        message_id = data['message_id']
+
+        try:
+            message = Message.objects.get(user=user, id=message_id)
+        except:
+            self._error_message("Message does not exist")
+
+        message.text = text
+        message.anonymous = False
+        message.save()
+
+        self._fire_event("edit_message",
+                            {
+                                "message_id": message_id,
+                                "text": text,
+                            }
+                        )
+
+    def delete_message(self, data):
+        user, classroom = self._validate_user()
+
+        message_id = data['message_id']
+
+        try:
+            message = Message.objects.get(user=user, id=message_id)
+        except:
+            self._error_message("Message does not exist")
+
+        message.delete()
+
+        self._fire_event("delete_message", {"message_id":message_id})
 
     def upvote_message(self,data):
         user, classroom = self._validate_user()
@@ -172,10 +216,35 @@ class ChatConsumer(WebsocketConsumer):
                             }
                         )
 
+    def un_upvote_message(self,data):
+        user, classroom = self._validate_user()
+
+        message_id = data["message_id"]
+
+        print(message_id)
+
+        try:
+            message = Message.objects.get(id=message_id)
+        except:
+            self._error_message("Not a valid message id")
+
+        if len(UserMessageUpvotes.objects.filter(user=user,message=message)) > 0:
+            UserMessageUpvotes.objects.filter(user=user, message=message).delete()
+
+        upvotes = len(UserMessageUpvotes.objects.filter(message=message))
+        self._fire_event("un_upvoted_message",
+                            {
+                                "message_id":message_id,
+                                "upvotes":upvotes
+                            }
+                        )
+
     def post_response(self, data):
         user, classroom = self._validate_user()
 
         text = data['text']
+
+        #anonymous = data['anonymous']
 
         message_id = data["message_id"]
         try:
@@ -183,17 +252,75 @@ class ChatConsumer(WebsocketConsumer):
         except:
             self._error_message("Not a valid message id")
 
-        response = Response.objects.create(user=user, message=message, text=text)
+        response = Response.objects.create(user=user, message=message, text=text, anonymous=False)
 
         self._fire_event("new_response",self.response_to_json(response))
+
+    def edit_response(self, data):
+        user, classroom = self._validate_user()
+
+        text = data['text']
+
+        #anonymous = data['anonymous']
+
+        message_id = data["message_id"]
+
+        response_id = data["response_id"]
+
+        try:
+            message = Message.objects.get(id=message_id)
+        except:
+            self._error_message("Not a valid message id")
+
+        try:
+            response = Response.objects.get(user=user, response_id=response_id)
+        except:
+            self._error_message("Response does not exist")
+
+        response.text = text
+        #response.anonymous = anonymous
+        response.save()
+
+        self._fire_event("edit_response",self.response_to_json(response))
+
+    def delete_response(self, data):
+        user, classroom = self._validate_user()
+
+        message_id = data["message_id"]
+
+        response_id = data["response_id"]
+
+        try:
+            message = Message.objects.get(id=message_id)
+        except:
+            self._error_message("Not a valid message id")
+
+        try:
+            response = Response.objects.get(user=user, id=response_id)
+        except:
+            self._error_message("Response does not exist")
+
+        response.delete()
+
+        self._fire_event("delete_response",
+                                {
+                                    "message_id": message_id,
+                                    "response_id": response_id,
+                                }
+                            )
 
     ## COMMANDS
 
     commands = {
         'init_chat': init_chat,
         'post_message': post_message,
-        'upvote_message':upvote_message,
-        'post_response':post_response
+        'upvote_message': upvote_message,
+        'un_upvote_message': un_upvote_message,
+        'post_response': post_response,
+        'delete_message': delete_message,
+        'edit_message': edit_message,
+        'delete_response': delete_response,
+        'edit_response': edit_response
     }
 
     ## EVENT HANDLERS
@@ -205,10 +332,25 @@ class ChatConsumer(WebsocketConsumer):
     def upvoted_message(self,event):
         self.send(text_data=json.dumps(event))
 
+    def un_upvoted_message(self,event):
+        self.send(text_data=json.dumps(event))
+
     # error message event handler
     def error_message(self, event):
         # Send message to WebSocket
         self.send(text_data=json.dumps(event))
 
     def new_response(self, event):
+        self.send(text_data=json.dumps(event))
+
+    def edit_message(self, event):
+        self.send(text_data=json.dumps(event))
+
+    def delete_message(self, event):
+        self.send(text_data=json.dumps(event))
+
+    def edit_response(self, event):
+        self.send(text_data=json.dumps(event))
+
+    def delete_response(self, event):
         self.send(text_data=json.dumps(event))

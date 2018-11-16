@@ -4,9 +4,31 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import {QUESTION_STYLE} from '../constants/styles';
 
 class QuestionListBasic extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            currUser: '',
+        };
+    }
+
+    componentWillMount() {
+        const token = 'Token ' + localStorage.getItem('token')
+        fetch('http://localhost:8000/api/auth/user/', {
+            method: 'GET',
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+        })
+        .then(response => response.json())
+        .then(response => {
+            this.setState({currUser: response.username});
+        })
+    }
     render() {
-        const {questions, classes, upvoteThisMessage, postResponseHandler} = this.props;
-        // TODO: const newQ = _.sortBy(questions, ['upvotes']);
+
+        const {questions, classes, upvoteThisMessage, unUpvoteThisMessage, postResponseHandler, handleDeleteMessage, handleEditMessage, handleDeleteResponse} = this.props;
         return (
             <div className={classes.questionContainer}>
                 {questions.map(question =>
@@ -15,10 +37,17 @@ class QuestionListBasic extends Component {
                         id={question.id}
                         key={question.id}
                         upvotes={question.upvotes}
+                        user={question.user}
                         upvoteThisMessage={upvoteThisMessage}
+                        unUpvoteThisMessage={unUpvoteThisMessage}
                         upvotedByUser={question.upvoted_by_user}
+
                         postResponseHandler={postResponseHandler}
                         answers= {question.responses}
+                        handleDeleteMessage={handleDeleteMessage}
+                        handleDeleteResponse={handleDeleteResponse}
+                        handleEditMessage={handleEditMessage}
+                        currUser={this.state.currUser}
                     />
                 )}
             </div>
