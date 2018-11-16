@@ -105,6 +105,8 @@ class ChatConsumer(WebsocketConsumer):
     def message_to_json(self, message):
         message_upvotes = UserMessageUpvotes.objects.filter(message=message)
         upvoted_by_user = len(message_upvotes.filter(user=self.scope["user"])) >= 1
+        pinned = len(UserPinMessage.objects.filter(message=message)) >= 1
+        saved_by_user = len(UserSaveMessage.objects.filter(user=self.scope["user"],message=message)) >= 1
         responses = Response.objects.filter(message=message)
         return {
             'id': message.id,
@@ -115,6 +117,8 @@ class ChatConsumer(WebsocketConsumer):
             'second':message.creation_time.second,
             'upvotes':len(message_upvotes),
             'upvoted_by_user':upvoted_by_user,
+            'saved_by_user':saved_by_user,
+            'pinned':pinned,
             'responses': list(map(lambda x: self.response_to_json(x), responses))
         }
 
@@ -172,6 +176,52 @@ class ChatConsumer(WebsocketConsumer):
                             }
                         )
 
+    def pin_message(self,data):
+        user, classroom = self._validate_user()
+
+        user_in_classroom = UserInClassroom.objects.get(user=user, classroom=classroom)
+        if user_in_classroom.permission != 3:
+            raise APIException("ERROR: User does not have sufficient permissions")
+
+        message_id = data["message_id"]
+        try:
+            message = Message.objects.get(id=message_id)
+        except:
+            self._error_message("Not a valid message id")
+
+        if len(UserPinMessage.objects.filter(user=user, message=message)) == 0:
+            UserPinMessage.objects.create(user=user, message=message, classroom=classroom)
+        else:
+            self._error_message("User " + user.username + "already pinned that message")
+
+        self._fire_event("pinned_message",
+                            {
+                                "message_id":message_id,
+                                "upvoted":True
+                            }
+                        )
+
+    def save_message(self,data):
+        user, classroom = self._validate_user()
+
+        message_id = data["message_id"]
+        try:
+            message = Message.objects.get(id=message_id)
+        except:
+            self._error_message("Not a valid message id")
+
+        if len(UserSaveMessage.objects.filter(user=user, message=message)) == 0:
+            UserSaveMessage.objects.create(user=user, message=message)
+        else:
+            self._error_message("User " + user.username + "already saved that message")
+
+        self._fire_event("saved_message",
+                            {
+                                "message_id":message_id,
+                                "saved":True
+                            }
+                        )
+
     def post_response(self, data):
         user, classroom = self._validate_user()
 
@@ -193,6 +243,8 @@ class ChatConsumer(WebsocketConsumer):
         'init_chat': init_chat,
         'post_message': post_message,
         'upvote_message':upvote_message,
+        'pin_message':pin_message,
+        'save_message':save_message,
         'post_response':post_response
     }
 
@@ -203,6 +255,12 @@ class ChatConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps(event))
 
     def upvoted_message(self,event):
+        self.send(text_data=json.dumps(event))
+
+    def pinned_message(self,event):
+        self.send(text_data=json.dumps(event))
+
+    def saved_message(self,event):
         self.send(text_data=json.dumps(event))
 
     # error message event handler
