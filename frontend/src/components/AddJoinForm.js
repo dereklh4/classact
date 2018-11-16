@@ -7,11 +7,11 @@ import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import Dialog from '@material-ui/core/Dialog';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
+import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -78,7 +78,7 @@ class JoinClassForm extends Component {
     onSubmit = (event) => {
        const {classID} = this.state;
        const {history, courses} = this.props;
-       const index = courses.findIndex((course) => course.url === classID)
+       const index = courses.findIndex((course) => course.classroom.url === classID)
        if (index >= 0) {
            history.push(routes.CHATROOM + "?url=" + classID, {state: classID});
            return;

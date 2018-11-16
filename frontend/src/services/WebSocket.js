@@ -15,13 +15,18 @@ class WebSocketService {
     this.socketRef = null;
   }
 
-  addCallbacks(initChatCallback,errorMessageCallback,newMessageCallback,upvotedMessageCallback,newResponseCallback) {
+  addCallbacks(initChatCallback,errorMessageCallback,newMessageCallback,upvotedMessageCallback,newResponseCallback,
+          editResponseCallback,deleteResponseCallback,editMessageCallback,deleteMessageCallback) {
     this.callbacks['init_chat'] = initChatCallback;
     this.callbacks['error_message'] = errorMessageCallback;
 
     this.callbacks['new_message'] = newMessageCallback;
-    this.callbacks['upvoted_message'] = upvotedMessageCallback
-    this.callbacks['new_response'] = newResponseCallback
+    this.callbacks['upvoted_message'] = upvotedMessageCallback;
+    this.callbacks['new_response'] = newResponseCallback;
+    this.callbacks['edit_response'] = editResponseCallback;
+    this.callbacks['delete_response'] = deleteResponseCallback;
+    this.callbacks['edit_message'] = editMessageCallback;
+    this.callbacks['delete_message'] = deleteMessageCallback;
   }
 
   connect(chatroom_url) {
@@ -82,13 +87,13 @@ class WebSocketService {
       }, timeToWait); // wait 5 milisecond for the connection...
   }
 
-  postChatMessage(text) {
+  postChatMessage(text, anonymous) {
     var key = localStorage.getItem('token')
     if (key == null) {
       throw new Error("Must be logged in to send chat message")
     }
     console.log("posting chat message")
-    this._sendMessage({ command: 'post_message', text: text});
+    this._sendMessage({ command: 'post_message', text: text, anonymous: anonymous});
   }
 
   initChat(load_count) {
@@ -99,9 +104,27 @@ class WebSocketService {
     this._sendMessage({command: 'upvote_message', message_id: in_message_id})
   }
 
-  postResponse(in_message_id, text) {
-    this._sendMessage({ command: 'post_response', message_id: in_message_id, text: text});
+  postResponse(in_message_id, text, anonymous) {
+    this._sendMessage({ command: 'post_response', message_id: in_message_id, text: text, anonymous: anonymous});
   }
+
+  editResponse(in_message_id, response_id, text, anonymous) {
+    this._sendMessage({ command: 'edit_response', message_id: in_message_id, response_id: response_id, text: text, anonymous: anonymous});
+  }
+
+  editMessage(in_message_id, text, anonymous) {
+    this._sendMessage({ command: 'edit_message', message_id: in_message_id, text: text, anonymous: anonymous});
+  }
+
+  deleteResponse(in_message_id, response_id) {
+    this._sendMessage({ command: 'delete_response', message_id: in_message_id, response_id: response_id});
+  }
+
+  deleteMessage(in_message_id) {
+    this._sendMessage({ command: 'delete_message', message_id: in_message_id});
+  }
+
+
 
   _sendMessage(data) {
     try {

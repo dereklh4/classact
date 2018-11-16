@@ -34,8 +34,23 @@ class TileBasic extends Component {
         this.setState({anchorEl: null});
     }
 
+    getStatus = (permission) => {
+        switch (permission) {
+            case 3:
+                return 'Creator';
+            case 2:
+                return 'Moderator';
+            case 1:
+                return 'Student';
+            case 0:
+                return 'Blocked';
+            default:
+                return 'Unknown'
+
+        }
+    }
     render() {
-        const {name, url, numenrolled, status, classes, history} = this.props;
+        const {name, url, numenrolled, permission, classes, history} = this.props;
         return (
             <React.Fragment>
                 <CssBaseline/>
@@ -71,7 +86,7 @@ class TileBasic extends Component {
                                       Number Enrolled: {numenrolled}
                                   </Typography>
                                   <Typography className={classes.tileText}>
-                                       Status: {status}
+                                       Status: {this.getStatus(permission)}
                                    </Typography>
                            </CardContent>
                            <CardActions>

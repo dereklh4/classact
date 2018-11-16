@@ -23,6 +23,7 @@ class Message(models.Model):
 	classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, default=None)
 	text = models.CharField(max_length=1000)
 	creation_time = models.DateTimeField(auto_now=True)
+	anonymous = models.BooleanField(default=False)
 
 class UserMessageUpvotes(models.Model):
 	user = models.ForeignKey(User,on_delete=models.CASCADE)
@@ -33,3 +34,4 @@ class Response(models.Model):
 	message = models.ForeignKey(Message,on_delete=models.CASCADE)
 	text = models.CharField(max_length=1000)
 	creation_time = models.DateTimeField(auto_now=True)
+	anonymous = models.BooleanField(default=False)
