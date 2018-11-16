@@ -21,6 +21,7 @@ class Chatroom extends Component {
 			message: '',
 			messages: [],
 			chatName: '',
+			messageDeleteId: ''
 		};
 
       var params = queryString.parse(this.props.location.search)
@@ -118,17 +119,27 @@ class Chatroom extends Component {
   	}
 
 	handleDeleteMessage = (message_id) => {
-		console.log(message_id)
+		// TODO FIX THIS
+		this.setState({messageDeleteId: message_id})
 		WebSocketInstance.deleteMessage(message_id);
 	}
 
+	handleEditMessage = (message_id) => {
+		alert(message_id)
+	}
 
   	editMessage(message) {
   		console.log("edit")
   	}
 
 	deleteMessage(message) {
-		console.log("delete")
+		const messages = this.state.messages;
+		const index = messages.findIndex((m) => m.id === this.state.messageDeleteId);
+		console.log(index)
+		this.setState({messageDeleteId: ''})
+		const updatedMessages = [...this.state.messages]
+		updatedMessages.splice(index, 1);
+		this.setState({messages: updatedMessages})
 	}
 	postResponseHandler = (id, text) => {
 		WebSocketInstance.postResponse(id, text);
@@ -173,6 +184,7 @@ class Chatroom extends Component {
 						upvoteThisMessage={this.upvoteThisMessage}
 						postResponseHandler={this.postResponseHandler}
 						handleDeleteMessage={this.handleDeleteMessage}
+						handleEditMessage={this.handleEditMessage}
 					/>
 					<form onSubmit={(e) => this.postChatMessageHandler(e, this.state.message)} className={classes.postQuestion}>
 						<FormControl margin="normal" fullWidth required>
