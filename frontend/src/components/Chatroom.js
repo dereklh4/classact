@@ -121,12 +121,13 @@ class Chatroom extends Component {
 		WebSocketInstance.deleteMessage(message_id);
 	}
 
-	handleEditMessage = (message_id) => {
-		alert(message_id)
+	handleEditMessage = (message_id, text) => {
+		console.log(message_id)
+		WebSocketInstance.editMessage(message_id, text, true)
 	}
 
   	editMessage(message) {
-  		console.log("edit")
+  		alert('done')
   	}
 
 	deleteMessage(message) {

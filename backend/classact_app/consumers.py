@@ -165,7 +165,7 @@ class ChatConsumer(WebsocketConsumer):
         message_id = data['message_id']
 
         try:
-            message = Message.objects.get(user=user, message_id=message_id)
+            message = Message.objects.get(user=user, id=message_id)
         except:
             self._error_message("Message does not exist")
 
