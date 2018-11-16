@@ -21,7 +21,7 @@ const AnswerListBasic = ({answers, classes, deleteResponse}) =>
                     <Typography className={classes.answerText}>
                         {answer.text}
                     </Typography>
-                    <DeleteButton deleteMessage={deleteResponse} give={1}/>
+                    <DeleteButton deleteMessage={() => deleteResponse(answer.response_id)} give={1}/>
                 </ListItem>
             )}
         </List>

@@ -279,7 +279,12 @@ class ChatConsumer(WebsocketConsumer):
 
         response.delete()
 
-        self._fire_event("delete_response",self.response_to_json(response))
+        self._fire_event("delete_response",
+                                {
+                                    "message_id": message_id,
+                                    "response_id": response_id,
+                                }
+                            )
 
     ## COMMANDS
 

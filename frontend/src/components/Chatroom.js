@@ -110,7 +110,25 @@ class Chatroom extends Component {
   	}
 
   	deleteResponse(response) {
-  		alert('done')
+  		const messages = this.state.messages;
+		const messageIndex = messages.findIndex((message) => message.id === response.message_id);
+		const updatedMessages = [...this.state.messages]
+		const responses = updatedMessages[messageIndex].responses
+		const responseIndex = responses.findIndex((r) => r.response_id === response.response_id);
+		responses.splice(responseIndex, 1)
+		const newMessage = {
+			hour: updatedMessages[messageIndex].hour,
+			id: updatedMessages[messageIndex].id,
+			minutes: updatedMessages[messageIndex].minute,
+			second:updatedMessages[messageIndex].second,
+			text: updatedMessages[messageIndex].text,
+			upvotes: updatedMessages[messageIndex].upvotes,
+			user: updatedMessages[messageIndex].user,
+			upvoted_by_user: updatedMessages[messageIndex].upvoted_by_user,
+			responses: responses
+		}
+		updatedMessages[messageIndex] = newMessage;
+		this.setState({messages: updatedMessages})
   	}
 
   	editResponse(response) {
