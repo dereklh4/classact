@@ -21,7 +21,6 @@ class Chatroom extends Component {
 			message: '',
 			messages: [],
 			chatName: '',
-			messageDeleteId: ''
 		};
 
       var params = queryString.parse(this.props.location.search)
@@ -119,8 +118,6 @@ class Chatroom extends Component {
   	}
 
 	handleDeleteMessage = (message_id) => {
-		// TODO FIX THIS
-		this.setState({messageDeleteId: message_id})
 		WebSocketInstance.deleteMessage(message_id);
 	}
 
@@ -134,9 +131,7 @@ class Chatroom extends Component {
 
 	deleteMessage(message) {
 		const messages = this.state.messages;
-		const index = messages.findIndex((m) => m.id === this.state.messageDeleteId);
-		console.log(index)
-		this.setState({messageDeleteId: ''})
+		const index = messages.findIndex((m) => m.id === message.message_id);
 		const updatedMessages = [...this.state.messages]
 		updatedMessages.splice(index, 1);
 		this.setState({messages: updatedMessages})

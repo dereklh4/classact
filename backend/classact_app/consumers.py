@@ -23,7 +23,7 @@ class ChatConsumer(WebsocketConsumer):
         except:
             print("ERROR: Not a valid token for websocket connection")
             return
-            
+
         self.scope["user"] = token.user
 
         self._validate_user()
@@ -138,7 +138,7 @@ class ChatConsumer(WebsocketConsumer):
         messages = Message.objects.filter(classroom=classroom).order_by('creation_time')[:count]
 
         messages_json = list(map(lambda x: self.message_to_json(x), messages))
-        
+
         self.send(text_data=json.dumps({"type":"init_chat","content":messages_json}))
 
     ## COMMAND METHODS
@@ -187,7 +187,7 @@ class ChatConsumer(WebsocketConsumer):
 
         message.delete()
 
-        self._fire_event("delete_message",self.message_to_json(message))
+        self._fire_event("delete_message", {"message_id":message_id})
 
     def upvote_message(self,data):
         user, classroom = self._validate_user()
