@@ -27,7 +27,8 @@ class QuestionListBasic extends Component {
         })
     }
     render() {
-        const {questions, classes, upvoteThisMessage, unUpvoteThisMessage, postResponseHandler, handleDeleteMessage, handleEditMessage} = this.props;
+
+        const {questions, classes, upvoteThisMessage, unUpvoteThisMessage, postResponseHandler, handleDeleteMessage, handleEditMessage, handleDeleteResponse} = this.props;
         return (
             <div className={classes.questionContainer}>
                 {questions.map(question =>
@@ -44,6 +45,7 @@ class QuestionListBasic extends Component {
                         postResponseHandler={postResponseHandler}
                         answers= {question.responses}
                         handleDeleteMessage={handleDeleteMessage}
+                        handleDeleteResponse={handleDeleteResponse}
                         handleEditMessage={handleEditMessage}
                         currUser={this.state.currUser}
                     />

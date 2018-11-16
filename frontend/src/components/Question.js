@@ -43,6 +43,10 @@ class QuestionBasic extends Component {
         this.props.handleDeleteMessage(this.props.id)
     }
 
+    deleteResponse = (response_id) => {
+        this.props.handleDeleteResponse(this.props.id, response_id)
+    }
+
     handleChange = (event) => {
         this.setState({userAnswer: event.target.value});
     }
@@ -74,7 +78,7 @@ class QuestionBasic extends Component {
                         {currUser === user ? (
                             <div>
                                 <EditButton editMessage={this.openEditMessageClick}/>
-                                <DeleteButton deleteMessage={this.deleteMessage}/>
+                                <DeleteButton deleteMessage={this.deleteMessage} give={0}/>
                             </div>
                         )
                             :
@@ -87,7 +91,7 @@ class QuestionBasic extends Component {
                                 {question}
                             </Typography>
                         </div>
-                        <AnswerList answers={answers}/>
+                        <AnswerList answers={answers} deleteResponse={this.deleteResponse}/>
                         <form onSubmit={this.onSubmit} className={classes.questionForm}>
                             <FormControl margin="normal" fullWidth required>
                                 <TextField
