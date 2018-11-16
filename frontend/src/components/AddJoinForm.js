@@ -78,7 +78,7 @@ class JoinClassForm extends Component {
     onSubmit = (event) => {
        const {classID} = this.state;
        const {history, courses} = this.props;
-       const index = courses.findIndex((course) => course.url === classID)
+       const index = courses.findIndex((course) => course.classroom.url === classID)
        if (index >= 0) {
            history.push(routes.CHATROOM + "?url=" + classID, {state: classID});
            return;
