@@ -66,7 +66,7 @@ class HomePage extends Component {
 
     onRemoveCourse = (url) => {
         const {courses} = this.state;
-        const isNotId = item => item.url !== url;
+        const isNotId = item => item.classroom.url !== url;
         const updatedCourses = courses.filter(isNotId);
         this.setState({courses: updatedCourses})
 

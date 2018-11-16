@@ -4,33 +4,30 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import {QUESTION_STYLE} from '../constants/styles';
 
 class QuestionListBasic extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      currentUser: '',
-    };
-  }
-
-  componentWillMount() {
-      const token = 'Token ' + localStorage.getItem('token')
-      fetch('http://localhost:8000/api/auth/user/', {
-          method: 'GET',
-          headers: {
-              'Authorization': token,
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-          },
-      })
-      .then(response => response.json())
-      .then(response => {
-          this.setState({currentUser: response.username});
-      })
+    constructor(props) {
+        super(props);
+        this.state = {
+            currUser: '',
+        };
     }
 
+    componentWillMount() {
+        const token = 'Token ' + localStorage.getItem('token')
+        fetch('http://localhost:8000/api/auth/user/', {
+            method: 'GET',
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+        })
+        .then(response => response.json())
+        .then(response => {
+            this.setState({currUser: response.username});
+        })
+    }
     render() {
-
-        const {questions, classes, upvoteThisMessage, postResponseHandler, unUpvoteThisMessage} = this.props;
-        // TODO: const newQ = _.sortBy(questions, ['upvotes']);
+        const {questions, classes, upvoteThisMessage, unUpvoteThisMessage, postResponseHandler, handleDeleteMessage, handleEditMessage} = this.props;
         return (
             <div className={classes.questionContainer}>
                 {questions.map(question =>
@@ -46,8 +43,9 @@ class QuestionListBasic extends Component {
 
                         postResponseHandler={postResponseHandler}
                         answers= {question.responses}
-
-                        currentUser={this.state.currentUser}
+                        handleDeleteMessage={handleDeleteMessage}
+                        handleEditMessage={handleEditMessage}
+                        currUser={this.state.currUser}
                     />
                 )}
             </div>

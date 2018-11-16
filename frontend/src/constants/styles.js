@@ -1,4 +1,35 @@
+export const EDIT_QUESTION_STYLE = theme => ({
+    dialog: {
+        width: 'auto',
+        display: 'block',
+        marginLeft: theme.spacing.unit * 3,
+        marginRight: theme.spacing.unit * 3,
+        marginTop: 200,
+        [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+            width: 600,
+            marginLeft: 'auto',
+            marginRight: 'auto',
+        },
+    },
+    submit: {
+        marginTop: theme.spacing.unit,
+        backgroundColor: '#3f51b5',
+        color: '#ffffff',
+        '&:hover': {
+            backgroundColor: '#2d46d1'
+        },
+    },
+    form: {
+        width: '100%',
+        marginTop: theme.spacing.unit
+    },
+    backButton: {
+        padding: '0px!important',
+        position: 'absolute',
+        right: '0px',
 
+    }
+})
 export const QUESTION_STYLE = theme => ({
     questionContainer: {
         marginTop: 10,
@@ -76,6 +107,16 @@ export const QUESTION_STYLE = theme => ({
     },
     fullQuestionText: {
         margin: '10px 15px 10px 15px'
+    },
+    EditButton: {
+        padding: '0px!important',
+        position: 'absolute',
+        right: '80px',
+    },
+    deleteButton: {
+        padding: '0px!important',
+        position: 'absolute',
+        right: '45px',
     },
 });
 export const CA_STYLE = {

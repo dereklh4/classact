@@ -29,8 +29,13 @@ class Chatroom extends Component {
     									this.errorMessage.bind(this),
     									this.newMessage.bind(this),
     									this.upvotedMessage.bind(this),
-											this.unUpvoteThisMessage.bind(this),
-    									this.newResponse.bind(this))
+											this.unUpvotedMessage.bind(this),
+    									this.newResponse.bind(this),
+    									this.editResponse.bind(this),
+    									this.deleteResponse.bind(this),
+    									this.editMessage.bind(this),
+    									this.deleteMessage.bind(this))
+
     };
 
 	// TODO: Fetch other information about particlular chatroom
@@ -84,6 +89,25 @@ class Chatroom extends Component {
 		this.setState({messages: updatedMessages})
   	}
 
+		unUpvotedMessage(content) {
+					const message = this.state.messages;
+					const index = message.findIndex((message) => message.id === content.message_id);
+					const updatedMessages = [...this.state.messages]
+					const newMessage = {
+						hour: updatedMessages[index].hour,
+						id: updatedMessages[index].id,
+						minutes: updatedMessages[index].minute,
+						second:updatedMessages[index].second,
+						text: updatedMessages[index].text,
+						upvotes: content.upvotes,
+						user: updatedMessages[index].user,
+						upvoted_by_user: false,
+						responses: updatedMessages[index].responses
+					}
+					updatedMessages[index] = newMessage
+					this.setState({messages: updatedMessages})
+				}
+
   	newResponse(response) {
 		const messages = this.state.messages;
 		const index = messages.findIndex((message) => message.id === response.message_id);
@@ -105,6 +129,48 @@ class Chatroom extends Component {
 		this.setState({messages: updatedMessages })
   	}
 
+  	deleteResponse(response) {
+  		console.log(this.state.messages)
+  	}
+
+  	editResponse(response) {
+  		console.log(this.state.messages)
+  	}
+
+	handleDeleteMessage = (message_id) => {
+		WebSocketInstance.deleteMessage(message_id);
+	}
+
+	handleEditMessage = (message_id, text) => {
+		WebSocketInstance.editMessage(message_id, text, true)
+	}
+
+  	editMessage(response) {
+		const messages = this.state.messages;
+		const index = messages.findIndex((message) => message.id === response.message_id);
+		const updatedMessages = [...this.state.messages]
+		const newMessage =  {
+			hour: updatedMessages[index].hour,
+			id: updatedMessages[index].id,
+			minutes: updatedMessages[index].minute,
+			second:updatedMessages[index].second,
+			text: response.text,
+			upvotes: updatedMessages[index].upvotes,
+			user: updatedMessages[index].user,
+			upvoted_by_user: updatedMessages[index].upvoted_by_user,
+			responses: updatedMessages[index].responses,
+		}
+		updatedMessages[index] = newMessage
+		this.setState({messages: updatedMessages})
+	}
+
+	deleteMessage(message) {
+		const messages = this.state.messages;
+		const index = messages.findIndex((m) => m.id === message.message_id);
+		const updatedMessages = [...this.state.messages]
+		updatedMessages.splice(index, 1);
+		this.setState({messages: updatedMessages})
+	}
 	postResponseHandler = (id, text) => {
 		WebSocketInstance.postResponse(id, text);
 	}
@@ -147,8 +213,14 @@ class Chatroom extends Component {
 					<Typography component="h1" variant="h5">
 						{this.state.chatName}
 					</Typography>
-
-					<QuestionList questions={messages} upvoteThisMessage={this.upvoteThisMessage} unUpvoteThisMessage={this.unUpvoteThisMessage} postResponseHandler={this.postResponseHandler}/>
+					<QuestionList
+						questions={messages}
+						upvoteThisMessage={this.upvoteThisMessage}
+						unUpvoteThisMessage={this.unUpvoteThisMessage}
+						postResponseHandler={this.postResponseHandler}
+						handleDeleteMessage={this.handleDeleteMessage}
+						handleEditMessage={this.handleEditMessage}
+					/>
 					<form onSubmit={(e) => this.postChatMessageHandler(e, this.state.message)} className={classes.postQuestion}>
 						<FormControl margin="normal" fullWidth required>
 							<TextField
