@@ -113,6 +113,9 @@ export const QUESTION_STYLE = theme => ({
         position: 'absolute',
         right: '45px',
     },
+    deleteResponseButton: {
+        right: '10px',
+    }
 });
 export const CA_STYLE = {
   width: '60px',
@@ -269,4 +272,7 @@ export const RESPONSE_STYLE = theme => ({
     image: {
         paddingBottom: 3
     },
+    answerText: {
+        paddingRight: 70
+    }
 })

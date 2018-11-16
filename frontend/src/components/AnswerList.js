@@ -1,12 +1,13 @@
 import React from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
+import {DeleteButton} from './DeleteButton'
 import {RESPONSE_STYLE} from '../constants/styles';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Avatar from '@material-ui/core/Avatar';
 
-const AnswerListBasic = ({answers, classes}) =>
+const AnswerListBasic = ({answers, classes, deleteResponse}) =>
     <div className={classes.answerBox}>
         <Typography className={classes.title}>
             Answers
@@ -20,6 +21,7 @@ const AnswerListBasic = ({answers, classes}) =>
                     <Typography className={classes.answerText}>
                         {answer.text}
                     </Typography>
+                    <DeleteButton deleteMessage={deleteResponse} give={1}/>
                 </ListItem>
             )}
         </List>

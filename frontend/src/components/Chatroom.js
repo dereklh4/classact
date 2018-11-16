@@ -110,20 +110,12 @@ class Chatroom extends Component {
   	}
 
   	deleteResponse(response) {
-  		console.log(this.state.messages)
+  		alert('done')
   	}
 
   	editResponse(response) {
   		console.log(this.state.messages)
   	}
-
-	handleDeleteMessage = (message_id) => {
-		WebSocketInstance.deleteMessage(message_id);
-	}
-
-	handleEditMessage = (message_id, text) => {
-		WebSocketInstance.editMessage(message_id, text, true)
-	}
 
   	editMessage(response) {
 		const messages = this.state.messages;
@@ -151,9 +143,7 @@ class Chatroom extends Component {
 		updatedMessages.splice(index, 1);
 		this.setState({messages: updatedMessages})
 	}
-	postResponseHandler = (id, text) => {
-		WebSocketInstance.postResponse(id, text);
-	}
+
 
   	postChatMessageHandler = (e, text) => {
 	    WebSocketInstance.postChatMessage(text);
@@ -162,6 +152,21 @@ class Chatroom extends Component {
     	})
 	    e.preventDefault();
   	}
+	handleDeleteMessage = (message_id) => {
+		WebSocketInstance.deleteMessage(message_id);
+	}
+
+	handleEditMessage = (message_id, text) => {
+		WebSocketInstance.editMessage(message_id, text, true)
+	}
+
+	handleDeleteResponse = (message_id, response_id) => {
+		WebSocketInstance.deleteResponse(message_id, response_id)
+	}
+
+	postResponseHandler = (id, text) => {
+		WebSocketInstance.postResponse(id, text);
+	}
 
 	upvoteThisMessage = (id) => {
 		WebSocketInstance.upvoteMessage(id);
@@ -195,6 +200,7 @@ class Chatroom extends Component {
 						postResponseHandler={this.postResponseHandler}
 						handleDeleteMessage={this.handleDeleteMessage}
 						handleEditMessage={this.handleEditMessage}
+						handleDeleteResponse={this.handleDeleteResponse}
 					/>
 					<form onSubmit={(e) => this.postChatMessageHandler(e, this.state.message)} className={classes.postQuestion}>
 						<FormControl margin="normal" fullWidth required>
