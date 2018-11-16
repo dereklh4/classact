@@ -122,13 +122,27 @@ class Chatroom extends Component {
 	}
 
 	handleEditMessage = (message_id, text) => {
-		console.log(message_id)
 		WebSocketInstance.editMessage(message_id, text, true)
 	}
 
-  	editMessage(message) {
-  		alert('done')
-  	}
+  	editMessage(response) {
+		const messages = this.state.messages;
+		const index = messages.findIndex((message) => message.id === response.message_id);
+		const updatedMessages = [...this.state.messages]
+		const newMessage =  {
+			hour: updatedMessages[index].hour,
+			id: updatedMessages[index].id,
+			minutes: updatedMessages[index].minute,
+			second:updatedMessages[index].second,
+			text: response.text,
+			upvotes: updatedMessages[index].upvotes,
+			user: updatedMessages[index].user,
+			upvoted_by_user: updatedMessages[index].upvoted_by_user,
+			responses: updatedMessages[index].responses,
+		}
+		updatedMessages[index] = newMessage
+		this.setState({messages: updatedMessages})
+	}
 
 	deleteMessage(message) {
 		const messages = this.state.messages;

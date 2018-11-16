@@ -173,7 +173,12 @@ class ChatConsumer(WebsocketConsumer):
         message.anonymous = False
         message.save()
 
-        self._fire_event("edit_message",self.message_to_json(message))
+        self._fire_event("edit_message",
+                            {
+                                "message_id": message_id,
+                                "text": text,
+                            }
+                        )
 
     def delete_message(self, data):
         user, classroom = self._validate_user()
