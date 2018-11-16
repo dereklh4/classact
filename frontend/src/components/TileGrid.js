@@ -6,22 +6,7 @@ import classNames from 'classnames';
 import Grid from '@material-ui/core/Grid';
 import {AddTile} from './AddTile.js';
 
-const getStatus = (permission) => {
-    switch (permission) {
-        case 3:
-            return 'Creator';
-        case 2:
-            return 'Moderator';
-        case 1:
-            return 'Student';
-        case 0:
-            return 'Blocked';
-        default:
-            return 'Unknown'
 
-    }
-
-}
 const TileGridBasic = ({classes, onPlusClick, courses, onRemoveCourse}) =>
     <div className={classNames(classes.layout_tiles, classes.cardGrid)}>
         <Grid container spacing={40}>
@@ -32,7 +17,7 @@ const TileGridBasic = ({classes, onPlusClick, courses, onRemoveCourse}) =>
                     numenrolled={a.classroom.enrolled}
                     onRemoveCourse={onRemoveCourse}
                     key={a.classroom.url}
-                    status={getStatus(a.permission)}
+                    permission={a.permission}
                 />
             )}
             <AddTile onPlusClick={onPlusClick}/>
