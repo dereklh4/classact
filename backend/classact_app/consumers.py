@@ -216,6 +216,29 @@ class ChatConsumer(WebsocketConsumer):
                             }
                         )
 
+    def un_upvote_message(self,data):
+        user, classroom = self._validate_user()
+
+        message_id = data["message_id"]
+
+        print(message_id)
+
+        try:
+            message = Message.objects.get(id=message_id)
+        except:
+            self._error_message("Not a valid message id")
+
+        if len(UserMessageUpvotes.objects.filter(user=user,message=message)) > 0:
+            UserMessageUpvotes.objects.filter(user=user, message=message).delete()
+
+        upvotes = len(UserMessageUpvotes.objects.filter(message=message))
+        self._fire_event("un_upvoted_message",
+                            {
+                                "message_id":message_id,
+                                "upvotes":upvotes
+                            }
+                        )
+
     def post_response(self, data):
         user, classroom = self._validate_user()
 
@@ -292,6 +315,7 @@ class ChatConsumer(WebsocketConsumer):
         'init_chat': init_chat,
         'post_message': post_message,
         'upvote_message': upvote_message,
+        'un_upvote_message': un_upvote_message,
         'post_response': post_response,
         'delete_message': delete_message,
         'edit_message': edit_message,
@@ -306,6 +330,9 @@ class ChatConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps(event))
 
     def upvoted_message(self,event):
+        self.send(text_data=json.dumps(event))
+
+    def un_upvoted_message(self,event):
         self.send(text_data=json.dumps(event))
 
     # error message event handler

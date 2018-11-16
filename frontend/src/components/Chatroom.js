@@ -29,6 +29,7 @@ class Chatroom extends Component {
     									this.errorMessage.bind(this),
     									this.newMessage.bind(this),
     									this.upvotedMessage.bind(this),
+											this.unUpvotedMessage.bind(this),
     									this.newResponse.bind(this),
     									this.editResponse.bind(this),
     									this.deleteResponse.bind(this),
@@ -87,6 +88,25 @@ class Chatroom extends Component {
 		updatedMessages[index] = newMessage
 		this.setState({messages: updatedMessages})
   	}
+
+		unUpvotedMessage(content) {
+					const message = this.state.messages;
+					const index = message.findIndex((message) => message.id === content.message_id);
+					const updatedMessages = [...this.state.messages]
+					const newMessage = {
+						hour: updatedMessages[index].hour,
+						id: updatedMessages[index].id,
+						minutes: updatedMessages[index].minute,
+						second:updatedMessages[index].second,
+						text: updatedMessages[index].text,
+						upvotes: content.upvotes,
+						user: updatedMessages[index].user,
+						upvoted_by_user: false,
+						responses: updatedMessages[index].responses
+					}
+					updatedMessages[index] = newMessage
+					this.setState({messages: updatedMessages})
+				}
 
   	newResponse(response) {
 		const messages = this.state.messages;
@@ -190,6 +210,10 @@ class Chatroom extends Component {
 		WebSocketInstance.upvoteMessage(id);
 	}
 
+	unUpvoteThisMessage = (id) => {
+		WebSocketInstance.unUpvoteMessage(id);
+	}
+
 	handleHomeClick = () => {
 		WebSocketInstance.close();
 		this.props.history.push(routes.HOME)
@@ -215,6 +239,7 @@ class Chatroom extends Component {
 					<QuestionList
 						questions={messages}
 						upvoteThisMessage={this.upvoteThisMessage}
+						unUpvoteThisMessage={this.unUpvoteThisMessage}
 						postResponseHandler={this.postResponseHandler}
 						handleDeleteMessage={this.handleDeleteMessage}
 						handleEditMessage={this.handleEditMessage}

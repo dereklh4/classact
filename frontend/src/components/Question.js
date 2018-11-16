@@ -52,11 +52,12 @@ class QuestionBasic extends Component {
     }
 
     render() {
-        const {currUser, user, question, classes, id, upvotes, upvotedByUser, upvoteThisMessage, answers} = this.props;
+        const {currUser, user, question, classes, id, upvotes, upvotedByUser, upvoteThisMessage, unUpvoteThisMessage, answers} = this.props;
         var questionShortened = question;
         if (question.length > 45) {
             questionShortened = question.substr(0,44) + '...'
         }
+
         return (
             <div>
                 <EditQuestionField
@@ -67,7 +68,7 @@ class QuestionBasic extends Component {
                 />
                 <ExpansionPanel className={classes.expansionPanel}>
                     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>} className={classes.questionSummary}>
-                        <Upvotes id={id} upvotedByUser={upvotedByUser} numUpvotes={upvotes} upvoteThisMessage={upvoteThisMessage}/>
+                        <Upvotes id={id} upvotedByUser={upvotedByUser} numUpvotes={upvotes} unUpvoteThisMessage={unUpvoteThisMessage} upvoteThisMessage={upvoteThisMessage}/>
                         <Typography className={classes.upvotesText}>
                             {upvotes}
                         </Typography>

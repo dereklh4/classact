@@ -78,6 +78,11 @@ export const QUESTION_STYLE = theme => ({
     upvoteButton: {
         padding: '0px 3px 0px 0px'
     },
+    editButton: {
+        padding: '0px!important',
+        position: 'absolute',
+        right: '45px',
+    },
     upvotesText: {
         color: '#505050',
         fontWeight: 'bold',
