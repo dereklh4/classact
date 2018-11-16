@@ -80,3 +80,13 @@ class ClassroomEnableSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Classroom
 		fields = ('url',)
+
+class UserInClassroomViewSerializer(serializers.ModelSerializer):
+	permission = serializers.IntegerField()
+	classroom = ClassroomViewSerializer
+	user = serializers.EmailField()
+
+	class Meta:
+		model = UserInClassroom
+		fields = ('user','classroom','permission')
+		depth = 2
