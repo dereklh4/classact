@@ -29,7 +29,7 @@ class Chatroom extends Component {
     									this.errorMessage.bind(this),
     									this.newMessage.bind(this),
     									this.upvotedMessage.bind(this),
-											this.unUpvotedMessage.bind(this),
+										this.unUpvotedMessage.bind(this),
     									this.newResponse.bind(this),
     									this.editResponse.bind(this),
     									this.deleteResponse.bind(this),
