@@ -89,24 +89,24 @@ class Chatroom extends Component {
 		this.setState({messages: updatedMessages})
   	}
 
-		unUpvotedMessage(content) {
-					const message = this.state.messages;
-					const index = message.findIndex((message) => message.id === content.message_id);
-					const updatedMessages = [...this.state.messages]
-					const newMessage = {
-						hour: updatedMessages[index].hour,
-						id: updatedMessages[index].id,
-						minutes: updatedMessages[index].minute,
-						second:updatedMessages[index].second,
-						text: updatedMessages[index].text,
-						upvotes: content.upvotes,
-						user: updatedMessages[index].user,
-						upvoted_by_user: false,
-						responses: updatedMessages[index].responses
-					}
-					updatedMessages[index] = newMessage
-					this.setState({messages: updatedMessages})
-				}
+	unUpvotedMessage(content) {
+		const message = this.state.messages;
+		const index = message.findIndex((message) => message.id === content.message_id);
+		const updatedMessages = [...this.state.messages]
+		const newMessage = {
+			hour: updatedMessages[index].hour,
+			id: updatedMessages[index].id,
+			minutes: updatedMessages[index].minute,
+			second:updatedMessages[index].second,
+			text: updatedMessages[index].text,
+			upvotes: content.upvotes,
+			user: updatedMessages[index].user,
+			upvoted_by_user: false,
+			responses: updatedMessages[index].responses
+		}
+		updatedMessages[index] = newMessage
+		this.setState({messages: updatedMessages})
+	}
 
   	newResponse(response) {
 		const messages = this.state.messages;
