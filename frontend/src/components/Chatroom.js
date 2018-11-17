@@ -140,29 +140,6 @@ class Chatroom extends Component {
     	})
 	    e.preventDefault();
   	}
-	handleDeleteMessage = (message_id) => {
-		WebSocketInstance.deleteMessage(message_id);
-	}
-
-	handleEditMessage = (message_id, text) => {
-		WebSocketInstance.editMessage(message_id, text, true)
-	}
-
-	handleDeleteResponse = (message_id, response_id) => {
-		WebSocketInstance.deleteResponse(message_id, response_id)
-	}
-
-	postResponseHandler = (id, text) => {
-		WebSocketInstance.postResponse(id, text);
-	}
-
-	upvoteThisMessage = (id) => {
-		WebSocketInstance.upvoteMessage(id);
-	}
-
-	unUpvoteThisMessage = (id) => {
-		WebSocketInstance.unUpvoteMessage(id);
-	}
 
 	handleHomeClick = () => {
 		WebSocketInstance.close();
@@ -188,12 +165,6 @@ class Chatroom extends Component {
 					</Typography>
 					<QuestionList
 						questions={messages}
-						upvoteThisMessage={this.upvoteThisMessage}
-						unUpvoteThisMessage={this.unUpvoteThisMessage}
-						postResponseHandler={this.postResponseHandler}
-						handleDeleteMessage={this.handleDeleteMessage}
-						handleEditMessage={this.handleEditMessage}
-						handleDeleteResponse={this.handleDeleteResponse}
 					/>
 					<form onSubmit={(e) => this.postChatMessageHandler(e, this.state.message)} className={classes.postQuestion}>
 						<FormControl margin="normal" fullWidth required>
