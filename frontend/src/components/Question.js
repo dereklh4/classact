@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {AnswerList} from './AnswerList'
+import WebSocketInstance from '../services/WebSocket'
 import {DeleteButton} from './DeleteButton'
 import {EditButton} from './EditButton'
 import {EditQuestionField} from './EditQuestionField'
@@ -44,7 +45,7 @@ class QuestionBasic extends Component {
     }
 
     deleteResponse = (response_id) => {
-        this.props.handleDeleteResponse(this.props.id, response_id)
+        WebSocketInstance.deleteResponse(this.props.id, response_id)
     }
 
     handleChange = (event) => {
