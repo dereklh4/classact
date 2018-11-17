@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {AnswerList} from './AnswerList'
+import WebSocketInstance from '../services/WebSocket'
 import {DeleteButton} from './DeleteButton'
 import {EditButton} from './EditButton'
 import {EditQuestionField} from './EditQuestionField'
@@ -25,13 +26,13 @@ class QuestionBasic extends Component {
         };
     }
     onSubmit = (event) => {
-        this.props.postResponseHandler(this.props.id, this.state.userAnswer)
+        WebSocketInstance.postResponse(this.props.id, this.state.userAnswer)
         this.setState({userAnswer:''})
         event.preventDefault();
     }
 
     onSubmitQuestionEdit = (text) => {
-         this.props.handleEditMessage(this.props.id, text)
+         WebSocketInstance.editMessage(this.props.id, text, true)
     }
     openEditMessageClick = () => {
         this.setState({edit: true})
@@ -40,11 +41,19 @@ class QuestionBasic extends Component {
         this.setState({edit: false})
     }
     deleteMessage = () => {
-        this.props.handleDeleteMessage(this.props.id)
+        WebSocketInstance.deleteMessage(this.props.id)
     }
 
     deleteResponse = (response_id) => {
-        this.props.handleDeleteResponse(this.props.id, response_id)
+        WebSocketInstance.deleteResponse(this.props.id, response_id)
+    }
+
+    upvoteQuestion = () => {
+        WebSocketInstance.upvoteMessage(this.props.id)
+    }
+
+    unUpvoteMessage = () => {
+        WebSocketInstance.unUpvoteMessage(this.props.id)
     }
 
     handleChange = (event) => {
@@ -52,7 +61,7 @@ class QuestionBasic extends Component {
     }
 
     render() {
-        const {currUser, user, question, classes, id, upvotes, upvotedByUser, upvoteThisMessage, unUpvoteThisMessage, answers} = this.props;
+        const {currUser, user, question, classes, id, upvotes, upvotedByUser, answers} = this.props;
         var questionShortened = question;
         if (question.length > 45) {
             questionShortened = question.substr(0,44) + '...'
@@ -68,7 +77,7 @@ class QuestionBasic extends Component {
                 />
                 <ExpansionPanel className={classes.expansionPanel}>
                     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>} className={classes.questionSummary}>
-                        <Upvotes id={id} upvotedByUser={upvotedByUser} numUpvotes={upvotes} unUpvoteThisMessage={unUpvoteThisMessage} upvoteThisMessage={upvoteThisMessage}/>
+                        <Upvotes id={id} upvotedByUser={upvotedByUser} numUpvotes={upvotes} unUpvoteThisMessage={this.unUpvoteMessage} upvoteThisMessage={this.upvoteQuestion}/>
                         <Typography className={classes.upvotesText}>
                             {upvotes}
                         </Typography>
