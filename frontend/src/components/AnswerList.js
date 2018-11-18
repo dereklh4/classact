@@ -7,7 +7,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Avatar from '@material-ui/core/Avatar';
 
-const AnswerListBasic = ({answers, classes, deleteResponse}) =>
+const AnswerListBasic = ({answers, classes, deleteResponse, currUser, user}) =>
     <div className={classes.answerBox}>
         <Typography className={classes.title}>
             Answers
@@ -21,7 +21,12 @@ const AnswerListBasic = ({answers, classes, deleteResponse}) =>
                     <Typography className={classes.answerText}>
                         {answer.text}
                     </Typography>
+                    {currUser === user ? (
                     <DeleteButton deleteMessage={() => deleteResponse(answer.response_id)} give={1}/>
+                    )
+                    :
+                    null
+                    }
                 </ListItem>
             )}
         </List>
