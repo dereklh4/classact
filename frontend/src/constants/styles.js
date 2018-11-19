@@ -78,18 +78,15 @@ export const QUESTION_STYLE = theme => ({
     upvoteButton: {
         padding: '0px 3px 0px 0px'
     },
-    editButton: {
-        padding: '0px!important',
-        position: 'absolute',
-        right: '45px',
-    },
+
     upvotesText: {
         color: '#505050',
         fontWeight: 'bold',
         borderRight: '2px solid #dfdfdf',
         borderBottom: '2px solid #dfdfdf',
-        paddingRight: 3,
+        paddingRight: 5,
         marginRight: 12,
+        marginLeft: 10
 
     },
     questionSummaryText: {
@@ -108,15 +105,20 @@ export const QUESTION_STYLE = theme => ({
     fullQuestionText: {
         margin: '10px 15px 10px 15px'
     },
-    EditButton: {
+    editButton: {
         padding: '0px!important',
         position: 'absolute',
         right: '80px',
+        border: '1px solid #dfdfdf',
+    },
+    editResponseButton: {
+        right: '45px',
     },
     deleteButton: {
         padding: '0px!important',
         position: 'absolute',
         right: '45px',
+        border: '1px solid #dfdfdf',
     },
     deleteResponseButton: {
         right: '10px',

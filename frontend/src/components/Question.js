@@ -100,7 +100,7 @@ class QuestionBasic extends Component {
                                 {question}
                             </Typography>
                         </div>
-                        <AnswerList answers={answers} deleteResponse={this.deleteResponse}/>
+                        <AnswerList answers={answers} user={user} currUser={currUser} deleteResponse={this.deleteResponse} message_id={id}/>
                         <form onSubmit={this.onSubmit} className={classes.questionForm}>
                             <FormControl margin="normal" fullWidth required>
                                 <TextField
