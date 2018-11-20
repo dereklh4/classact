@@ -28,17 +28,13 @@ class EditQuestionFieldBasic extends Component {
         this.setState({modifiedQuestion: this.props.originalQuestion})
     }
     render() {
-        const {isOpen, classes, originalQuestion, closeEditMessageClick} = this.props;
+        const {isOpen, classes, originalQuestion, closeEditMessageClick, give} = this.props;
         return (
             <Dialog open={isOpen} className= {classes.dialog}>
                 <BackButton backClick={closeEditMessageClick}/>
-                 <DialogTitle>
-                     Edit Question
-                 </DialogTitle>
+                {give === 1 ? <DialogTitle> Edit Response </DialogTitle> : <DialogTitle> Edit Question </DialogTitle>}
                  <DialogContent>
-                     <DialogContentText>
-                         Edit Your Question Below
-                     </DialogContentText>
+                     {give === 1 ? <DialogContentText> Enter Your Response Below  </DialogContentText> : <DialogContentText> Edit Your Question Below </DialogContentText>}
                      <form onSubmit={this.onSubmit} className={classes.questionForm}>
                          <FormControl margin="normal" fullWidth required>
                              <TextField

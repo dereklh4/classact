@@ -273,7 +273,7 @@ class ChatConsumer(WebsocketConsumer):
             self._error_message("Not a valid message id")
 
         try:
-            response = Response.objects.get(user=user, response_id=response_id)
+            response = Response.objects.get(user=user, id=response_id)
         except:
             self._error_message("Response does not exist")
 
