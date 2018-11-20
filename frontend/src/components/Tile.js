@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
+import {EditField} from './EditField'
 import * as routes from '../constants/routes';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
@@ -19,7 +20,10 @@ class TileBasic extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            anchorEl: null
+            anchorEl: null,
+            changeNameFormOpen: false,
+            changed: false,
+            changedName: ''
         };
     }
 
@@ -29,11 +33,37 @@ class TileBasic extends Component {
     handleClose = () => {
         this.setState({anchorEl: null});
     }
+    openChangeForm = () => {
+        this.setState({changeNameFormOpen: true})
+    }
+    closeChangeForm = () => {
+        this.setState({changeNameFormOpen: false})
+    }
     removeClass = () => {
         this.props.onRemoveCourse(this.props.url);
         this.setState({anchorEl: null});
     }
-
+    onSubmitQuestionEdit = (new_name) => {
+        const token = 'Token ' + localStorage.getItem('token')
+        const url = 'http://localhost:8000/api/classroom/update/'
+        const data = {
+            url: this.props.url,
+            new_title: new_name,
+        }
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(response => {
+            this.setState({changed: true, changedName: new_name})
+        })
+    }
     getStatus = (permission) => {
         switch (permission) {
             case 3:
@@ -51,13 +81,21 @@ class TileBasic extends Component {
     }
     render() {
         const {name, url, numenrolled, permission, classes, history} = this.props;
+        const {changed, changedName} = this.state;
         return (
             <React.Fragment>
                 <CssBaseline/>
+                    <EditField
+                        isOpen={this.state.changeNameFormOpen}
+                        originalMessage={name}
+                        closeEditMessageClick={this.closeChangeForm}
+                        onSubmitQuestionEdit={this.onSubmitQuestionEdit}
+                        give={2}
+                    />
                     <Grid item sm={6} md={4} lg={3}>
                         <Card className={classes.card}>
                             <CardHeader
-                                title={name}
+                                title={changed ? changedName : name}
                                 titleTypographyProps={{ align: 'center' }}
                                 className={classes.cardHeader}
                                 action={
@@ -76,6 +114,12 @@ class TileBasic extends Component {
                                 onClose={this.handleClose}
                             >
                                 <MenuItem onClick={this.removeClass}>Remove Class</MenuItem>
+                                {permission === 3 ?
+                                    <MenuItem onClick={this.openChangeForm}>Change Chat Name </MenuItem>
+                                    :
+                                    null
+                                }
+
                             </Menu>
 
                             <CardContent className={classes.cardContent}>
