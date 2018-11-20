@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
 import {DeleteButton} from './DeleteButton'
 import {EditButton} from './EditButton'
-import {EditQuestionField} from './EditQuestionField'
+import {EditField} from './EditField'
 import {RESPONSE_STYLE} from '../constants/styles';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
@@ -33,11 +33,11 @@ class AnswerListBasic extends Component {
         const {answers, classes, deleteResponse, currUser, user} = this.props;
         return (
             <div>
-                <EditQuestionField
+                <EditField
                     give={1}
                     isOpen={this.state.editAnswerForm}
                     closeEditMessageClick={this.closeEditResponseClick}
-                    originalQuestion={this.state.text}
+                    originalMessage={this.state.text}
                     onSubmitQuestionEdit={this.submitResponseEdit}
                 />
                 <div className={classes.answerBox}>

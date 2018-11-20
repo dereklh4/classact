@@ -10,41 +10,61 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 
-class EditQuestionFieldBasic extends Component {
+class EditFieldBasic extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            modifiedQuestion: '',
+            modifiedMessage: '',
         };
     }
 
     onSubmit = (event) => {
-        this.props.onSubmitQuestionEdit(this.state.modifiedQuestion)
+        this.props.onSubmitQuestionEdit(this.state.modifiedMessage)
         this.props.closeEditMessageClick();
         event.preventDefault();
     }
 
     componentWillMount() {
-        this.setState({modifiedQuestion: this.props.originalQuestion})
+        this.setState({modifiedMessage: this.props.originalMessage})
     }
     render() {
-        const {isOpen, classes, originalQuestion, closeEditMessageClick, give} = this.props;
+        const {isOpen, classes, originalMessage, closeEditMessageClick, give} = this.props;
         return (
             <Dialog open={isOpen} className= {classes.dialog}>
                 <BackButton backClick={closeEditMessageClick}/>
-                {give === 1 ? <DialogTitle> Edit Response </DialogTitle> : <DialogTitle> Edit Question </DialogTitle>}
+                {
+                    give === 1 ?
+                    <DialogTitle> Edit Response </DialogTitle>
+                    :
+                    (
+                        give === 2 ?
+                        <DialogTitle> Edit Title </DialogTitle>
+                        :
+                        <DialogTitle> Edit Question </DialogTitle>
+                    )
+                }
                  <DialogContent>
-                     {give === 1 ? <DialogContentText> Enter Your Response Below  </DialogContentText> : <DialogContentText> Edit Your Question Below </DialogContentText>}
+                     {
+                         give === 1 ?
+                         <DialogContentText> Enter Your Response Below  </DialogContentText>
+                         :
+                         (
+                             give === 2 ?
+                             <DialogContentText> Edit Your Title Below </DialogContentText>
+                             :
+                             <DialogContentText> Edit Your Question Below </DialogContentText>
+                         )
+                     }
                      <form onSubmit={this.onSubmit} className={classes.questionForm}>
                          <FormControl margin="normal" fullWidth required>
                              <TextField
                                  label="Edit"
                                  multiline
                                  rows="3"
-                                 value={this.state.modifiedQuestion}
-                                 onChange={event => this.setState({modifiedQuestion: event.target.value})}
+                                 value={this.state.modifiedMessage}
+                                 onChange={event => this.setState({modifiedMessage: event.target.value})}
                                  type="text"
-                                 placeholder={originalQuestion}
+                                 placeholder={originalMessage}
                                  fullWidth
                                  autoFocus
                                  variant="outlined"
@@ -63,5 +83,5 @@ class EditQuestionFieldBasic extends Component {
         );
     }
 }
-const EditQuestionField = withStyles(EDIT_QUESTION_STYLE)(EditQuestionFieldBasic)
-export {EditQuestionField}
+const EditField = withStyles(EDIT_QUESTION_STYLE)(EditFieldBasic)
+export {EditField}

@@ -3,7 +3,7 @@ import {AnswerList} from './AnswerList'
 import WebSocketInstance from '../services/WebSocket'
 import {DeleteButton} from './DeleteButton'
 import {EditButton} from './EditButton'
-import {EditQuestionField} from './EditQuestionField'
+import {EditField} from './EditField'
 import Upvotes from './Upvotes'
 import withStyles from '@material-ui/core/styles/withStyles';
 import {QUESTION_STYLE} from '../constants/styles';
@@ -69,9 +69,9 @@ class QuestionBasic extends Component {
 
         return (
             <div>
-                <EditQuestionField
+                <EditField
                     isOpen={this.state.edit}
-                    originalQuestion={question}
+                    originalMessage={question}
                     closeEditMessageClick={this.closeEditMessageClick}
                     onSubmitQuestionEdit={this.onSubmitQuestionEdit}
                 />

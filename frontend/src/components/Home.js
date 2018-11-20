@@ -85,19 +85,18 @@ class HomePage extends Component {
         })
         .then(response => response.json())
         .then(response => {
-            console.log('TODO: ERROR HANDLE?' + response)
         })
         .catch(error => this.setState({error: error}))
     }
 
     render() {
-        const {userInfo} = this.state;
+        const {userInfo, courses, formOpen} = this.state;
         return (
           <div>
             <h1>Home</h1>
             <h2>Classrooms belonging to {userInfo.first_name}</h2>
-            <AddJoinForm formOpen={this.state.formOpen} onPlusClickAway={this.onPlusClickAway} courses={this.state.courses}/>
-            <TileGrid onPlusClick={this.onPlusClick} courses={this.state.courses} onRemoveCourse={this.onRemoveCourse}/>
+            <AddJoinForm formOpen={formOpen} onPlusClickAway={this.onPlusClickAway} courses={courses}/>
+            <TileGrid onPlusClick={this.onPlusClick} courses={courses} onRemoveCourse={this.onRemoveCourse}/>
             <SignOutButton onUserChange={this.props.onUserChange}/>
           </div>
         )
