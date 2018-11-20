@@ -327,7 +327,7 @@ class ChatConsumer(WebsocketConsumer):
             self._error_message("Response does not exist")
 
         if len(UserResponseUpvotes.objects.filter(user=user,response=response)) == 0:
-            UserResponseUpvotes.objects.filter(user=user,response=response).delete()
+            UserResponseUpvotes.objects.create(user=user,response=response)
         else:
             self._error_message("User " + user.username + "already upvoted that response")
 
@@ -357,7 +357,7 @@ class ChatConsumer(WebsocketConsumer):
             self._error_message("Response does not exist")
 
         if len(UserResponseUpvotes.objects.filter(user=user,response=response)) > 0:
-            UserResponseUpvotes.objects.create(user=user,response=response)
+            UserResponseUpvotes.objects.filter(user=user,response=response).delete()
         else:
             self._error_message("User " + user.username + "already upvoted that response")
 

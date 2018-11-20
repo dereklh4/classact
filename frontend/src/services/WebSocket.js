@@ -16,7 +16,8 @@ class WebSocketService {
   }
 
   addCallbacks(initChatCallback,errorMessageCallback,newMessageCallback,upvotedMessageCallback,unUpvotedMessageCallback,
-          newResponseCallback,editResponseCallback,deleteResponseCallback,editMessageCallback,deleteMessageCallback) {
+          newResponseCallback,editResponseCallback,deleteResponseCallback,editMessageCallback,deleteMessageCallback,
+          upvotedResponseCallback,unUpvotedResponseCallback) {
     this.callbacks['init_chat'] = initChatCallback;
     this.callbacks['error_message'] = errorMessageCallback;
 
@@ -28,6 +29,8 @@ class WebSocketService {
     this.callbacks['delete_response'] = deleteResponseCallback;
     this.callbacks['edit_message'] = editMessageCallback;
     this.callbacks['delete_message'] = deleteMessageCallback;
+    this.callbacks['upvoted_response'] = upvotedResponseCallback;
+    this.callbacks['un_upvoted_response'] = unUpvotedResponseCallback;
   }
 
   connect(chatroom_url) {
@@ -107,6 +110,14 @@ class WebSocketService {
 
   unUpvoteMessage(in_message_id) {
     this._sendMessage({command: 'un_upvote_message', message_id: in_message_id})
+  }
+
+  upvoteResponse(in_message_id, in_response_id) {
+    this._sendMessage({command: 'upvote_response', message_id: in_message_id, response_id: in_response_id})
+  }
+
+  unUpvoteResponse(in_message_id, in_response_id) {
+    this._sendMessage({command: 'un_upvote_message', message_id: in_message_id, response_id: in_response_id})
   }
 
   postResponse(in_message_id, text, anonymous) {

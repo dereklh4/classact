@@ -34,7 +34,9 @@ class Chatroom extends Component {
     									this.editResponse.bind(this),
     									this.deleteResponse.bind(this),
     									this.editMessage.bind(this),
-    									this.deleteMessage.bind(this))
+    									this.deleteMessage.bind(this),
+    									this.upvotedResponse.bind(this),
+    									this.unUpvotedResponse.bind(this))
 
     };
 
@@ -86,6 +88,16 @@ class Chatroom extends Component {
 		const newMessage = Object.assign(updatedMessages[index], {upvotes: content.upvotes, upvoted_by_user: false})
 		updatedMessages[index] = newMessage
 		this.setState({messages: updatedMessages})
+	}
+
+	upvotedResponse(content) {
+		console.log("Upvoted response:")
+		console.log(content)
+  	}
+
+	unUpvotedResponse(content) {
+		console.log("Unupvoted response:")
+		console.log(content)
 	}
 
   	newResponse(content) {
