@@ -35,3 +35,7 @@ class Response(models.Model):
 	text = models.CharField(max_length=1000)
 	creation_time = models.DateTimeField(auto_now=True)
 	anonymous = models.BooleanField(default=False)
+
+class UserResponseUpvotes(models.Model):
+	user = models.ForeignKey(User,on_delete=models.CASCADE)
+	response = models.ForeignKey(Response,on_delete=models.CASCADE)

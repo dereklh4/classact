@@ -309,6 +309,66 @@ class ChatConsumer(WebsocketConsumer):
                                 }
                             )
 
+    def upvote_response(self,data):
+        user, classroom = self._validate_user()
+
+        message_id = data["message_id"]
+
+        response_id = data["response_id"]
+
+        try:
+            message = Message.objects.get(id=message_id)
+        except:
+            self._error_message("Not a valid message id")
+
+        try:
+            response = Response.objects.get(user=user, id=response_id)
+        except:
+            self._error_message("Response does not exist")
+
+        if len(UserResponseUpvotes.objects.filter(user=user,response=response)) == 0:
+            UserResponseUpvotes.objects.filter(user=user,response=response).delete()
+        else:
+            self._error_message("User " + user.username + "already upvoted that response")
+
+        upvotes = len(UserResponseUpvotes.objects.filter(response=response))
+        self._fire_event("upvoted_response",
+                            {
+                                "response_id":response_id,
+                                "upvotes":upvotes
+                            }
+                        )
+
+    def un_upvote_response(self,data):
+        user, classroom = self._validate_user()
+
+        message_id = data["message_id"]
+
+        response_id = data["response_id"]
+
+        try:
+            message = Message.objects.get(id=message_id)
+        except:
+            self._error_message("Not a valid message id")
+
+        try:
+            response = Response.objects.get(user=user, id=response_id)
+        except:
+            self._error_message("Response does not exist")
+
+        if len(UserResponseUpvotes.objects.filter(user=user,response=response)) > 0:
+            UserResponseUpvotes.objects.create(user=user,response=response)
+        else:
+            self._error_message("User " + user.username + "already upvoted that response")
+
+        upvotes = len(UserResponseUpvotes.objects.filter(response=response))
+        self._fire_event("un_upvoted_response",
+                            {
+                                "response_id":response_id,
+                                "upvotes":upvotes
+                            }
+                        )
+
     ## COMMANDS
 
     commands = {
@@ -317,6 +377,8 @@ class ChatConsumer(WebsocketConsumer):
         'upvote_message': upvote_message,
         'un_upvote_message': un_upvote_message,
         'post_response': post_response,
+        'upvote_response': upvote_response,
+        'un_upvote_response': un_upvote_response,
         'delete_message': delete_message,
         'edit_message': edit_message,
         'delete_response': delete_response,
@@ -341,6 +403,12 @@ class ChatConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps(event))
 
     def new_response(self, event):
+        self.send(text_data=json.dumps(event))
+
+    def upvoted_response(self,event):
+        self.send(text_data=json.dumps(event))
+
+    def un_upvoted_response(self,event):
         self.send(text_data=json.dumps(event))
 
     def edit_message(self, event):
