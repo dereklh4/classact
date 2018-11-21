@@ -34,7 +34,9 @@ class Chatroom extends Component {
     									this.editResponse.bind(this),
     									this.deleteResponse.bind(this),
     									this.editMessage.bind(this),
-    									this.deleteMessage.bind(this))
+    									this.deleteMessage.bind(this),
+    									this.upvotedResponse.bind(this),
+    									this.unUpvotedResponse.bind(this))
 
     };
 
@@ -86,6 +88,32 @@ class Chatroom extends Component {
 		const newMessage = Object.assign(updatedMessages[index], {upvotes: content.upvotes, upvoted_by_user: false})
 		updatedMessages[index] = newMessage
 		this.setState({messages: updatedMessages})
+	}
+
+	upvotedResponse(content) {
+		const messages = this.state.messages;
+		const messageIndex = messages.findIndex((message) => message.id === content.message_id)
+		const updatedMessages = [...this.state.messages]
+		const responses = updatedMessages[messageIndex].responses
+		const responseIndex = responses.findIndex((r) => r.response_id === content.response_id)
+		const newResponse = Object.assign(updatedMessages[messageIndex].responses[responseIndex], {upvotes: content.upvotes, upvoted_by_user: true})
+		responses[responseIndex] = newResponse
+		const newMessage = Object.assign(updatedMessages[messageIndex], {responses: responses})
+		updatedMessages[messageIndex] = newMessage
+		this.setState({messages: updatedMessages})
+  	}
+
+	unUpvotedResponse(content) {
+		const messages = this.state.messages;
+		const messageIndex = messages.findIndex((message) => message.id === content.message_id)
+		const updatedMessages = [...this.state.messages]
+		const responses = updatedMessages[messageIndex].responses
+		const responseIndex = responses.findIndex((r) => r.response_id === content.response_id)
+		const newResponse = Object.assign(updatedMessages[messageIndex].responses[responseIndex], {upvotes: content.upvotes, upvoted_by_user: false})
+		responses[responseIndex] = newResponse
+		const newMessage = Object.assign(updatedMessages[messageIndex], {responses: responses})
+		updatedMessages[messageIndex] = newMessage
+		this.setState(this.state)
 	}
 
   	newResponse(content) {
