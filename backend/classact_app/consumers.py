@@ -120,6 +120,8 @@ class ChatConsumer(WebsocketConsumer):
         }
 
     def response_to_json(self, response):
+        response_upvotes = UserResponseUpvotes.objects.filter(response=response)
+        upvoted_by_user = len(response_upvotes.filter(user=self.scope["user"])) >= 1
         return {
             'message_id': response.message.id,
             'response_id': response.id,
@@ -128,6 +130,8 @@ class ChatConsumer(WebsocketConsumer):
             'hour': response.creation_time.hour,
             'minute':response.creation_time.minute,
             'second':response.creation_time.second,
+            'upvotes':len(response_upvotes),
+            'upvoted_by_user':upvoted_by_user,
             'anonymous':response.anonymous,
         }
 
