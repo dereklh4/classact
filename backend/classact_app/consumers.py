@@ -52,7 +52,7 @@ class ChatConsumer(WebsocketConsumer):
 
     def _fire_event(self, event, message):
         # Send message to room group
-        print("broadcasting message post:" + str(message))
+        print("broadcasting event "+ str(event) + " with message:" + str(message))
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
@@ -196,7 +196,7 @@ class ChatConsumer(WebsocketConsumer):
 
         message.delete()
 
-        self._fire_event("delete_message", {"message_id":message_id})
+        self._fire_event("deleted_message", {"message_id":message_id})
 
     def upvote_message(self,data):
         user, classroom = self._validate_user()
@@ -306,7 +306,7 @@ class ChatConsumer(WebsocketConsumer):
 
         response.delete()
 
-        self._fire_event("delete_response",
+        self._fire_event("deleted_response",
                                 {
                                     "message_id": message_id,
                                     "response_id": response_id,
@@ -420,11 +420,11 @@ class ChatConsumer(WebsocketConsumer):
     def edit_message(self, event):
         self.send(text_data=json.dumps(event))
 
-    def delete_message(self, event):
+    def deleted_message(self, event):
         self.send(text_data=json.dumps(event))
 
     def edit_response(self, event):
         self.send(text_data=json.dumps(event))
 
-    def delete_response(self, event):
+    def deleted_response(self, event):
         self.send(text_data=json.dumps(event))
