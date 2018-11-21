@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
+import WebSocketInstance from '../services/WebSocket'
 import withStyles from '@material-ui/core/styles/withStyles';
 import {DeleteButton} from './DeleteButton'
 import {EditButton} from './EditButton'
 import {EditField} from './EditField'
+import Upvotes from './Upvotes'
 import {RESPONSE_STYLE} from '../constants/styles';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
-import WebSocketInstance from '../services/WebSocket'
 import ListItem from '@material-ui/core/ListItem';
 import Avatar from '@material-ui/core/Avatar';
 
@@ -25,6 +26,12 @@ class AnswerListBasic extends Component {
     }
     closeEditResponseClick = () => {
         this.setState({editAnswerForm: false, responseId: '', text: ''})
+    }
+    upvoteResponse = (response_id) => {
+        WebSocketInstance.upvoteResponse(this.props.message_id, response_id)
+    }
+    unUpvoteResponse = (response_id) => {
+        WebSocketInstance.unUpvoteResponse(this.props.message_id, response_id)
     }
     submitResponseEdit = (text) => {
         WebSocketInstance.editResponse(this.props.message_id, this.state.responseId, text, true);
@@ -47,6 +54,15 @@ class AnswerListBasic extends Component {
                     <List dense>
                         {answers.map(answer =>
                             <ListItem key={answer.response_id} className={classes.listItem}>
+                                <Upvotes
+                                    id={answer.response_id}
+                                    upvotedByUser={answer.upvoted_by_user}
+                                    unUpvoteThisMessage={this.unUpvoteResponse}
+                                    upvoteThisMessage={this.upvoteResponse}
+                                />
+                                <Typography className={classes.upvotesText}>
+                                    {answer.upvotes}
+                                </Typography>
                                 <Avatar className={classes.avatar}>
                                     <img className={classes.image} src={require('../images/ListArrow.png')} alt="CA Logo"/>
                                 </Avatar>

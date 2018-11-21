@@ -338,6 +338,7 @@ class ChatConsumer(WebsocketConsumer):
         upvotes = len(UserResponseUpvotes.objects.filter(response=response))
         self._fire_event("upvoted_response",
                             {
+                                "message_id":message_id,
                                 "response_id":response_id,
                                 "upvotes":upvotes
                             }
@@ -368,6 +369,7 @@ class ChatConsumer(WebsocketConsumer):
         upvotes = len(UserResponseUpvotes.objects.filter(response=response))
         self._fire_event("un_upvoted_response",
                             {
+                                "message_id":message_id,
                                 "response_id":response_id,
                                 "upvotes":upvotes
                             }

@@ -27,7 +27,6 @@ class QuestionListBasic extends Component {
         })
     }
     render() {
-
         const {questions, classes} = this.props;
         return (
             <div className={classes.questionContainer}>

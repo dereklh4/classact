@@ -273,6 +273,16 @@ export const RESPONSE_STYLE = theme => ({
     list: {
         listStyleImage: 'url(../images/ListArrow.png)',
     },
+    upvotesText: {
+        color: '#505050',
+        fontWeight: 'bold',
+        borderRight: '2px solid #dfdfdf',
+        borderBottom: '2px solid #dfdfdf',
+        paddingRight: 5,
+        marginRight: 12,
+        marginLeft: 10
+
+    },
     avatar: {
         backgroundColor: 'white'
     },

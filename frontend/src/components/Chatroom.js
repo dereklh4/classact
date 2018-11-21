@@ -91,13 +91,29 @@ class Chatroom extends Component {
 	}
 
 	upvotedResponse(content) {
-		console.log("Upvoted response:")
-		console.log(content)
+		const messages = this.state.messages;
+		const messageIndex = messages.findIndex((message) => message.id === content.message_id)
+		const updatedMessages = [...this.state.messages]
+		const responses = updatedMessages[messageIndex].responses
+		const responseIndex = responses.findIndex((r) => r.response_id === content.response_id)
+		const newResponse = Object.assign(updatedMessages[messageIndex].responses[responseIndex], {upvotes: content.upvotes, upvoted_by_user: true})
+		responses[responseIndex] = newResponse
+		const newMessage = Object.assign(updatedMessages[messageIndex], {responses: responses})
+		updatedMessages[messageIndex] = newMessage
+		this.setState({messages: updatedMessages})
   	}
 
 	unUpvotedResponse(content) {
-		console.log("Unupvoted response:")
-		console.log(content)
+		const messages = this.state.messages;
+		const messageIndex = messages.findIndex((message) => message.id === content.message_id)
+		const updatedMessages = [...this.state.messages]
+		const responses = updatedMessages[messageIndex].responses
+		const responseIndex = responses.findIndex((r) => r.response_id === content.response_id)
+		const newResponse = Object.assign(updatedMessages[messageIndex].responses[responseIndex], {upvotes: content.upvotes, upvoted_by_user: false})
+		responses[responseIndex] = newResponse
+		const newMessage = Object.assign(updatedMessages[messageIndex], {responses: responses})
+		updatedMessages[messageIndex] = newMessage
+		this.setState(this.state)
 	}
 
   	newResponse(content) {

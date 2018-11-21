@@ -9,7 +9,6 @@ class Upvotes extends Component {
     handleClick = (upvotedByUser) => {
         if (upvotedByUser) {
             this.props.unUpvoteThisMessage(this.props.id);
-            //alert("UnUpvote" + this.props.id);
         }
         else {
             this.props.upvoteThisMessage(this.props.id);

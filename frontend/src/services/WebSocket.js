@@ -117,7 +117,7 @@ class WebSocketService {
   }
 
   unUpvoteResponse(in_message_id, in_response_id) {
-    this._sendMessage({command: 'un_upvote_message', message_id: in_message_id, response_id: in_response_id})
+    this._sendMessage({command: 'un_upvote_response', message_id: in_message_id, response_id: in_response_id})
   }
 
   postResponse(in_message_id, text, anonymous) {
