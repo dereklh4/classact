@@ -326,4 +326,24 @@ class ChatroomTests(APITestCase):
 		self.assertEqual(len(responses),1)
 		self.assertEqual(responses[0].text,"another")
 
+	def test_edit_message(self):
+		self.consumer.post_message({"text":"hello world"})
+		message = Message.objects.get()
+		self.assertEqual(message.text,"hello world")
+
+		self.consumer.edit_message({"message_id":message.id,"text":"new text"})
+		message = Message.objects.get()
+		self.assertEqual(message.text,"new text")
+
+	def test_edit_response(self):
+		self.consumer.post_message({"text":"hello world"})
+
+		message = Message.objects.get()
+		self.consumer.post_response({"text":"world response","message_id":message.id})
+		response = Response.objects.get()
+		self.consumer.edit_response({"text":"new response","message_id":message.id,"response_id":response.id})
+
+		response = Response.objects.get()
+		self.assertEqual(response.text,"new response")
+
 

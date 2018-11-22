@@ -25,9 +25,9 @@ class WebSocketService {
     this.callbacks['upvoted_message'] = upvotedMessageCallback;
     this.callbacks['un_upvoted_message'] = unUpvotedMessageCallback;
     this.callbacks['new_response'] = newResponseCallback;
-    this.callbacks['edit_response'] = editResponseCallback;
+    this.callbacks['edited_response'] = editResponseCallback;
     this.callbacks['deleted_response'] = deleteResponseCallback;
-    this.callbacks['edit_message'] = editMessageCallback;
+    this.callbacks['edited_message'] = editMessageCallback;
     this.callbacks['deleted_message'] = deleteMessageCallback;
     this.callbacks['upvoted_response'] = upvotedResponseCallback;
     this.callbacks['un_upvoted_response'] = unUpvotedResponseCallback;

@@ -177,7 +177,7 @@ class ChatConsumer(WebsocketConsumer):
         message.anonymous = False
         message.save()
 
-        self._fire_event("edit_message",
+        self._fire_event("edited_message",
                             {
                                 "message_id": message_id,
                                 "text": text,
@@ -285,7 +285,7 @@ class ChatConsumer(WebsocketConsumer):
         #response.anonymous = anonymous
         response.save()
 
-        self._fire_event("edit_response",self.response_to_json(response))
+        self._fire_event("edited_response",self.response_to_json(response))
 
     def delete_response(self, data):
         user, classroom = self._validate_user()
@@ -417,13 +417,13 @@ class ChatConsumer(WebsocketConsumer):
     def un_upvoted_response(self,event):
         self.send(text_data=json.dumps(event))
 
-    def edit_message(self, event):
+    def edited_message(self, event):
         self.send(text_data=json.dumps(event))
 
     def deleted_message(self, event):
         self.send(text_data=json.dumps(event))
 
-    def edit_response(self, event):
+    def edited_response(self, event):
         self.send(text_data=json.dumps(event))
 
     def deleted_response(self, event):
