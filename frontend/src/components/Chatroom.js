@@ -36,7 +36,9 @@ class Chatroom extends Component {
     									this.editMessage.bind(this),
     									this.deleteMessage.bind(this),
     									this.upvotedResponse.bind(this),
-    									this.unUpvotedResponse.bind(this))
+    									this.unUpvotedResponse.bind(this),
+    									this.pinnedMessage.bind(this),
+    									this.savedMessage.bind(this))
 
     };
 
@@ -171,6 +173,15 @@ class Chatroom extends Component {
 		this.setState({messages: updatedMessages})
 	}
 
+	pinnedMessage(content) {
+		console.log("Pinned message:")
+		console.log(content)
+	}
+
+	savedMessage(content) {
+		console.log("Saved message:")
+		console.log(content)
+	}
 
   	postChatMessageHandler = (e, text) => {
 	    WebSocketInstance.postChatMessage(text);

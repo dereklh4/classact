@@ -39,3 +39,13 @@ class Response(models.Model):
 class UserResponseUpvotes(models.Model):
 	user = models.ForeignKey(User,on_delete=models.CASCADE)
 	response = models.ForeignKey(Response,on_delete=models.CASCADE)
+
+class UserPinMessage(models.Model):
+	user = models.ForeignKey(User,on_delete=models.CASCADE)
+	message = models.ForeignKey(Message,on_delete=models.CASCADE)
+	classroom = models.ForeignKey(Classroom,on_delete=models.CASCADE)
+
+class UserSaveQuestion(models.Model):
+	user = models.ForeignKey(User,on_delete=models.CASCADE)
+	message = models.ForeignKey(Message,on_delete=models.CASCADE)
+

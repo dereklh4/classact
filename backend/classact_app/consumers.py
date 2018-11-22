@@ -10,421 +10,472 @@ from django.core import serializers
 class ChatConsumer(WebsocketConsumer):
 
 
-    def connect(self):
-        #set chatroom name
-        print(self.scope['url_route'])
-        self.room_name = self.scope['url_route']['kwargs']['chatroom_url']
-        self.room_group_name = self.room_name
-        classroom_url = self.room_name
-
-        #check token
-        try:
-            token = Token.objects.get(key=self.scope['url_route']['kwargs']['token'])
-        except:
-            print("ERROR: Not a valid token for websocket connection")
-            return
-
-        self.scope["user"] = token.user
-
-        self._validate_user()
-
-        #join room group
-        async_to_sync(self.channel_layer.group_add)(
-            self.room_group_name,
-            self.channel_name
-        )
-
-        #accept connection
-        self.accept()
-        print("connected a client on websocket")
-
-    def disconnect(self, close_code):
-        # leave group room
-        async_to_sync(self.channel_layer.group_discard)(
-            self.room_group_name,
-            self.channel_name
-        )
-        print("disconnected a client from websocket")
-
-    def receive(self, text_data):
-        data = json.loads(text_data)
-        self.commands[data['command']](self, data)
-
-    def _fire_event(self, event, message):
-        # Send message to room group
-        print("broadcasting event "+ str(event) + " with message:" + str(message))
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name,
-            {
-                'type': event,
-                'content': message
-            }
-        )
-
-    def _error_message(self,error_text):
-        print("ERROR: " + error_text)
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name,
-            {
-                'type': 'error_message',
-                'content': error_text
-            }
-        )
-        raise Exception(error_text)
-
-    """
-    Checks that user exists, classroom exists, and that user is part of the classroom
-    Returns the validated user model object, and classroom model object
-    """
-    def _validate_user(self):
-        username = self.scope["user"]
-        if username == None:
-            self._error_message("Empty username")
-            raise
-
-        try:
-            user = User.objects.get(username=username)
-        except:
-            self._error_message("Not a valid user: " + str(username))
-            raise
-
-        try:
-            classroom = Classroom.objects.get(url=self.room_group_name)
-        except:
-            self._error_message("Classroom does not exist")
-            raise
-
-        try:
-            user_in_classroom = UserInClassroom.objects.get(user = self.scope["user"], classroom=classroom)
-        except:
-            self._error_message("User is not a part of this classroom")
-            raise
-
-        return user, classroom
-
-    def message_to_json(self, message):
-        message_upvotes = UserMessageUpvotes.objects.filter(message=message)
-        upvoted_by_user = len(message_upvotes.filter(user=self.scope["user"])) >= 1
-        responses = Response.objects.filter(message=message)
-        return {
-            'id': message.id,
-            'user': message.user.username,
-            'text': message.text,
-            'hour': message.creation_time.hour,
-            'minute':message.creation_time.minute,
-            'second':message.creation_time.second,
-            'upvotes':len(message_upvotes),
-            'upvoted_by_user':upvoted_by_user,
-            'anonymous':message.anonymous,
-            'responses': list(map(lambda x: self.response_to_json(x), responses))
-        }
+	def connect(self):
+		#set chatroom name
+		print(self.scope['url_route'])
+		self.room_name = self.scope['url_route']['kwargs']['chatroom_url']
+		self.room_group_name = self.room_name
+		classroom_url = self.room_name
+
+		#check token
+		try:
+			token = Token.objects.get(key=self.scope['url_route']['kwargs']['token'])
+		except:
+			print("ERROR: Not a valid token for websocket connection")
+			return
+
+		self.scope["user"] = token.user
+
+		self._validate_user()
+
+		#join room group
+		async_to_sync(self.channel_layer.group_add)(
+			self.room_group_name,
+			self.channel_name
+		)
+
+		#accept connection
+		self.accept()
+		print("connected a client on websocket")
+
+	def disconnect(self, close_code):
+		# leave group room
+		async_to_sync(self.channel_layer.group_discard)(
+			self.room_group_name,
+			self.channel_name
+		)
+		print("disconnected a client from websocket")
+
+	def receive(self, text_data):
+		data = json.loads(text_data)
+		self.commands[data['command']](self, data)
+
+	def _fire_event(self, event, message):
+		# Send message to room group
+		print("broadcasting event "+ str(event) + " with message:" + str(message))
+		async_to_sync(self.channel_layer.group_send)(
+			self.room_group_name,
+			{
+				'type': event,
+				'content': message
+			}
+		)
+
+	def _error_message(self,error_text):
+		print("ERROR: " + error_text)
+		async_to_sync(self.channel_layer.group_send)(
+			self.room_group_name,
+			{
+				'type': 'error_message',
+				'content': error_text
+			}
+		)
+		raise Exception(error_text)
+
+	"""
+	Checks that user exists, classroom exists, and that user is part of the classroom
+	Returns the validated user model object, and classroom model object
+	"""
+	def _validate_user(self):
+		username = self.scope["user"]
+		if username == None:
+			self._error_message("Empty username")
+			raise
+
+		try:
+			user = User.objects.get(username=username)
+		except:
+			self._error_message("Not a valid user: " + str(username))
+			raise
+
+		try:
+			classroom = Classroom.objects.get(url=self.room_group_name)
+		except:
+			self._error_message("Classroom does not exist")
+			raise
+
+		try:
+			user_in_classroom = UserInClassroom.objects.get(user = self.scope["user"], classroom=classroom)
+		except:
+			self._error_message("User is not a part of this classroom")
+			raise
+
+		return user, classroom
+
+	def message_to_json(self, message):
+		message_upvotes = UserMessageUpvotes.objects.filter(message=message)
+		upvoted_by_user = len(message_upvotes.filter(user=self.scope["user"])) >= 1
+		responses = Response.objects.filter(message=message)
+		pinned = len(UserPinMessage.objects.filter(message=message)) >= 1
+		saved_by_user = len(UserSaveQuestion.objects.filter(user=self.scope["user"],message=message)) >= 1
+		return {
+			'id': message.id,
+			'user': message.user.username,
+			'text': message.text,
+			'hour': message.creation_time.hour,
+			'minute':message.creation_time.minute,
+			'second':message.creation_time.second,
+			'upvotes':len(message_upvotes),
+			'upvoted_by_user':upvoted_by_user,
+			'anonymous':message.anonymous,
+			'saved_by_user':saved_by_user,
+			'pinned':pinned,
+			'responses': list(map(lambda x: self.response_to_json(x), responses))
+		}
+
+	def response_to_json(self, response):
+		response_upvotes = UserResponseUpvotes.objects.filter(response=response)
+		upvoted_by_user = len(response_upvotes.filter(user=self.scope["user"])) >= 1
+		return {
+			'message_id': response.message.id,
+			'response_id': response.id,
+			'user': response.user.username,
+			'text': response.text,
+			'hour': response.creation_time.hour,
+			'minute':response.creation_time.minute,
+			'second':response.creation_time.second,
+			'upvotes':len(response_upvotes),
+			'upvoted_by_user':upvoted_by_user,
+			'anonymous':response.anonymous,
+		}
 
-    def response_to_json(self, response):
-        response_upvotes = UserResponseUpvotes.objects.filter(response=response)
-        upvoted_by_user = len(response_upvotes.filter(user=self.scope["user"])) >= 1
-        return {
-            'message_id': response.message.id,
-            'response_id': response.id,
-            'user': response.user.username,
-            'text': response.text,
-            'hour': response.creation_time.hour,
-            'minute':response.creation_time.minute,
-            'second':response.creation_time.second,
-            'upvotes':len(response_upvotes),
-            'upvoted_by_user':upvoted_by_user,
-            'anonymous':response.anonymous,
-        }
+	def init_chat(self,data):
+		user, classroom = self._validate_user()
 
-    def init_chat(self,data):
-        user, classroom = self._validate_user()
+		count = data["message_count"]
+		messages = Message.objects.filter(classroom=classroom).order_by('creation_time')[:count]
+
+		messages_json = list(map(lambda x: self.message_to_json(x), messages))
+
+		self.send(text_data=json.dumps({"type":"init_chat","content":messages_json}))
+
+	## COMMAND METHODS
 
-        count = data["message_count"]
-        messages = Message.objects.filter(classroom=classroom).order_by('creation_time')[:count]
+	def post_message(self, data):
+		user, classroom = self._validate_user()
 
-        messages_json = list(map(lambda x: self.message_to_json(x), messages))
+		text = data['text']
 
-        self.send(text_data=json.dumps({"type":"init_chat","content":messages_json}))
+		#anonymous = data['anonymous']
 
-    ## COMMAND METHODS
+		message = Message.objects.create(user=user, text=text, classroom=classroom, anonymous=False)
+		print(str(message.id))
 
-    def post_message(self, data):
-        user, classroom = self._validate_user()
+		self._fire_event("new_message",self.message_to_json(message))
 
-        text = data['text']
+	def edit_message(self, data):
+		user, classroom = self._validate_user()
 
-        #anonymous = data['anonymous']
+		text = data['text']
 
-        message = Message.objects.create(user=user, text=text, classroom=classroom, anonymous=False)
-        print(str(message.id))
+		#anonymous = data['anonymous']
 
-        self._fire_event("new_message",self.message_to_json(message))
+		message_id = data['message_id']
 
-    def edit_message(self, data):
-        user, classroom = self._validate_user()
+		try:
+			message = Message.objects.get(user=user, id=message_id)
+		except:
+			self._error_message("Message does not exist")
 
-        text = data['text']
+		message.text = text
+		message.anonymous = False
+		message.save()
 
-        #anonymous = data['anonymous']
+		self._fire_event("edited_message",
+							{
+								"message_id": message_id,
+								"text": text,
+							}
+						)
 
-        message_id = data['message_id']
+	def delete_message(self, data):
+		user, classroom = self._validate_user()
 
-        try:
-            message = Message.objects.get(user=user, id=message_id)
-        except:
-            self._error_message("Message does not exist")
+		message_id = data['message_id']
 
-        message.text = text
-        message.anonymous = False
-        message.save()
+		try:
+			message = Message.objects.get(user=user, id=message_id)
+		except:
+			self._error_message("Message does not exist")
 
-        self._fire_event("edited_message",
-                            {
-                                "message_id": message_id,
-                                "text": text,
-                            }
-                        )
+		message.delete()
 
-    def delete_message(self, data):
-        user, classroom = self._validate_user()
+		self._fire_event("deleted_message", {"message_id":message_id})
 
-        message_id = data['message_id']
+	def upvote_message(self,data):
+		user, classroom = self._validate_user()
 
-        try:
-            message = Message.objects.get(user=user, id=message_id)
-        except:
-            self._error_message("Message does not exist")
+		message_id = data["message_id"]
+		try:
+			message = Message.objects.get(id=message_id)
+		except:
+			self._error_message("Not a valid message id")
 
-        message.delete()
+		if len(UserMessageUpvotes.objects.filter(user=user,message=message)) == 0:
+			UserMessageUpvotes.objects.create(user=user,message=message)
+		else:
+			self._error_message("User " + user.username + "already upvoted that message")
 
-        self._fire_event("deleted_message", {"message_id":message_id})
+		upvotes = len(UserMessageUpvotes.objects.filter(message=message))
+		self._fire_event("upvoted_message",
+							{
+								"message_id":message_id,
+								"upvotes":upvotes
+							}
+						)
 
-    def upvote_message(self,data):
-        user, classroom = self._validate_user()
+	def un_upvote_message(self,data):
+		user, classroom = self._validate_user()
 
-        message_id = data["message_id"]
-        try:
-            message = Message.objects.get(id=message_id)
-        except:
-            self._error_message("Not a valid message id")
+		message_id = data["message_id"]
 
-        if len(UserMessageUpvotes.objects.filter(user=user,message=message)) == 0:
-            UserMessageUpvotes.objects.create(user=user,message=message)
-        else:
-            self._error_message("User " + user.username + "already upvoted that message")
+		print(message_id)
 
-        upvotes = len(UserMessageUpvotes.objects.filter(message=message))
-        self._fire_event("upvoted_message",
-                            {
-                                "message_id":message_id,
-                                "upvotes":upvotes
-                            }
-                        )
+		try:
+			message = Message.objects.get(id=message_id)
+		except:
+			self._error_message("Not a valid message id")
 
-    def un_upvote_message(self,data):
-        user, classroom = self._validate_user()
+		if len(UserMessageUpvotes.objects.filter(user=user,message=message)) > 0:
+			UserMessageUpvotes.objects.filter(user=user, message=message).delete()
 
-        message_id = data["message_id"]
+		upvotes = len(UserMessageUpvotes.objects.filter(message=message))
+		self._fire_event("un_upvoted_message",
+							{
+								"message_id":message_id,
+								"upvotes":upvotes
+							}
+						)
 
-        print(message_id)
+	def post_response(self, data):
+		user, classroom = self._validate_user()
 
-        try:
-            message = Message.objects.get(id=message_id)
-        except:
-            self._error_message("Not a valid message id")
+		text = data['text']
 
-        if len(UserMessageUpvotes.objects.filter(user=user,message=message)) > 0:
-            UserMessageUpvotes.objects.filter(user=user, message=message).delete()
+		#anonymous = data['anonymous']
 
-        upvotes = len(UserMessageUpvotes.objects.filter(message=message))
-        self._fire_event("un_upvoted_message",
-                            {
-                                "message_id":message_id,
-                                "upvotes":upvotes
-                            }
-                        )
+		message_id = data["message_id"]
+		try:
+			message = Message.objects.get(id=message_id)
+		except:
+			self._error_message("Not a valid message id")
 
-    def post_response(self, data):
-        user, classroom = self._validate_user()
+		response = Response.objects.create(user=user, message=message, text=text, anonymous=False)
 
-        text = data['text']
+		self._fire_event("new_response",self.response_to_json(response))
 
-        #anonymous = data['anonymous']
+	def edit_response(self, data):
+		user, classroom = self._validate_user()
 
-        message_id = data["message_id"]
-        try:
-            message = Message.objects.get(id=message_id)
-        except:
-            self._error_message("Not a valid message id")
+		text = data['text']
 
-        response = Response.objects.create(user=user, message=message, text=text, anonymous=False)
+		#anonymous = data['anonymous']
 
-        self._fire_event("new_response",self.response_to_json(response))
+		message_id = data["message_id"]
 
-    def edit_response(self, data):
-        user, classroom = self._validate_user()
+		response_id = data["response_id"]
 
-        text = data['text']
+		try:
+			message = Message.objects.get(id=message_id)
+		except:
+			self._error_message("Not a valid message id")
 
-        #anonymous = data['anonymous']
+		try:
+			response = Response.objects.get(user=user, id=response_id)
+		except:
+			self._error_message("Response does not exist")
 
-        message_id = data["message_id"]
+		response.text = text
+		#response.anonymous = anonymous
+		response.save()
 
-        response_id = data["response_id"]
+		self._fire_event("edited_response",self.response_to_json(response))
 
-        try:
-            message = Message.objects.get(id=message_id)
-        except:
-            self._error_message("Not a valid message id")
-
-        try:
-            response = Response.objects.get(user=user, id=response_id)
-        except:
-            self._error_message("Response does not exist")
-
-        response.text = text
-        #response.anonymous = anonymous
-        response.save()
-
-        self._fire_event("edited_response",self.response_to_json(response))
-
-    def delete_response(self, data):
-        user, classroom = self._validate_user()
-
-        message_id = data["message_id"]
-
-        response_id = data["response_id"]
-
-        try:
-            message = Message.objects.get(id=message_id)
-        except:
-            self._error_message("Not a valid message id")
-
-        try:
-            response = Response.objects.get(user=user, id=response_id)
-        except:
-            self._error_message("Response does not exist")
-
-        response.delete()
-
-        self._fire_event("deleted_response",
-                                {
-                                    "message_id": message_id,
-                                    "response_id": response_id,
-                                }
-                            )
-
-    def upvote_response(self,data):
-        user, classroom = self._validate_user()
-
-        message_id = data["message_id"]
-
-        response_id = data["response_id"]
-
-        try:
-            message = Message.objects.get(id=message_id)
-        except:
-            self._error_message("Not a valid message id")
-
-        try:
-            response = Response.objects.get(user=user, id=response_id)
-        except:
-            self._error_message("Response does not exist")
-
-        if len(UserResponseUpvotes.objects.filter(user=user,response=response)) == 0:
-            UserResponseUpvotes.objects.create(user=user,response=response)
-        else:
-            self._error_message("User " + user.username + "already upvoted that response")
-
-        upvotes = len(UserResponseUpvotes.objects.filter(response=response))
-        self._fire_event("upvoted_response",
-                            {
-                                "message_id":message_id,
-                                "response_id":response_id,
-                                "upvotes":upvotes
-                            }
-                        )
-
-    def un_upvote_response(self,data):
-        user, classroom = self._validate_user()
-
-        message_id = data["message_id"]
-
-        response_id = data["response_id"]
-
-        try:
-            message = Message.objects.get(id=message_id)
-        except:
-            self._error_message("Not a valid message id")
-
-        try:
-            response = Response.objects.get(user=user, id=response_id)
-        except:
-            self._error_message("Response does not exist")
-
-        if len(UserResponseUpvotes.objects.filter(user=user,response=response)) > 0:
-            UserResponseUpvotes.objects.filter(user=user,response=response).delete()
-        else:
-            self._error_message("User " + user.username + "already upvoted that response")
-
-        upvotes = len(UserResponseUpvotes.objects.filter(response=response))
-        self._fire_event("un_upvoted_response",
-                            {
-                                "message_id":message_id,
-                                "response_id":response_id,
-                                "upvotes":upvotes
-                            }
-                        )
-
-    ## COMMANDS
-
-    commands = {
-        'init_chat': init_chat,
-        'post_message': post_message,
-        'upvote_message': upvote_message,
-        'un_upvote_message': un_upvote_message,
-        'post_response': post_response,
-        'upvote_response': upvote_response,
-        'un_upvote_response': un_upvote_response,
-        'delete_message': delete_message,
-        'edit_message': edit_message,
-        'delete_response': delete_response,
-        'edit_response': edit_response
-    }
-
-    ## EVENT HANDLERS
-
-    def new_message(self, event):
-        # Send message to WebSocket
-        self.send(text_data=json.dumps(event))
-
-    def upvoted_message(self,event):
-        self.send(text_data=json.dumps(event))
-
-    def un_upvoted_message(self,event):
-        self.send(text_data=json.dumps(event))
-
-    # error message event handler
-    def error_message(self, event):
-        # Send message to WebSocket
-        self.send(text_data=json.dumps(event))
-
-    def new_response(self, event):
-        self.send(text_data=json.dumps(event))
-
-    def upvoted_response(self,event):
-        self.send(text_data=json.dumps(event))
-
-    def un_upvoted_response(self,event):
-        self.send(text_data=json.dumps(event))
-
-    def edited_message(self, event):
-        self.send(text_data=json.dumps(event))
-
-    def deleted_message(self, event):
-        self.send(text_data=json.dumps(event))
-
-    def edited_response(self, event):
-        self.send(text_data=json.dumps(event))
-
-    def deleted_response(self, event):
-        self.send(text_data=json.dumps(event))
+	def delete_response(self, data):
+		user, classroom = self._validate_user()
+
+		message_id = data["message_id"]
+
+		response_id = data["response_id"]
+
+		try:
+			message = Message.objects.get(id=message_id)
+		except:
+			self._error_message("Not a valid message id")
+
+		try:
+			response = Response.objects.get(user=user, id=response_id)
+		except:
+			self._error_message("Response does not exist")
+
+		response.delete()
+
+		self._fire_event("deleted_response",
+								{
+									"message_id": message_id,
+									"response_id": response_id,
+								}
+							)
+
+	def upvote_response(self,data):
+		user, classroom = self._validate_user()
+
+		message_id = data["message_id"]
+
+		response_id = data["response_id"]
+
+		try:
+			message = Message.objects.get(id=message_id)
+		except:
+			self._error_message("Not a valid message id")
+
+		try:
+			response = Response.objects.get(user=user, id=response_id)
+		except:
+			self._error_message("Response does not exist")
+
+		if len(UserResponseUpvotes.objects.filter(user=user,response=response)) == 0:
+			UserResponseUpvotes.objects.create(user=user,response=response)
+		else:
+			self._error_message("User " + user.username + "already upvoted that response")
+
+		upvotes = len(UserResponseUpvotes.objects.filter(response=response))
+		self._fire_event("upvoted_response",
+							{
+								"message_id":message_id,
+								"response_id":response_id,
+								"upvotes":upvotes
+							}
+						)
+
+	def un_upvote_response(self,data):
+		user, classroom = self._validate_user()
+
+		message_id = data["message_id"]
+
+		response_id = data["response_id"]
+
+		try:
+			message = Message.objects.get(id=message_id)
+		except:
+			self._error_message("Not a valid message id")
+
+		try:
+			response = Response.objects.get(user=user, id=response_id)
+		except:
+			self._error_message("Response does not exist")
+
+		if len(UserResponseUpvotes.objects.filter(user=user,response=response)) > 0:
+			UserResponseUpvotes.objects.filter(user=user,response=response).delete()
+		else:
+			self._error_message("User " + user.username + "already upvoted that response")
+
+		upvotes = len(UserResponseUpvotes.objects.filter(response=response))
+		self._fire_event("un_upvoted_response",
+							{
+								"message_id":message_id,
+								"response_id":response_id,
+								"upvotes":upvotes
+							}
+						)
+
+	def pin_message(self,data):
+		user, classroom = self._validate_user()
+		user_in_classroom = UserInClassroom.objects.get(user=user, classroom=classroom)
+		if user_in_classroom.permission != 3:
+			raise APIException("ERROR: User does not have sufficient permissions")
+		message_id = data["message_id"]
+		try:
+			message = Message.objects.get(id=message_id)
+		except:
+			self._error_message("Not a valid message id")
+		if len(UserPinMessage.objects.filter(user=user, message=message)) == 0:
+			UserPinMessage.objects.create(user=user, message=message, classroom=classroom)
+		else:
+			self._error_message("User " + user.username + " already pinned that message")
+		self._fire_event("pinned_message",
+							{
+								"message_id":message_id,
+								"pinned":True
+							}
+						)
+
+	def save_message(self,data):
+		user, classroom = self._validate_user()
+		message_id = data["message_id"]
+		try:
+			message = Message.objects.get(id=message_id)
+		except:
+			self._error_message("Not a valid message id")
+		if len(UserSaveQuestion.objects.filter(user=user, message=message)) == 0:
+			UserSaveQuestion.objects.create(user=user, message=message)
+		else:
+			self._error_message("User " + user.username + " already saved that message")
+		self._fire_event("saved_message",
+							{
+								"message_id":message_id,
+								"saved":True
+							}
+						)
+
+	## COMMANDS
+
+	commands = {
+		'init_chat': init_chat,
+		'post_message': post_message,
+		'upvote_message': upvote_message,
+		'un_upvote_message': un_upvote_message,
+		'post_response': post_response,
+		'upvote_response': upvote_response,
+		'un_upvote_response': un_upvote_response,
+		'delete_message': delete_message,
+		'edit_message': edit_message,
+		'delete_response': delete_response,
+		'edit_response': edit_response,
+		'pin_message':pin_message,
+		'save_message':save_message
+	}
+
+	## EVENT HANDLERS
+
+	def new_message(self, event):
+		# Send message to WebSocket
+		self.send(text_data=json.dumps(event))
+
+	def upvoted_message(self,event):
+		self.send(text_data=json.dumps(event))
+
+	def un_upvoted_message(self,event):
+		self.send(text_data=json.dumps(event))
+
+	# error message event handler
+	def error_message(self, event):
+		# Send message to WebSocket
+		self.send(text_data=json.dumps(event))
+
+	def new_response(self, event):
+		self.send(text_data=json.dumps(event))
+
+	def upvoted_response(self,event):
+		self.send(text_data=json.dumps(event))
+
+	def un_upvoted_response(self,event):
+		self.send(text_data=json.dumps(event))
+
+	def edited_message(self, event):
+		self.send(text_data=json.dumps(event))
+
+	def deleted_message(self, event):
+		self.send(text_data=json.dumps(event))
+
+	def edited_response(self, event):
+		self.send(text_data=json.dumps(event))
+
+	def deleted_response(self, event):
+		self.send(text_data=json.dumps(event))
+
+	def pinned_message(self,event):
+		self.send(text_data=json.dumps(event))
+	
+	def saved_message(self,event):
+		self.send(text_data=json.dumps(event))
