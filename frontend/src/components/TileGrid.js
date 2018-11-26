@@ -9,7 +9,8 @@ import {AddTile} from './AddTile.js';
 
 const TileGridBasic = ({classes, onPlusClick, courses, onRemoveCourse}) =>
     <div className={classNames(classes.layout_tiles, classes.cardGrid)}>
-        <Grid container spacing={40}>
+        <Grid container spacing={40} wrap="nowrap">
+            <AddTile onPlusClick={onPlusClick}/>
             {courses.map(a =>
                 <Tile
                     name={a.classroom.title}
@@ -20,7 +21,6 @@ const TileGridBasic = ({classes, onPlusClick, courses, onRemoveCourse}) =>
                     permission={a.permission}
                 />
             )}
-            <AddTile onPlusClick={onPlusClick}/>
         </Grid>
     </div>
 

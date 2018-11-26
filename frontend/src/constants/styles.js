@@ -29,6 +29,67 @@ export const EDIT_QUESTION_STYLE = theme => ({
         right: '0px',
 
     }
+});
+
+export const CA_STYLE_HOME = {
+    width: '150px',
+  };
+
+export const HOME_STYLE = theme => ({
+    homeIntro: {
+        borderBottom: '2px solid #3f51b5',
+    },
+    paperRoot: {
+        ...theme.mixins.gutters(),
+        marginLeft: theme.spacing.unit * 4,
+        marginRight: theme.spacing.unit * 4,
+        marginTop: theme.spacing.unit * 2,
+        marginBottom: theme.spacing.unit * 2,
+        display: 'flex',
+        flexDirection: 'row',
+        backgroundColor: 'rgba(45, 70, 209, 0.57)',
+
+
+    },
+    words: {
+        paddingLeft: theme.spacing.unit,
+        paddingRight: theme.spacing.unit * 30,
+        width: '100%'
+    },
+    chatroomText: {
+        fontSize: 100,
+        lineHeight: '90%',
+        fontWeight: 'bold',
+        paddingLeft: theme.spacing.unit * 10
+    },
+    homeText: {
+        fontSize: 100,
+        lineHeight: '90%',
+        fontWeight: 'bold',
+        paddingLeft: theme.spacing.unit * 55
+    },
+    avatar: {
+        margin: '8px 90px 8px 70px',
+        width: 160,
+        height: 160,
+        borderStyle: 'solid',
+        boderWidth: 8,
+        borderColor: '#3f51b5',
+        marginTop: theme.spacing.unit,
+        backgroundColor: '#ffffff',
+        paddingRight: 20
+    },
+    gridPaper: {
+        ...theme.mixins.gutters(),
+        marginLeft: theme.spacing.unit * 4,
+        marginRight: theme.spacing.unit * 4,
+        marginTop: theme.spacing.unit * 2,
+        marginBottom: theme.spacing.unit * 2,
+        overflowX: 'scroll',
+    },
+    ownerText: {
+        fontSize: 60
+    }
 })
 export const QUESTION_STYLE = theme => ({
     questionContainer: {
@@ -129,6 +190,7 @@ export const CA_STYLE = {
   marginRight: 8,
 };
 
+
 export const FORM_STYLE = theme => ({
     formTitle: {
         textAlign: 'center',
@@ -152,7 +214,7 @@ export const CARD_STYLE = theme => ({
         marginLeft: theme.spacing.unit * 5,
         marginRight: theme.spacing.unit * 5,
         [theme.breakpoints.up(1400 + theme.spacing.unit * 3 * 2)]: {
-            width: 1400,
+            width: 1350,
             marginLeft: 'auto',
             marginRight: 'auto'
         }
@@ -178,6 +240,7 @@ export const CARD_STYLE = theme => ({
     },
     card: {
       height: '100%',
+      width: 325,
       display: 'flex',
       flexDirection: 'column',
     },
@@ -204,9 +267,10 @@ export const CARD_STYLE = theme => ({
     },
     addButton : {
         backgroundColor: '#3f51b5',
-        height: '100px',
-        width: '100px',
-        marginLeft: '85px',
+        height: '120px',
+        width: '120px',
+        marginLeft: '75px',
+        marginRight: '70px',
         marginTop: '120px',
         color: 'white',
         '&:hover': {
@@ -214,8 +278,8 @@ export const CARD_STYLE = theme => ({
         },
     },
     addIcon: {
-        height: '80px',
-        width: '80px',
+        height: '90px',
+        width: '90px',
     }
 })
 export const INTRO_STYLE = theme => ({
