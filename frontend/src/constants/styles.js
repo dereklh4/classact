@@ -45,7 +45,8 @@ export const HOME_STYLE = theme => ({
         marginRight: theme.spacing.unit * 4,
         marginTop: theme.spacing.unit * 2,
         marginBottom: theme.spacing.unit * 2,
-        paddingRight: 0,
+        paddingTop: theme.spacing.unit,
+        paddingBottom: theme.spacing.unit,
         display: 'flex',
         flexDirection: 'row',
         backgroundColor: 'rgba(45, 70, 209, 0.57)',
@@ -280,6 +281,7 @@ export const CARD_STYLE = theme => ({
         marginLeft: '75px',
         marginRight: '70px',
         marginTop: '120px',
+        marginBottom: '120px',
         color: 'white',
         '&:hover': {
             backgroundColor: '#2d46d1'

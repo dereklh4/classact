@@ -40,7 +40,6 @@ class Chatroom extends Component {
 
     };
 
-	// TODO: Fetch other information about particlular chatroom
 	componentDidMount() {
 		const token = 'Token ' + localStorage.getItem('token')
 		const addedUrl = this.props.location.state.url;
