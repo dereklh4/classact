@@ -96,7 +96,7 @@ class HomePage extends Component {
         const {userInfo, courses, formOpen} = this.state;
         const {classes} = this.props;
         return (
-          <div>
+          <div className={classes.wholePage}>
                 <div className={classes.homeIntro}>
                     <Paper className={classes.paperRoot} elevation={1}>
                         <Avatar className={classes.avatar}>
@@ -106,14 +106,16 @@ class HomePage extends Component {
                             <Typography className={classes.chatroomText}> Chatroom </Typography>
                             <Typography className={classes.homeText}>Hub</Typography>
                         </div>
+                        <div className={classes.buttons}>
+                            <SignOutButton onUserChange={this.props.onUserChange}/>
+                        </div>
                     </Paper>
                 </div>
-            <Typography align="center" className={classes.ownerText}>Chatrooms belonging to {userInfo.first_name}</Typography>
-            <Paper className={classes.gridPaper}>
-                <AddJoinForm formOpen={formOpen} onPlusClickAway={this.onPlusClickAway} courses={courses}/>
-                <TileGrid onPlusClick={this.onPlusClick} courses={courses} onRemoveCourse={this.onRemoveCourse}/>
-                <SignOutButton onUserChange={this.props.onUserChange}/>
-            </Paper>
+                <Typography align="center" className={classes.ownerText}>Chatrooms belonging to {userInfo.first_name}</Typography>
+                <Paper className={classes.gridPaper}>
+                    <AddJoinForm formOpen={formOpen} onPlusClickAway={this.onPlusClickAway} courses={courses}/>
+                    <TileGrid onPlusClick={this.onPlusClick} courses={courses} onRemoveCourse={this.onRemoveCourse}/>
+                </Paper>
           </div>
         )
     }

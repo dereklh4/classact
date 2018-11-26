@@ -45,6 +45,7 @@ export const HOME_STYLE = theme => ({
         marginRight: theme.spacing.unit * 4,
         marginTop: theme.spacing.unit * 2,
         marginBottom: theme.spacing.unit * 2,
+        paddingRight: 0,
         display: 'flex',
         flexDirection: 'row',
         backgroundColor: 'rgba(45, 70, 209, 0.57)',
@@ -55,6 +56,9 @@ export const HOME_STYLE = theme => ({
         paddingLeft: theme.spacing.unit,
         paddingRight: theme.spacing.unit * 30,
         width: '100%'
+    },
+    buttons: {
+        width: '100%',
     },
     chatroomText: {
         fontSize: 100,
@@ -83,11 +87,14 @@ export const HOME_STYLE = theme => ({
         ...theme.mixins.gutters(),
         marginLeft: theme.spacing.unit * 4,
         marginRight: theme.spacing.unit * 4,
-        marginTop: theme.spacing.unit * 2,
-        marginBottom: theme.spacing.unit * 2,
+        marginTop: theme.spacing.unit * 4,
+        marginBottom: theme.spacing.unit * 4,
+        padding: 4,
         overflowX: 'scroll',
+        overflowY: 'hidden'
     },
     ownerText: {
+        paddingTop: 4,
         fontSize: 60
     }
 })
@@ -234,6 +241,7 @@ export const CARD_STYLE = theme => ({
         '&:hover': {
             backgroundColor: '#2d46d1'
         },
+
     },
     cardGrid: {
         padding: `${theme.spacing.unit * 2}px 0`,
@@ -322,6 +330,9 @@ export const INTRO_STYLE = theme => ({
             backgroundColor: '#2d46d1'
         },
     },
+    linkText: {
+        textDecoration: 'none'
+    }
 });
 
 export const RESPONSE_STYLE = theme => ({
