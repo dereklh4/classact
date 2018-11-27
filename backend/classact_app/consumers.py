@@ -9,7 +9,6 @@ from django.core import serializers
 
 class ChatConsumer(WebsocketConsumer):
 
-
 	def connect(self):
 		#set chatroom name
 		print(self.scope['url_route'])
@@ -108,9 +107,17 @@ class ChatConsumer(WebsocketConsumer):
 		responses = Response.objects.filter(message=message)
 		pinned = len(UserPinMessage.objects.filter(message=message)) >= 1
 		saved_by_user = len(UserSaveQuestion.objects.filter(user=self.scope["user"],message=message)) >= 1
+		
+		user_image = ""
+		try:
+			user_image = UserImage.objects.get(user=message.user).image.url
+		except:
+			pass
+
 		return {
 			'id': message.id,
 			'user': message.user.username,
+			'user_image':user_image,
 			'text': message.text,
 			'hour': message.creation_time.hour,
 			'minute':message.creation_time.minute,
@@ -126,10 +133,18 @@ class ChatConsumer(WebsocketConsumer):
 	def response_to_json(self, response):
 		response_upvotes = UserResponseUpvotes.objects.filter(response=response)
 		upvoted_by_user = len(response_upvotes.filter(user=self.scope["user"])) >= 1
+		
+		user_image = ""
+		try:
+			user_image = UserImage.objects.get(user=response.user).image.url
+		except:
+			pass
+
 		return {
 			'message_id': response.message.id,
 			'response_id': response.id,
 			'user': response.user.username,
+			'user_image':user_image,
 			'text': response.text,
 			'hour': response.creation_time.hour,
 			'minute':response.creation_time.minute,

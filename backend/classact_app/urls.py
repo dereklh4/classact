@@ -24,6 +24,10 @@ urlpatterns = [
     url(r'classroom/disable/$', views.ClassroomDisableView.as_view()),
     url(r'classroom/(?P<url>.*)/$', views.ClassroomView.as_view()),
 
+    url(r'user/image/$', views.UserImageListView.as_view()), #for posting an image, and getting list of user images
+    url(r'user/image/(?P<filepath>.*)$', views.UserImageView.as_view()), #for downloading the image
+
+
     url(r'user/(?P<email>[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4})/$', views.UserClassroomList.as_view()),#Example: user/eric@gmail.com/ would
                                                                                                          #display the classrooms for a user with
                                                                                                          #the email 'eric@gmail.com'

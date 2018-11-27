@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponse
 import json
 from django.db import models
 from django.contrib.auth.models import User
-from rest_framework import generics, serializers
+from rest_framework import generics, serializers, mixins
 from rest_framework.views import APIView
 from .models import (Classroom, UserInClassroom)
 from datetime import datetime
@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import APIException, PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication,TokenAuthentication
+from django.views.static import serve
 
 class UserList(generics.ListAPIView):
 	"""Shows a list of all users"""
@@ -296,3 +297,32 @@ class UserClassroomList(generics.ListAPIView):
 
 		queryset = UserInClassroom.objects.filter(user=user)
 		return queryset
+
+class UserImageListView(mixins.ListModelMixin,
+				mixins.CreateModelMixin,
+				generics.GenericAPIView):
+	queryset = UserImage.objects.all()
+	serializer_class = UserImageSerializer
+
+	def get(self, request, *args, **kwargs):
+		return self.list(request, *args, **kwargs)
+
+	def post(self, request, *args, **kwargs):
+		user = User.objects.get(pk=request.data["user"])
+		if request.user != user:
+			raise APIException("You don't have permission to modify someone else's photo")
+
+		user_image = UserImage.objects.filter(user=user)
+		if user_image:
+			try:
+				os.remove(user_image.values("image")[0]["image"])
+			except:
+				pass
+			user_image.delete()
+		return self.create(request, *args, **kwargs)
+
+class UserImageView(generics.GenericAPIView):
+	def get(self, request, *args, **kwargs):
+		#not best way to do this in production, but works well for prototyping
+		filepath = kwargs["filepath"]
+		return serve(request, os.path.basename(filepath), os.path.dirname(filepath))
