@@ -71,8 +71,8 @@ class AnswerListBasic extends Component {
                                 </Typography>
                                 {currUser === user ? (
                                 <div>
-                                <DeleteButton deleteMessage={() => deleteResponse(answer.response_id)} give={1}/>
                                 <EditButton editMessage={() => this.openEditResponseClick(answer.response_id, answer.text)} give={1}/>
+                                <DeleteButton deleteMessage={() => deleteResponse(answer.response_id)} give={1}/>
                                 </div>
                                 )
                                 :

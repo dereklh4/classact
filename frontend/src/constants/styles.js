@@ -63,6 +63,7 @@ export const QUESTION_STYLE = theme => ({
         '&:hover': {
             backgroundColor: '#2d46d1'
         },
+
     },
     expansionPanel: {
         marginTop: 3,
@@ -70,10 +71,28 @@ export const QUESTION_STYLE = theme => ({
         borderColor: '#3f51b5',
         borderStyle: 'solid'
     },
-    questionSummary: {
+    questionHeader: {
+        display: 'flex',
+        flexDirection: 'row',
+        height: 50,
+        paddingTop: 13,
+        paddingBottom: 15,
+        paddingLeft: 15,
+    },
+
+    expanded: {
+        '&$expanded': {
+            minHeight: 0,
+            marginTop: 0,
+            marginBottom: 0,
+        },
         borderBottomWidth: 1,
         borderColor: '#000000',
-        borderStyle: 'solid'
+        borderStyle: 'solid',
+        height: 30
+    },
+    expandIcon: {
+        color: 'black',
     },
     upvoteButton: {
         padding: '0px 3px 0px 0px'
@@ -91,7 +110,8 @@ export const QUESTION_STYLE = theme => ({
     },
     questionSummaryText: {
         color: '#505050',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        width: '70%'
     },
     details: {
         display: 'flex',
@@ -107,21 +127,18 @@ export const QUESTION_STYLE = theme => ({
     },
     editButton: {
         padding: '0px!important',
-        position: 'absolute',
-        right: '80px',
         border: '1px solid #dfdfdf',
     },
     editResponseButton: {
-        right: '45px',
+
     },
     deleteButton: {
         padding: '0px!important',
-        position: 'absolute',
-        right: '45px',
+        marginLeft: 10,
         border: '1px solid #dfdfdf',
     },
     deleteResponseButton: {
-        right: '10px',
+
     }
 });
 export const CA_STYLE = {
@@ -267,6 +284,7 @@ export const RESPONSE_STYLE = theme => ({
     },
     title: {
         textAlign: 'center',
+        paddingRight: 25,
         fontSize: 15,
         fontWeight: 'bold',
     },
@@ -290,6 +308,7 @@ export const RESPONSE_STYLE = theme => ({
         paddingBottom: 3
     },
     answerText: {
-        paddingRight: 70
+        width: '65%',
+
     }
 })

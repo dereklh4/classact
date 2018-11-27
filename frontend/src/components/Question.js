@@ -15,14 +15,13 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
-
-
 class QuestionBasic extends Component {
     constructor(props) {
         super(props);
         this.state = {
             userAnswer: '',
             edit: false,
+            open: false,
         };
     }
     onSubmit = (event) => {
@@ -66,7 +65,6 @@ class QuestionBasic extends Component {
         if (question.length > 45) {
             questionShortened = question.substr(0,44) + '...'
         }
-
         return (
             <div>
                 <EditField
@@ -75,12 +73,19 @@ class QuestionBasic extends Component {
                     closeEditMessageClick={this.closeEditMessageClick}
                     onSubmitQuestionEdit={this.onSubmitQuestionEdit}
                 />
-                <ExpansionPanel className={classes.expansionPanel}>
-                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>} className={classes.questionSummary}>
-                        <Upvotes id={id} upvotedByUser={upvotedByUser} numUpvotes={upvotes} unUpvoteThisMessage={this.unUpvoteMessage} upvoteThisMessage={this.upvoteQuestion}/>
+                <div className={classes.expansionPanel}>
+                    <div className={classes.questionHeader}>
+                        <Upvotes
+                            id={id}
+                            upvotedByUser={upvotedByUser}
+                            numUpvotes={upvotes}
+                            unUpvoteThisMessage={this.unUpvoteMessage}
+                            upvoteThisMessage={this.upvoteQuestion}
+                        />
                         <Typography className={classes.upvotesText}>
                             {upvotes}
                         </Typography>
+
                         <Typography className={classes.questionSummaryText}>
                             {questionShortened}
                         </Typography>
@@ -89,43 +94,45 @@ class QuestionBasic extends Component {
                                 <EditButton editMessage={this.openEditMessageClick}/>
                                 <DeleteButton deleteMessage={this.deleteMessage} give={0}/>
                             </div>
-                        )
-                            :
+                            ) :
                             null
                         }
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails className={classes.details}>
-                        <div className={classes.fullQuestionContainer}>
-                            <Typography className={classes.fullQuestionText}>
-                                {question}
-                            </Typography>
                         </div>
-                        <AnswerList answers={answers} user={user} currUser={currUser} deleteResponse={this.deleteResponse} message_id={id}/>
-                        <form onSubmit={this.onSubmit} className={classes.questionForm}>
-                            <FormControl margin="normal" fullWidth required>
-                                <TextField
-                                    label="Enter Answer"
-                                    multiline
-                                    rows="3"
-    								value={this.state.userAnswer}
-    								onChange={event => this.setState({userAnswer: event.target.value})}
-    								type="text"
-    								placeholder="Enter Answer Here"
-                                    fullWidth
-                                    variant="outlined"
-    							/>
-                                <Button
-                                    disabled={this.state.userAnswer === ''}
-                                    type="submit"
-                                    fullWidth className={classes.submit}
-                                    variant="contained"
-                                >
-                                    Answer
-                                </Button>
-                            </FormControl>
-                        </form>
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
+                    <ExpansionPanel expanded={this.state.open} onChange={(event, expanded) => this.setState({open: expanded})}>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon className={classes.expandIcon}/>} className={classes.expanded}/>
+                        <ExpansionPanelDetails className={classes.details}>
+                            <div className={classes.fullQuestionContainer}>
+                                <Typography className={classes.fullQuestionText}>
+                                    {question}
+                                </Typography>
+                            </div>
+                            <AnswerList answers={answers} user={user} currUser={currUser} deleteResponse={this.deleteResponse} message_id={id}/>
+                            <form onSubmit={this.onSubmit} className={classes.questionForm}>
+                                <FormControl margin="normal" fullWidth required>
+                                    <TextField
+                                        label="Enter Answer"
+                                        multiline
+                                        rows="3"
+        								value={this.state.userAnswer}
+        								onChange={event => this.setState({userAnswer: event.target.value})}
+        								type="text"
+        								placeholder="Enter Answer Here"
+                                        fullWidth
+                                        variant="outlined"
+        							/>
+                                    <Button
+                                        disabled={this.state.userAnswer === ''}
+                                        type="submit"
+                                        fullWidth className={classes.submit}
+                                        variant="contained"
+                                    >
+                                        Answer
+                                    </Button>
+                                </FormControl>
+                            </form>
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                </div>
             </div>
         );
     }
