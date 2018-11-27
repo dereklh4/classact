@@ -52,6 +52,13 @@ class AnswerListBasic extends Component {
                     <Typography className={classes.title}>
                         Answers
                     </Typography>
+                    <div className={classes.topAnswerHolder}>
+                        <Typography className={classes.topAnswerText}>
+                            Top Answer: {(answers.length > 0) ? (_.maxBy(answers, function (o) {
+                                return o.upvotes;
+                            }).text) : 'None'}
+                        </Typography>
+                    </div>
                     <List dense>
                         {_.sortBy(answers, ['hour', 'minute', 'second']).reverse().map(answer =>
                             <ListItem key={answer.response_id} className={classes.listItem}>

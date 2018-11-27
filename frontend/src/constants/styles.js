@@ -385,6 +385,12 @@ export const INTRO_STYLE = theme => ({
 });
 
 export const RESPONSE_STYLE = theme => ({
+    topAnswerText: {
+        width: '100%',
+        padding: "10px 20px 10px 20px",
+        borderBottom: '2px solid #dfdfdf',
+        fontWeight: 'bold'
+    },
     answerBox: {
         marginTop: theme.spacing.unit * 2,
         paddingLeft: 0
@@ -394,6 +400,8 @@ export const RESPONSE_STYLE = theme => ({
         paddingRight: 25,
         fontSize: 15,
         fontWeight: 'bold',
+        color: 'white',
+        backgroundColor: '#2196f3'
     },
     list: {
         listStyleImage: 'url(../images/ListArrow.png)',
