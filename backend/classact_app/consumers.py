@@ -107,7 +107,13 @@ class ChatConsumer(WebsocketConsumer):
 		responses = Response.objects.filter(message=message)
 		pinned = len(UserPinMessage.objects.filter(message=message)) >= 1
 		saved_by_user = len(UserSaveQuestion.objects.filter(user=self.scope["user"],message=message)) >= 1
-		user_image = UserImage.objects.get(user=message.user).image.url
+		
+		user_image = ""
+		try:
+			user_image = UserImage.objects.get(user=message.user).image.url
+		except:
+			pass
+
 		return {
 			'id': message.id,
 			'user': message.user.username,
@@ -127,7 +133,13 @@ class ChatConsumer(WebsocketConsumer):
 	def response_to_json(self, response):
 		response_upvotes = UserResponseUpvotes.objects.filter(response=response)
 		upvoted_by_user = len(response_upvotes.filter(user=self.scope["user"])) >= 1
-		user_image = UserImage.objects.get(user=response.user).image.url
+		
+		user_image = ""
+		try:
+			user_image = UserImage.objects.get(user=response.user).image.url
+		except:
+			pass
+
 		return {
 			'message_id': response.message.id,
 			'response_id': response.id,
