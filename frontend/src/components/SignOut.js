@@ -15,9 +15,11 @@ function logout(onUserChange) {
     onUserChange(null);
 }
 const BasicSignOutButton = ({classes, onUserChange}) =>
-    <Link to={routes.LANDING}>
+    <Link to={routes.LANDING} className={classes.linkText}>
         <Button
             type="button"
+            fullWidth
+            variant="contained"
             onClick={() => logout(onUserChange)}
             className={classes.submit}
         >

@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
 import {SignOutButton} from './SignOut'
-import { CARD_STYLE} from '../constants/styles'
+import {CA_STYLE_HOME, HOME_STYLE} from '../constants/styles'
 import {TileGrid} from './TileGrid'
 import {AddJoinForm} from './AddJoinForm'
 import withStyles from '@material-ui/core/styles/withStyles';
+import Typography from '@material-ui/core/Typography';
+import Avatar from '@material-ui/core/Avatar';
+import Paper from '@material-ui/core/Paper';
 
 
 class HomePage extends Component {
@@ -91,16 +94,31 @@ class HomePage extends Component {
 
     render() {
         const {userInfo, courses, formOpen} = this.state;
+        const {classes} = this.props;
         return (
-          <div>
-            <h1>Home</h1>
-            <h2>Classrooms belonging to {userInfo.first_name}</h2>
-            <AddJoinForm formOpen={formOpen} onPlusClickAway={this.onPlusClickAway} courses={courses}/>
-            <TileGrid onPlusClick={this.onPlusClick} courses={courses} onRemoveCourse={this.onRemoveCourse}/>
-            <SignOutButton onUserChange={this.props.onUserChange}/>
+          <div className={classes.wholePage}>
+                <div className={classes.homeIntro}>
+                    <Paper className={classes.paperRoot} elevation={1}>
+                        <Avatar className={classes.avatar}>
+                            <img style={CA_STYLE_HOME} src={require('../images/ClassActLogo.png')} alt="CA Logo"/>
+                        </Avatar>
+                        <div className={classes.words}>
+                            <Typography className={classes.chatroomText}> Chatroom </Typography>
+                            <Typography className={classes.homeText}>Hub</Typography>
+                        </div>
+                        <div className={classes.buttons}>
+                            <SignOutButton onUserChange={this.props.onUserChange}/>
+                        </div>
+                    </Paper>
+                </div>
+                <Typography align="center" className={classes.ownerText}>Chatrooms belonging to {userInfo.first_name}</Typography>
+                <Paper className={classes.gridPaper}>
+                    <AddJoinForm formOpen={formOpen} onPlusClickAway={this.onPlusClickAway} courses={courses}/>
+                    <TileGrid onPlusClick={this.onPlusClick} courses={courses} onRemoveCourse={this.onRemoveCourse}/>
+                </Paper>
           </div>
         )
     }
 }
 
-export default withStyles(CARD_STYLE)(HomePage);
+export default withStyles(HOME_STYLE)(HomePage);
