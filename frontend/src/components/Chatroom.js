@@ -13,6 +13,11 @@ import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
+import Close from '@material-ui/icons/Close';
+import Input from '@material-ui/core/Input';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import InputLabel from '@material-ui/core/InputLabel';
 
 class Chatroom extends Component {
 	constructor(props) {
@@ -22,6 +27,7 @@ class Chatroom extends Component {
 			message: '',
 			messages: [],
 			chatName: '',
+			searchVal: '',
 		};
 
       var params = queryString.parse(this.props.location.search)
@@ -184,6 +190,7 @@ class Chatroom extends Component {
 	}
 
   	postChatMessageHandler = (e, text) => {
+		this.setState({searchVal: ''})
 	    WebSocketInstance.postChatMessage(text);
     	this.setState({
       		message: ''
@@ -194,6 +201,9 @@ class Chatroom extends Component {
 	handleHomeClick = () => {
 		WebSocketInstance.close();
 		this.props.history.push(routes.HOME)
+	}
+	filterFor = (value) => {
+		this.setState({searchVal: value});
 	}
   render() {
     const messages = this.state.messages;
@@ -221,8 +231,29 @@ class Chatroom extends Component {
 					<Typography component="h1" variant="h5">
 						{this.state.chatName}
 					</Typography>
+					<TextField
+	 					label="Search Questions"
+				  		value={this.state.searchVal}
+			  			onChange={(event) => this.filterFor(event.target.value)}
+			  			margin="dense"
+			  			variant="outlined"
+						InputProps={{
+							endAdornment: (
+								<InputAdornment position="end">
+									<IconButton aria-label="Toggle password visibility" onClick={() => this.setState({searchVal: ''})}>
+										<Close/>
+									</IconButton>
+								</InputAdornment>
+							)
+						}}
+					>
+						 <IconButton onClick={() => this.setState({searchVal: ''})} className={classes.deleteSearch}>
+							 <Close fontSize="default" color="black"/>
+						 </IconButton>
+					 </TextField>
 					<QuestionList
 						questions={messages}
+						searchVal={this.state.searchVal}
 					/>
 					<form onSubmit={(e) => this.postChatMessageHandler(e, this.state.message)} className={classes.postQuestion}>
 						<FormControl margin="normal" fullWidth required>

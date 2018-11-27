@@ -31,10 +31,11 @@ class QuestionListBasic extends Component {
         this.setState({key: key})
     }
     render() {
-        const {questions, classes} = this.props;
+        const {questions, classes, searchVal} = this.props;
+        const filteredQuestions = questions.filter(question => question.text.includes(searchVal))
         return (
             <div className={classes.questionContainer}>
-                {questions.map(question =>
+                {filteredQuestions.map(question =>
                     <Question
                         question={question.text}
                         id={question.id}
@@ -48,6 +49,7 @@ class QuestionListBasic extends Component {
                         setOpen={this.changeOpen}
                     />
                 )}
+                {(filteredQuestions.length === 0 && questions.length !== 0) ? <div className={classes.sorry}>Sorry, no questions matched your search</div> : null}
             </div>
         );
     }

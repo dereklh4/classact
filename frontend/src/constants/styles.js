@@ -102,6 +102,9 @@ export const HOME_STYLE = theme => ({
     }
 })
 export const QUESTION_STYLE = theme => ({
+    sorry: {
+        textAlign: 'center'
+    },
     chatIntro: {
         borderBottom: '2px solid #3f51b5',
     },
