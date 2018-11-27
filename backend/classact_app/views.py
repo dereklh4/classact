@@ -23,7 +23,7 @@ class UserList(generics.ListAPIView):
 		queryset = User.objects.all()
 
 		starts_with = self.request.query_params.get('starts_with', None)
-		
+
 		if starts_with:
 			queryset = queryset.filter(email__startswith=starts_with)
 
@@ -54,7 +54,7 @@ class ClassroomView(generics.ListAPIView):
 
 		title = request.data['title']
 
-		classroom = Classroom.objects.create(title = title, 
+		classroom = Classroom.objects.create(title = title,
 			creation_time = time, enabled = True)
 
 		print("Creation user: " + str(request.user))
@@ -91,7 +91,7 @@ class ClassroomEnableView(generics.CreateAPIView):
 		try:
 			user_in_classroom = UserInClassroom.objects.get(classroom=classroom,user=user)
 		except:
-			raise APIException("ERROR: User does not exist in this classroom")			
+			raise APIException("ERROR: User does not exist in this classroom")
 
 		permission = user_in_classroom.permission
 
@@ -130,7 +130,7 @@ class ClassroomDisableView(generics.CreateAPIView):
 		try:
 			user_in_classroom = UserInClassroom.objects.get(classroom=classroom,user=user)
 		except:
-			raise APIException("ERROR: User does not exist in this classroom")			
+			raise APIException("ERROR: User does not exist in this classroom")
 
 		permission = user_in_classroom.permission
 
@@ -200,7 +200,7 @@ class PermissionUpdateView(generics.CreateAPIView):
 			authority_permission = UserInClassroom.objects.get(classroom=classroom,user=authority_user).permission
 		except:
 			raise APIException("ERROR: The user requesting a change is not a member of the classroom")
-		
+
 		if authority_permission <= 1:
 			raise PermissionDenied("ERROR: This user does not have requisite permissions to change others permissions")
 
@@ -245,7 +245,7 @@ class ClassroomJoinView(generics.CreateAPIView):
 		user = request.user
 		user_in_classroom = UserInClassroom(user=user, classroom=classroom, permission=1)
 		user_in_classroom.save()
-		
+
 		return Response({
 			'status': 'SUCCESS', 'url': classroom.url,
 			'message': 'User Joined Classroom Successfully'
@@ -272,9 +272,9 @@ class ClassroomLeaveView(generics.CreateAPIView):
 			user_in_classroom = UserInClassroom.objects.get(classroom=classroom,user=user)
 		except:
 			raise APIException("ERROR: User does not exist in this classroom")
-			
+
 		user_in_classroom.delete()
-		
+
 		return Response({
 			'status': 'SUCCESS', 'url': classroom.url,
 			'message': 'User Left Classroom Successfully'
