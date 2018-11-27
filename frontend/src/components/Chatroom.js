@@ -4,7 +4,7 @@ import {withRouter} from 'react-router-dom';
 import * as routes from '../constants/routes';
 import queryString from 'query-string';
 import {QuestionList} from './QuestionList';
-import {QUESTION_STYLE} from '../constants/styles';
+import {QUESTION_STYLE, CA_STYLE_HOME} from '../constants/styles';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
@@ -12,6 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
+import Avatar from '@material-ui/core/Avatar';
 
 class Chatroom extends Component {
 	constructor(props) {
@@ -200,10 +201,18 @@ class Chatroom extends Component {
     return (
 		<React.Fragment>
 			<CssBaseline/>
+			<div className={classes.chatIntro}>
+				<Paper className={classes.paperRoot} elevation={1}>
+					<Avatar className={classes.avatar}>
+						<img style={CA_STYLE_HOME} src={require('../images/ClassActLogo.png')} alt="CA Logo"/>
+					</Avatar>
+				</Paper>
+			</div>
 			<Button
 				type="button"
 				onClick={this.handleHomeClick}
 				className={classes.submit}
+				fullWidth
 			>
 				Back To Home
 			</Button>

@@ -103,8 +103,8 @@ class HomePage extends Component {
                             <img style={CA_STYLE_HOME} src={require('../images/ClassActLogo.png')} alt="CA Logo"/>
                         </Avatar>
                         <div className={classes.words}>
-                            <Typography className={classes.chatroomText}> Chatroom </Typography>
-                            <Typography className={classes.homeText}>Hub</Typography>
+                            <Typography className={classes.chatroomText}> ClassAct </Typography>
+                            <Typography className={classes.homeText}>Home</Typography>
                         </div>
                         <div className={classes.buttons}>
                             <SignOutButton onUserChange={this.props.onUserChange}/>

@@ -73,7 +73,7 @@ export const HOME_STYLE = theme => ({
         lineHeight: '90%',
         color: 'white',
         fontWeight: 'bold',
-        paddingLeft: theme.spacing.unit * 55
+        paddingLeft: theme.spacing.unit * 50
     },
     avatar: {
         margin: '8px 90px 8px 70px',
@@ -102,9 +102,38 @@ export const HOME_STYLE = theme => ({
     }
 })
 export const QUESTION_STYLE = theme => ({
+    chatIntro: {
+        borderBottom: '2px solid #3f51b5',
+    },
+    paperRoot: {
+        ...theme.mixins.gutters(),
+        marginLeft: theme.spacing.unit * 4,
+        marginRight: theme.spacing.unit * 4,
+        marginTop: theme.spacing.unit * 2,
+        marginBottom: theme.spacing.unit * 2,
+        paddingTop: theme.spacing.unit,
+        paddingBottom: theme.spacing.unit,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        backgroundColor: '#2196f3',
+    },
+
+    avatar: {
+        width: 160,
+        height: 160,
+        borderStyle: 'solid',
+        boderWidth: 8,
+        borderColor: '#3f51b5',
+        marginTop: theme.spacing.unit,
+        backgroundColor: '#ffffff',
+        paddingRight: 20
+    },
     questionContainer: {
         marginTop: 10,
         width: '100%',
+        overflow: 'auto',
+        maxHeight: 300,
     },
     layout: {
         width: 'auto',
@@ -118,7 +147,7 @@ export const QUESTION_STYLE = theme => ({
         }
     },
     paper: {
-        marginTop: theme.spacing.unit * 20,
+        marginTop: theme.spacing.unit * 5,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -134,7 +163,6 @@ export const QUESTION_STYLE = theme => ({
         '&:hover': {
             backgroundColor: '#2d46d1'
         },
-
     },
     expansionPanel: {
         marginTop: 3,
