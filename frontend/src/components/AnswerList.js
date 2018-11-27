@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Avatar from '@material-ui/core/Avatar';
+import _ from 'lodash';
 
 class AnswerListBasic extends Component {
     constructor(props) {
@@ -51,8 +52,15 @@ class AnswerListBasic extends Component {
                     <Typography className={classes.title}>
                         Answers
                     </Typography>
+                    <div className={classes.topAnswerHolder}>
+                        <Typography className={classes.topAnswerText}>
+                            Top Answer: {(answers.length > 0) ? (_.maxBy(answers, function (o) {
+                                return o.upvotes;
+                            }).text) : 'None'}
+                        </Typography>
+                    </div>
                     <List dense>
-                        {answers.map(answer =>
+                        {_.sortBy(answers, ['hour', 'minute', 'second']).reverse().map(answer =>
                             <ListItem key={answer.response_id} className={classes.listItem}>
                                 <Upvotes
                                     id={answer.response_id}
@@ -71,8 +79,8 @@ class AnswerListBasic extends Component {
                                 </Typography>
                                 {currUser === user ? (
                                 <div>
-                                <DeleteButton deleteMessage={() => deleteResponse(answer.response_id)} give={1}/>
                                 <EditButton editMessage={() => this.openEditResponseClick(answer.response_id, answer.text)} give={1}/>
+                                <DeleteButton deleteMessage={() => deleteResponse(answer.response_id)} give={1}/>
                                 </div>
                                 )
                                 :

@@ -8,6 +8,7 @@ class QuestionListBasic extends Component {
         super(props);
         this.state = {
             currUser: '',
+            key: '',
         };
     }
 
@@ -26,6 +27,9 @@ class QuestionListBasic extends Component {
             this.setState({currUser: response.username});
         })
     }
+    changeOpen = (key) => {
+        this.setState({key: key})
+    }
     render() {
         const {questions, classes} = this.props;
         return (
@@ -40,6 +44,8 @@ class QuestionListBasic extends Component {
                         upvotedByUser={question.upvoted_by_user}
                         answers= {question.responses}
                         currUser={this.state.currUser}
+                        open={this.state.key === question.id}
+                        setOpen={this.changeOpen}
                     />
                 )}
             </div>

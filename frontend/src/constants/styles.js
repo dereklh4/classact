@@ -29,11 +29,111 @@ export const EDIT_QUESTION_STYLE = theme => ({
         right: '0px',
 
     }
+});
+
+export const CA_STYLE_HOME = {
+    width: '150px',
+  };
+
+export const HOME_STYLE = theme => ({
+    homeIntro: {
+        borderBottom: '2px solid #3f51b5',
+    },
+    paperRoot: {
+        ...theme.mixins.gutters(),
+        marginLeft: theme.spacing.unit * 4,
+        marginRight: theme.spacing.unit * 4,
+        marginTop: theme.spacing.unit * 2,
+        marginBottom: theme.spacing.unit * 2,
+        paddingTop: theme.spacing.unit,
+        paddingBottom: theme.spacing.unit,
+        display: 'flex',
+        flexDirection: 'row',
+        backgroundColor: '#2196f3',
+
+
+    },
+    words: {
+        paddingLeft: theme.spacing.unit,
+        paddingRight: theme.spacing.unit * 30,
+        width: '100%'
+    },
+    buttons: {
+        width: '100%',
+    },
+    chatroomText: {
+        fontSize: 100,
+        color: 'white',
+        lineHeight: '90%',
+        fontWeight: 'bold',
+        paddingLeft: theme.spacing.unit * 10
+    },
+    homeText: {
+        fontSize: 100,
+        lineHeight: '90%',
+        color: 'white',
+        fontWeight: 'bold',
+        paddingLeft: theme.spacing.unit * 50
+    },
+    avatar: {
+        margin: '8px 90px 8px 70px',
+        width: 160,
+        height: 160,
+        borderStyle: 'solid',
+        boderWidth: 8,
+        borderColor: '#3f51b5',
+        marginTop: theme.spacing.unit,
+        backgroundColor: '#ffffff',
+        paddingRight: 20
+    },
+    gridPaper: {
+        ...theme.mixins.gutters(),
+        marginLeft: theme.spacing.unit * 4,
+        marginRight: theme.spacing.unit * 4,
+        marginTop: theme.spacing.unit * 4,
+        marginBottom: theme.spacing.unit * 4,
+        padding: 4,
+        overflowX: 'scroll',
+        overflowY: 'hidden'
+    },
+    ownerText: {
+        paddingTop: 4,
+        fontSize: 60
+    }
 })
 export const QUESTION_STYLE = theme => ({
+    chatIntro: {
+        borderBottom: '2px solid #3f51b5',
+    },
+    paperRoot: {
+        ...theme.mixins.gutters(),
+        marginLeft: theme.spacing.unit * 4,
+        marginRight: theme.spacing.unit * 4,
+        marginTop: theme.spacing.unit * 2,
+        marginBottom: theme.spacing.unit * 2,
+        paddingTop: theme.spacing.unit,
+        paddingBottom: theme.spacing.unit,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        backgroundColor: '#2196f3',
+    },
+
+    avatar: {
+        width: 160,
+        height: 160,
+        borderStyle: 'solid',
+        boderWidth: 8,
+        borderColor: '#3f51b5',
+        marginTop: theme.spacing.unit,
+        backgroundColor: '#ffffff',
+        paddingRight: 20
+    },
     questionContainer: {
         marginTop: 10,
         width: '100%',
+        overflow: 'auto',
+        maxHeight: 300,
     },
     layout: {
         width: 'auto',
@@ -47,7 +147,7 @@ export const QUESTION_STYLE = theme => ({
         }
     },
     paper: {
-        marginTop: theme.spacing.unit * 20,
+        marginTop: theme.spacing.unit * 5,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -70,10 +170,28 @@ export const QUESTION_STYLE = theme => ({
         borderColor: '#3f51b5',
         borderStyle: 'solid'
     },
-    questionSummary: {
+    questionHeader: {
+        display: 'flex',
+        flexDirection: 'row',
+        height: 50,
+        paddingTop: 13,
+        paddingBottom: 15,
+        paddingLeft: 15,
+    },
+
+    expanded: {
+        '&$expanded': {
+            minHeight: 0,
+            marginTop: 0,
+            marginBottom: 0,
+        },
         borderBottomWidth: 1,
         borderColor: '#000000',
-        borderStyle: 'solid'
+        borderStyle: 'solid',
+        height: 30
+    },
+    expandIcon: {
+        color: 'black',
     },
     upvoteButton: {
         padding: '0px 3px 0px 0px'
@@ -91,7 +209,8 @@ export const QUESTION_STYLE = theme => ({
     },
     questionSummaryText: {
         color: '#505050',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        width: '70%'
     },
     details: {
         display: 'flex',
@@ -107,27 +226,25 @@ export const QUESTION_STYLE = theme => ({
     },
     editButton: {
         padding: '0px!important',
-        position: 'absolute',
-        right: '80px',
         border: '1px solid #dfdfdf',
     },
     editResponseButton: {
-        right: '45px',
+
     },
     deleteButton: {
         padding: '0px!important',
-        position: 'absolute',
-        right: '45px',
+        marginLeft: 10,
         border: '1px solid #dfdfdf',
     },
     deleteResponseButton: {
-        right: '10px',
+
     }
 });
 export const CA_STYLE = {
   width: '60px',
   marginRight: 8,
 };
+
 
 export const FORM_STYLE = theme => ({
     formTitle: {
@@ -152,7 +269,7 @@ export const CARD_STYLE = theme => ({
         marginLeft: theme.spacing.unit * 5,
         marginRight: theme.spacing.unit * 5,
         [theme.breakpoints.up(1400 + theme.spacing.unit * 3 * 2)]: {
-            width: 1400,
+            width: 1350,
             marginLeft: 'auto',
             marginRight: 'auto'
         }
@@ -172,12 +289,14 @@ export const CARD_STYLE = theme => ({
         '&:hover': {
             backgroundColor: '#2d46d1'
         },
+
     },
     cardGrid: {
         padding: `${theme.spacing.unit * 2}px 0`,
     },
     card: {
       height: '100%',
+      width: 325,
       display: 'flex',
       flexDirection: 'column',
     },
@@ -204,18 +323,20 @@ export const CARD_STYLE = theme => ({
     },
     addButton : {
         backgroundColor: '#3f51b5',
-        height: '100px',
-        width: '100px',
-        marginLeft: '85px',
+        height: '120px',
+        width: '120px',
+        marginLeft: '75px',
+        marginRight: '70px',
         marginTop: '120px',
+        marginBottom: '120px',
         color: 'white',
         '&:hover': {
             backgroundColor: '#2d46d1'
         },
     },
     addIcon: {
-        height: '80px',
-        width: '80px',
+        height: '90px',
+        width: '90px',
     }
 })
 export const INTRO_STYLE = theme => ({
@@ -258,17 +379,29 @@ export const INTRO_STYLE = theme => ({
             backgroundColor: '#2d46d1'
         },
     },
+    linkText: {
+        textDecoration: 'none'
+    }
 });
 
 export const RESPONSE_STYLE = theme => ({
+    topAnswerText: {
+        width: '100%',
+        padding: "10px 20px 10px 20px",
+        borderBottom: '2px solid #dfdfdf',
+        fontWeight: 'bold'
+    },
     answerBox: {
         marginTop: theme.spacing.unit * 2,
         paddingLeft: 0
     },
     title: {
         textAlign: 'center',
+        paddingRight: 25,
         fontSize: 15,
         fontWeight: 'bold',
+        color: 'white',
+        backgroundColor: '#2196f3'
     },
     list: {
         listStyleImage: 'url(../images/ListArrow.png)',
@@ -290,6 +423,7 @@ export const RESPONSE_STYLE = theme => ({
         paddingBottom: 3
     },
     answerText: {
-        paddingRight: 70
+        width: '65%',
+
     }
 })
