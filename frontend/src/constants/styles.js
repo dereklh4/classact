@@ -49,7 +49,7 @@ export const HOME_STYLE = theme => ({
         paddingBottom: theme.spacing.unit,
         display: 'flex',
         flexDirection: 'row',
-        backgroundColor: 'rgba(45, 70, 209, 0.57)',
+        backgroundColor: '#2196f3',
 
 
     },
@@ -63,6 +63,7 @@ export const HOME_STYLE = theme => ({
     },
     chatroomText: {
         fontSize: 100,
+        color: 'white',
         lineHeight: '90%',
         fontWeight: 'bold',
         paddingLeft: theme.spacing.unit * 10
@@ -70,6 +71,7 @@ export const HOME_STYLE = theme => ({
     homeText: {
         fontSize: 100,
         lineHeight: '90%',
+        color: 'white',
         fontWeight: 'bold',
         paddingLeft: theme.spacing.unit * 55
     },
