@@ -45,6 +45,7 @@ class QuestionListBasic extends Component {
                         answers= {question.responses}
                         currUser={this.state.currUser}
                         open={this.state.key === question.id}
+                        setOpen={this.changeOpen}
                     />
                 )}
             </div>

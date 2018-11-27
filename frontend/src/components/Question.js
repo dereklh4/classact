@@ -21,7 +21,6 @@ class QuestionBasic extends Component {
         this.state = {
             userAnswer: '',
             edit: false,
-            open: false,
         };
     }
     onSubmit = (event) => {
@@ -59,6 +58,14 @@ class QuestionBasic extends Component {
         this.setState({userAnswer: event.target.value});
     }
 
+    handlePanelOpen = (expanded) => {
+        if (expanded) {
+            this.props.setOpen(this.props.id)
+        }
+        else {
+            this.props.setOpen('')
+        }
+    }
     render() {
         const {currUser, user, question, classes, id, upvotes, upvotedByUser, answers} = this.props;
         var questionShortened = question;
@@ -98,7 +105,7 @@ class QuestionBasic extends Component {
                             null
                         }
                         </div>
-                    <ExpansionPanel expanded={this.state.open} onChange={(event, expanded) => this.setState({open: expanded})}>
+                    <ExpansionPanel expanded={this.props.open} onChange={(event, expanded) => this.handlePanelOpen(expanded)}>
                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon className={classes.expandIcon}/>} className={classes.expanded}/>
                         <ExpansionPanelDetails className={classes.details}>
                             <div className={classes.fullQuestionContainer}>
