@@ -223,8 +223,7 @@ class Chatroom extends Component {
 			<Button
 				type="button"
 				onClick={this.handleHomeClick}
-				className={classes.submit}
-				fullWidth
+				className={classes.submit1}
 			>
 				Back To Home
 			</Button>

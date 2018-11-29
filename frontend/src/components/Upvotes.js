@@ -3,8 +3,8 @@ import IconButton from '@material-ui/core/IconButton';
 import WebSocketInstance from '../services/WebSocket'
 import ThumbsUp from '@material-ui/icons/ThumbUpOutlined'
 import ThumbsUpFilled from '@material-ui/icons/ThumbUp'
-import Whatshot from '@material-ui/icons/WhatshotTwoTone'
-import WhatshotOutlined from '@material-ui/icons/WhatshotOutlined'
+import Whatshot from '@material-ui/icons/DoneRounded'
+import WhatshotOutlined from '@material-ui/icons/DoneOutlineRounded'
 import withStyles from '@material-ui/core/styles/withStyles';
 import {QUESTION_STYLE} from '../constants/styles';
 
@@ -18,6 +18,7 @@ class Upvotes extends Component {
         }
     }
     handlePinClick = () => {
+        WebSocketInstance.upvoteMessage(this.props.id)
         WebSocketInstance.pinMessage(this.props.id);
     }
     render() {
@@ -40,13 +41,13 @@ class Upvotes extends Component {
                         (
                             <IconButton
                                 onClick={() => this.handlePinClick()}
-                                className={classes.upvoteButton}
+                                className={classes.pinButton}
                                 disabled={pinned}
                             >
                                 {pinned ?
-                                <Whatshot fontSize="small" color="secondary"/>
+                                <Whatshot fontSize="default" color="action"/>
                                 :
-                                <WhatshotOutlined fontSize="small" color="secondary"/>
+                                <WhatshotOutlined fontSize="default" color="action"/>
                                 }
                             </IconButton>
                         )

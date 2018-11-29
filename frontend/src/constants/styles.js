@@ -133,7 +133,7 @@ export const QUESTION_STYLE = theme => ({
         paddingRight: 20
     },
     questionContainer: {
-        marginTop: 10,
+        marginTop: 8,
         width: '100%',
         overflow: 'auto',
         maxHeight: 300,
@@ -150,11 +150,11 @@ export const QUESTION_STYLE = theme => ({
         }
     },
     paper: {
-        marginTop: theme.spacing.unit * 5,
+        marginTop: 0 ,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: `${theme.spacing.unit * 4}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`
+        padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`
     },
     postQuestion: {
         width: '100%',
@@ -167,11 +167,20 @@ export const QUESTION_STYLE = theme => ({
             backgroundColor: '#2d46d1'
         },
     },
+    submit1: {
+        backgroundColor: '#3f51b5',
+        color: '#ffffff',
+        '&:hover': {
+            backgroundColor: '#2d46d1'
+        },
+        postion: 'absolute'
+    },
     expansionPanel: {
         marginTop: 3,
         borderWidth: 2,
         borderColor: '#3f51b5',
-        borderStyle: 'solid'
+        borderStyle: 'solid',
+        marginBottom: 10
     },
     questionHeader: {
         display: 'flex',
@@ -199,7 +208,9 @@ export const QUESTION_STYLE = theme => ({
     upvoteButton: {
         padding: '0px 3px 0px 0px'
     },
-
+    pinButton: {
+        padding: '0px 3px 2px 0px'
+    },
     upvotesText: {
         color: '#505050',
         fontWeight: 'bold',
