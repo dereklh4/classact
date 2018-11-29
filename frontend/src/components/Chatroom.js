@@ -43,7 +43,8 @@ class Chatroom extends Component {
     									this.upvotedResponse.bind(this),
     									this.unUpvotedResponse.bind(this),
     									this.pinnedMessage.bind(this),
-    									this.savedMessage.bind(this))
+    									this.savedMessage.bind(this),
+    									this.unSavedMessage.bind(this))
 
     };
 
@@ -188,6 +189,11 @@ class Chatroom extends Component {
 
 	savedMessage(content) {
 		console.log("Saved message:")
+		console.log(content)
+	}
+
+	unSavedMessage(content) {
+		console.log("Unsaved message:")
 		console.log(content)
 	}
 

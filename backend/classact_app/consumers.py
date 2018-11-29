@@ -122,6 +122,9 @@ class ChatConsumer(WebsocketConsumer):
 			'hour': message.creation_time.hour,
 			'minute':message.creation_time.minute,
 			'second':message.creation_time.second,
+			'day':message.creation_time.day,
+			'month':message.creation_time.month,
+			'year':message.creation_time.year,
 			'upvotes':len(message_upvotes),
 			'upvoted_by_user':upvoted_by_user,
 			'anonymous':message.anonymous,
@@ -149,6 +152,9 @@ class ChatConsumer(WebsocketConsumer):
 			'hour': response.creation_time.hour,
 			'minute':response.creation_time.minute,
 			'second':response.creation_time.second,
+			'day':response.creation_time.day,
+			'month':response.creation_time.month,
+			'year':response.creation_time.year,
 			'upvotes':len(response_upvotes),
 			'upvoted_by_user':upvoted_by_user,
 			'anonymous':response.anonymous,
@@ -433,6 +439,24 @@ class ChatConsumer(WebsocketConsumer):
 							}
 						)
 
+	def un_save_message(self,data):
+		user, classroom = self._validate_user()
+		message_id = data["message_id"]
+		try:
+			message = Message.objects.get(id=message_id)
+		except:
+			self._error_message("Not a valid message id")
+		if len(UserSaveQuestion.objects.filter(user=user, message=message)) == 0:
+			self._error_message("User " + user.username + " has not saved this message")
+		else:
+			UserSaveQuestion.objects.filter(user=user, message=message).delete()
+		self._fire_event("un_saved_message",
+							{
+								"message_id":message_id,
+								"saved":False
+							}
+						)
+
 	## COMMANDS
 
 	commands = {
@@ -448,7 +472,8 @@ class ChatConsumer(WebsocketConsumer):
 		'delete_response': delete_response,
 		'edit_response': edit_response,
 		'pin_message':pin_message,
-		'save_message':save_message
+		'save_message':save_message,
+		'un_save_message':un_save_message
 	}
 
 	## EVENT HANDLERS
@@ -493,4 +518,7 @@ class ChatConsumer(WebsocketConsumer):
 		self.send(text_data=json.dumps(event))
 	
 	def saved_message(self,event):
+		self.send(text_data=json.dumps(event))
+
+	def un_saved_message(self,event):
 		self.send(text_data=json.dumps(event))
