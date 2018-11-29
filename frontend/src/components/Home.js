@@ -69,20 +69,18 @@ class HomePage extends Component {
         this.setState({selectedFile: event.target.files[0]})
     }
     fileUpload = () => {
+        var fileInput = document.getElementById('input-button');
+        var file = fileInput.files[0];
         var formData = new FormData();
-        formData.append('user', this.state.userInfo.pk)
-        formData.append('image', this.state.selectedFile.name)
+        formData.append('image', file);
+        formData.append('user',this.state.userInfo.pk);
+
         console.log(formData)
-        const data = {
-            user: this.state.userInfo.pk,
-            image: this.state.selectedFile
-        }
         const token = 'Token ' + localStorage.getItem('token')
         fetch('http://localhost:8000/api/user/image/', {
             method: 'POST',
             headers: {
                 'Authorization': token,
-                'Accept': 'application/json'
             },
             body: formData
         })
@@ -125,7 +123,7 @@ class HomePage extends Component {
             <AddJoinForm formOpen={formOpen} onPlusClickAway={this.onPlusClickAway} courses={courses}/>
             <TileGrid onPlusClick={this.onPlusClick} courses={courses} onRemoveCourse={this.onRemoveCourse}/>
             <SignOutButton onUserChange={this.props.onUserChange}/>
-            <input type="file" onChange={this.fileSelectedHandler}/>
+            <input id="input-button" type="file" onChange={this.fileSelectedHandler}/>
             <button onClick={this.fileUpload}>Upload</button>
           </div>
         )

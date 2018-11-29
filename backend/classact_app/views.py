@@ -308,7 +308,11 @@ class UserImageListView(mixins.ListModelMixin,
 		return self.list(request, *args, **kwargs)
 
 	def post(self, request, *args, **kwargs):
-		user = User.objects.get(pk=request.data["user"])
+		try:
+			user = User.objects.get(pk=request.data["user"])
+		except:
+			raise APIException("User does not exist")
+
 		if request.user != user:
 			raise APIException("You don't have permission to modify someone else's photo")
 
