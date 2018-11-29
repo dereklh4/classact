@@ -18,6 +18,14 @@ const theme = createMuiTheme({
   typography: {
     useNextVariants: true,
   },
+  overrides: {
+      MuiExpansionPanelSummary: {
+         expandIcon: {
+              right: '50%',
+              padding: 0
+          }
+      }
+  }
 });
 
 class App extends Component {

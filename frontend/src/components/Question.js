@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {AnswerList} from './AnswerList'
+import WebSocketInstance from '../services/WebSocket'
 import {DeleteButton} from './DeleteButton'
 import {EditButton} from './EditButton'
-import {EditQuestionField} from './EditQuestionField'
+import {EditField} from './EditField'
 import Upvotes from './Upvotes'
 import withStyles from '@material-ui/core/styles/withStyles';
 import {QUESTION_STYLE} from '../constants/styles';
@@ -15,7 +16,6 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
 
-
 class QuestionBasic extends Component {
     constructor(props) {
         super(props);
@@ -25,13 +25,13 @@ class QuestionBasic extends Component {
         };
     }
     onSubmit = (event) => {
-        this.props.postResponseHandler(this.props.id, this.state.userAnswer)
+        WebSocketInstance.postResponse(this.props.id, this.state.userAnswer)
         this.setState({userAnswer:''})
         event.preventDefault();
     }
 
     onSubmitQuestionEdit = (text) => {
-         this.props.handleEditMessage(this.props.id, text)
+         WebSocketInstance.editMessage(this.props.id, text, true)
     }
     openEditMessageClick = () => {
         this.setState({edit: true})
@@ -40,38 +40,60 @@ class QuestionBasic extends Component {
         this.setState({edit: false})
     }
     deleteMessage = () => {
-        this.props.handleDeleteMessage(this.props.id)
+        WebSocketInstance.deleteMessage(this.props.id)
     }
 
     deleteResponse = (response_id) => {
-        this.props.handleDeleteResponse(this.props.id, response_id)
+        WebSocketInstance.deleteResponse(this.props.id, response_id)
+    }
+
+    upvoteQuestion = () => {
+        WebSocketInstance.upvoteMessage(this.props.id)
+    }
+
+    unUpvoteMessage = () => {
+        WebSocketInstance.unUpvoteMessage(this.props.id)
     }
 
     handleChange = (event) => {
         this.setState({userAnswer: event.target.value});
     }
 
+    handlePanelOpen = (expanded) => {
+        if (expanded) {
+            this.props.setOpen(this.props.id)
+        }
+        else {
+            this.props.setOpen('')
+        }
+    }
     render() {
-        const {currUser, user, question, classes, id, upvotes, upvotedByUser, upvoteThisMessage, unUpvoteThisMessage, answers} = this.props;
+        const {currUser, user, question, classes, id, upvotes, upvotedByUser, answers} = this.props;
         var questionShortened = question;
         if (question.length > 45) {
             questionShortened = question.substr(0,44) + '...'
         }
-
         return (
             <div>
-                <EditQuestionField
+                <EditField
                     isOpen={this.state.edit}
-                    originalQuestion={question}
+                    originalMessage={question}
                     closeEditMessageClick={this.closeEditMessageClick}
                     onSubmitQuestionEdit={this.onSubmitQuestionEdit}
                 />
-                <ExpansionPanel className={classes.expansionPanel}>
-                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>} className={classes.questionSummary}>
-                        <Upvotes id={id} upvotedByUser={upvotedByUser} numUpvotes={upvotes} unUpvoteThisMessage={unUpvoteThisMessage} upvoteThisMessage={upvoteThisMessage}/>
+                <div className={classes.expansionPanel}>
+                    <div className={classes.questionHeader}>
+                        <Upvotes
+                            id={id}
+                            upvotedByUser={upvotedByUser}
+                            numUpvotes={upvotes}
+                            unUpvoteThisMessage={this.unUpvoteMessage}
+                            upvoteThisMessage={this.upvoteQuestion}
+                        />
                         <Typography className={classes.upvotesText}>
                             {upvotes}
                         </Typography>
+
                         <Typography className={classes.questionSummaryText}>
                             {questionShortened}
                         </Typography>
@@ -80,43 +102,45 @@ class QuestionBasic extends Component {
                                 <EditButton editMessage={this.openEditMessageClick}/>
                                 <DeleteButton deleteMessage={this.deleteMessage} give={0}/>
                             </div>
-                        )
-                            :
+                            ) :
                             null
                         }
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails className={classes.details}>
-                        <div className={classes.fullQuestionContainer}>
-                            <Typography className={classes.fullQuestionText}>
-                                {question}
-                            </Typography>
                         </div>
-                        <AnswerList answers={answers} deleteResponse={this.deleteResponse}/>
-                        <form onSubmit={this.onSubmit} className={classes.questionForm}>
-                            <FormControl margin="normal" fullWidth required>
-                                <TextField
-                                    label="Enter Answer"
-                                    multiline
-                                    rows="3"
-    								value={this.state.userAnswer}
-    								onChange={event => this.setState({userAnswer: event.target.value})}
-    								type="text"
-    								placeholder="Enter Answer Here"
-                                    fullWidth
-                                    variant="outlined"
-    							/>
-                                <Button
-                                    disabled={this.state.userAnswer === ''}
-                                    type="submit"
-                                    fullWidth className={classes.submit}
-                                    variant="contained"
-                                >
-                                    Answer
-                                </Button>
-                            </FormControl>
-                        </form>
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
+                    <ExpansionPanel expanded={this.props.open} onChange={(event, expanded) => this.handlePanelOpen(expanded)}>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon className={classes.expandIcon}/>} className={classes.expanded}/>
+                        <ExpansionPanelDetails className={classes.details}>
+                            <div className={classes.fullQuestionContainer}>
+                                <Typography className={classes.fullQuestionText}>
+                                    {question}
+                                </Typography>
+                            </div>
+                            <AnswerList answers={answers} user={user} currUser={currUser} deleteResponse={this.deleteResponse} message_id={id}/>
+                            <form onSubmit={this.onSubmit} className={classes.questionForm}>
+                                <FormControl margin="normal" fullWidth required>
+                                    <TextField
+                                        label="Enter Answer"
+                                        multiline
+                                        rows="3"
+        								value={this.state.userAnswer}
+        								onChange={event => this.setState({userAnswer: event.target.value})}
+        								type="text"
+        								placeholder="Enter Answer Here"
+                                        fullWidth
+                                        variant="outlined"
+        							/>
+                                    <Button
+                                        disabled={this.state.userAnswer === ''}
+                                        type="submit"
+                                        fullWidth className={classes.submit}
+                                        variant="contained"
+                                    >
+                                        Answer
+                                    </Button>
+                                </FormControl>
+                            </form>
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                </div>
             </div>
         );
     }

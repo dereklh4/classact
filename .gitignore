@@ -4,6 +4,7 @@
 *.sqlite3
 *.coverage
 backend/htmlcov
+backend/image_files
 
 #react app
 frontend/.DS_STORE

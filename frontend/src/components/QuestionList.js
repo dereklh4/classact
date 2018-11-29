@@ -8,6 +8,7 @@ class QuestionListBasic extends Component {
         super(props);
         this.state = {
             currUser: '',
+            key: '',
         };
     }
 
@@ -26,30 +27,29 @@ class QuestionListBasic extends Component {
             this.setState({currUser: response.username});
         })
     }
+    changeOpen = (key) => {
+        this.setState({key: key})
+    }
     render() {
-
-        const {questions, classes, upvoteThisMessage, unUpvoteThisMessage, postResponseHandler, handleDeleteMessage, handleEditMessage, handleDeleteResponse} = this.props;
+        const {questions, classes, searchVal} = this.props;
+        const filteredQuestions = questions.filter(question => question.text.includes(searchVal))
         return (
             <div className={classes.questionContainer}>
-                {questions.map(question =>
+                {filteredQuestions.map(question =>
                     <Question
                         question={question.text}
                         id={question.id}
                         key={question.id}
                         upvotes={question.upvotes}
                         user={question.user}
-                        upvoteThisMessage={upvoteThisMessage}
-                        unUpvoteThisMessage={unUpvoteThisMessage}
                         upvotedByUser={question.upvoted_by_user}
-
-                        postResponseHandler={postResponseHandler}
                         answers= {question.responses}
-                        handleDeleteMessage={handleDeleteMessage}
-                        handleDeleteResponse={handleDeleteResponse}
-                        handleEditMessage={handleEditMessage}
                         currUser={this.state.currUser}
+                        open={this.state.key === question.id}
+                        setOpen={this.changeOpen}
                     />
                 )}
+                {(filteredQuestions.length === 0 && questions.length !== 0) ? <div className={classes.sorry}>Sorry, no questions matched your search</div> : null}
             </div>
         );
     }

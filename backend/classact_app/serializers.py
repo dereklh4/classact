@@ -2,7 +2,7 @@ from rest_auth.registration.serializers import RegisterSerializer
 from rest_auth.serializers import LoginSerializer
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import (Classroom, UserInClassroom)
+from .models import *
 
 
 #override rest_auth's default registration serializer so can add first and last names, and remove username
@@ -90,3 +90,11 @@ class UserInClassroomViewSerializer(serializers.ModelSerializer):
 		model = UserInClassroom
 		fields = ('user','classroom','permission')
 		depth = 2
+
+class UserImageSerializer(serializers.ModelSerializer):
+	email = serializers.EmailField(source="user.email",read_only=True)
+
+	class Meta:
+		model = UserImage
+		fields = ('id','user','email','image')
+

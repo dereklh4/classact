@@ -4,7 +4,7 @@ import {withRouter} from 'react-router-dom';
 import * as routes from '../constants/routes';
 import queryString from 'query-string';
 import {QuestionList} from './QuestionList';
-import {QUESTION_STYLE} from '../constants/styles';
+import {QUESTION_STYLE, CA_STYLE_HOME} from '../constants/styles';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
@@ -12,6 +12,12 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
+import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
+import Close from '@material-ui/icons/Close';
+import Input from '@material-ui/core/Input';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import InputLabel from '@material-ui/core/InputLabel';
 
 class Chatroom extends Component {
 	constructor(props) {
@@ -21,6 +27,7 @@ class Chatroom extends Component {
 			message: '',
 			messages: [],
 			chatName: '',
+			searchVal: '',
 		};
 
       var params = queryString.parse(this.props.location.search)
@@ -29,16 +36,19 @@ class Chatroom extends Component {
     									this.errorMessage.bind(this),
     									this.newMessage.bind(this),
     									this.upvotedMessage.bind(this),
-											this.unUpvotedMessage.bind(this),
+										this.unUpvotedMessage.bind(this),
     									this.newResponse.bind(this),
     									this.editResponse.bind(this),
     									this.deleteResponse.bind(this),
     									this.editMessage.bind(this),
-    									this.deleteMessage.bind(this))
+    									this.deleteMessage.bind(this),
+    									this.upvotedResponse.bind(this),
+    									this.unUpvotedResponse.bind(this),
+    									this.pinnedMessage.bind(this),
+    									this.savedMessage.bind(this))
 
     };
 
-	// TODO: Fetch other information about particlular chatroom
 	componentDidMount() {
 		const token = 'Token ' + localStorage.getItem('token')
 		const addedUrl = this.props.location.state.url;
@@ -74,149 +84,126 @@ class Chatroom extends Component {
 		const messages = this.state.messages;
 		const index = messages.findIndex((message) => message.id === content.message_id);
 		const updatedMessages = [...this.state.messages]
-		const newMessage =  {
-			hour: updatedMessages[index].hour,
-			id: updatedMessages[index].id,
-			minutes: updatedMessages[index].minute,
-			second:updatedMessages[index].second,
-			text: updatedMessages[index].text,
-			upvotes: content.upvotes,
-			user: updatedMessages[index].user,
-			upvoted_by_user: true,
-			responses: updatedMessages[index].responses
-		}
+		const newMessage = Object.assign(updatedMessages[index], {upvotes: content.upvotes, upvoted_by_user: true})
 		updatedMessages[index] = newMessage
 		this.setState({messages: updatedMessages})
   	}
 
-		unUpvotedMessage(content) {
-					const message = this.state.messages;
-					const index = message.findIndex((message) => message.id === content.message_id);
-					const updatedMessages = [...this.state.messages]
-					const newMessage = {
-						hour: updatedMessages[index].hour,
-						id: updatedMessages[index].id,
-						minutes: updatedMessages[index].minute,
-						second:updatedMessages[index].second,
-						text: updatedMessages[index].text,
-						upvotes: content.upvotes,
-						user: updatedMessages[index].user,
-						upvoted_by_user: false,
-						responses: updatedMessages[index].responses
-					}
-					updatedMessages[index] = newMessage
-					this.setState({messages: updatedMessages})
-				}
-
-  	newResponse(response) {
-		const messages = this.state.messages;
-		const index = messages.findIndex((message) => message.id === response.message_id);
+	unUpvotedMessage(content) {
+		const message = this.state.messages;
+		const index = message.findIndex((message) => message.id === content.message_id);
 		const updatedMessages = [...this.state.messages]
-		const updatedResponses = updatedMessages[index].responses
-		updatedResponses.push(response)
-		const newMessage =  {
-			hour: updatedMessages[index].hour,
-			id: updatedMessages[index].id,
-			minutes: updatedMessages[index].minute,
-			second:updatedMessages[index].second,
-			text: updatedMessages[index].text,
-			upvotes: updatedMessages[index].upvotes,
-			user: updatedMessages[index].user,
-			upvoted_by_user: updatedMessages[index].upvoted_by_user,
-			responses: updatedResponses,
-		}
-  		updatedMessages[index] = newMessage
-		this.setState({messages: updatedMessages })
-  	}
-
-  	deleteResponse(response) {
-  		const messages = this.state.messages;
-		const messageIndex = messages.findIndex((message) => message.id === response.message_id);
-		const updatedMessages = [...this.state.messages]
-		const responses = updatedMessages[messageIndex].responses
-		const responseIndex = responses.findIndex((r) => r.response_id === response.response_id);
-		responses.splice(responseIndex, 1)
-		const newMessage = {
-			hour: updatedMessages[messageIndex].hour,
-			id: updatedMessages[messageIndex].id,
-			minutes: updatedMessages[messageIndex].minute,
-			second:updatedMessages[messageIndex].second,
-			text: updatedMessages[messageIndex].text,
-			upvotes: updatedMessages[messageIndex].upvotes,
-			user: updatedMessages[messageIndex].user,
-			upvoted_by_user: updatedMessages[messageIndex].upvoted_by_user,
-			responses: responses
-		}
-		updatedMessages[messageIndex] = newMessage;
-		this.setState({messages: updatedMessages})
-  	}
-
-  	editResponse(response) {
-  		console.log(this.state.messages)
-  	}
-
-  	editMessage(response) {
-		const messages = this.state.messages;
-		const index = messages.findIndex((message) => message.id === response.message_id);
-		const updatedMessages = [...this.state.messages]
-		const newMessage =  {
-			hour: updatedMessages[index].hour,
-			id: updatedMessages[index].id,
-			minutes: updatedMessages[index].minute,
-			second:updatedMessages[index].second,
-			text: response.text,
-			upvotes: updatedMessages[index].upvotes,
-			user: updatedMessages[index].user,
-			upvoted_by_user: updatedMessages[index].upvoted_by_user,
-			responses: updatedMessages[index].responses,
-		}
+		const newMessage = Object.assign(updatedMessages[index], {upvotes: content.upvotes, upvoted_by_user: false})
 		updatedMessages[index] = newMessage
 		this.setState({messages: updatedMessages})
 	}
 
-	deleteMessage(message) {
+	upvotedResponse(content) {
 		const messages = this.state.messages;
-		const index = messages.findIndex((m) => m.id === message.message_id);
+		const messageIndex = messages.findIndex((message) => message.id === content.message_id)
+		const updatedMessages = [...this.state.messages]
+		const responses = updatedMessages[messageIndex].responses
+		const responseIndex = responses.findIndex((r) => r.response_id === content.response_id)
+		const newResponse = Object.assign(updatedMessages[messageIndex].responses[responseIndex], {upvotes: content.upvotes, upvoted_by_user: true})
+		responses[responseIndex] = newResponse
+		const newMessage = Object.assign(updatedMessages[messageIndex], {responses: responses})
+		updatedMessages[messageIndex] = newMessage
+		this.setState({messages: updatedMessages})
+  	}
+
+	unUpvotedResponse(content) {
+		const messages = this.state.messages;
+		const messageIndex = messages.findIndex((message) => message.id === content.message_id)
+		const updatedMessages = [...this.state.messages]
+		const responses = updatedMessages[messageIndex].responses
+		const responseIndex = responses.findIndex((r) => r.response_id === content.response_id)
+		const newResponse = Object.assign(updatedMessages[messageIndex].responses[responseIndex], {upvotes: content.upvotes, upvoted_by_user: false})
+		responses[responseIndex] = newResponse
+		const newMessage = Object.assign(updatedMessages[messageIndex], {responses: responses})
+		updatedMessages[messageIndex] = newMessage
+		this.setState(this.state)
+	}
+
+  	newResponse(content) {
+		const messages = this.state.messages;
+		const index = messages.findIndex((message) => message.id === content.message_id);
+		const updatedMessages = [...this.state.messages]
+		const updatedResponses = updatedMessages[index].responses
+		updatedResponses.push(content)
+		const newMessage = Object.assign(updatedMessages[index], {responses: updatedResponses})
+  		updatedMessages[index] = newMessage
+		this.setState({messages: updatedMessages })
+  	}
+
+  	deleteResponse(content) {
+  		const messages = this.state.messages;
+		const messageIndex = messages.findIndex((message) => message.id === content.message_id)
+		const updatedMessages = [...this.state.messages]
+		const responses = updatedMessages[messageIndex].responses
+		const responseIndex = responses.findIndex((r) => r.response_id === content.response_id)
+		responses.splice(responseIndex, 1)
+		const newMessage = Object.assign(updatedMessages[messageIndex], {responses: responses})
+		updatedMessages[messageIndex] = newMessage
+		this.setState({messages: updatedMessages})
+  	}
+
+  	editResponse(content) {
+		const messages = this.state.messages;
+		const messageIndex = messages.findIndex((message) => message.id === content.message_id)
+		const updatedMessages = [...this.state.messages]
+		const responses = updatedMessages[messageIndex].responses
+		const responseIndex = responses.findIndex((r) => r.response_id === content.response_id)
+		const newResponse = Object.assign(updatedMessages[messageIndex].responses[responseIndex], {text: content.text})
+		responses[responseIndex] = newResponse
+		const newMessage = Object.assign(updatedMessages[messageIndex], {responses: responses})
+		updatedMessages[messageIndex] = newMessage
+		this.setState({messages: updatedMessages})
+
+
+  	}
+
+  	editMessage(content) {
+		const messages = this.state.messages;
+		const index = messages.findIndex((message) => message.id === content.message_id);
+		const updatedMessages = [...this.state.messages]
+		const newMessage = Object.assign(updatedMessages[index], {text: content.text})
+		updatedMessages[index] = newMessage
+		this.setState({messages: updatedMessages})
+	}
+
+	deleteMessage(content) {
+		const messages = this.state.messages;
+		const index = messages.findIndex((message) => message.id === content.message_id);
 		const updatedMessages = [...this.state.messages]
 		updatedMessages.splice(index, 1);
 		this.setState({messages: updatedMessages})
 	}
 
+	pinnedMessage(content) {
+		console.log("Pinned message:")
+		console.log(content)
+	}
+
+	savedMessage(content) {
+		console.log("Saved message:")
+		console.log(content)
+	}
 
   	postChatMessageHandler = (e, text) => {
+		this.setState({searchVal: ''})
 	    WebSocketInstance.postChatMessage(text);
     	this.setState({
       		message: ''
     	})
 	    e.preventDefault();
   	}
-	handleDeleteMessage = (message_id) => {
-		WebSocketInstance.deleteMessage(message_id);
-	}
-
-	handleEditMessage = (message_id, text) => {
-		WebSocketInstance.editMessage(message_id, text, true)
-	}
-
-	handleDeleteResponse = (message_id, response_id) => {
-		WebSocketInstance.deleteResponse(message_id, response_id)
-	}
-
-	postResponseHandler = (id, text) => {
-		WebSocketInstance.postResponse(id, text);
-	}
-
-	upvoteThisMessage = (id) => {
-		WebSocketInstance.upvoteMessage(id);
-	}
-
-	unUpvoteThisMessage = (id) => {
-		WebSocketInstance.unUpvoteMessage(id);
-	}
 
 	handleHomeClick = () => {
 		WebSocketInstance.close();
 		this.props.history.push(routes.HOME)
+	}
+	filterFor = (value) => {
+		this.setState({searchVal: value});
 	}
   render() {
     const messages = this.state.messages;
@@ -224,10 +211,18 @@ class Chatroom extends Component {
     return (
 		<React.Fragment>
 			<CssBaseline/>
+			<div className={classes.chatIntro}>
+				<Paper className={classes.paperRoot} elevation={1}>
+					<Avatar className={classes.avatar}>
+						<img style={CA_STYLE_HOME} src={require('../images/ClassActLogo.png')} alt="CA Logo"/>
+					</Avatar>
+				</Paper>
+			</div>
 			<Button
 				type="button"
 				onClick={this.handleHomeClick}
 				className={classes.submit}
+				fullWidth
 			>
 				Back To Home
 			</Button>
@@ -236,14 +231,29 @@ class Chatroom extends Component {
 					<Typography component="h1" variant="h5">
 						{this.state.chatName}
 					</Typography>
+					<TextField
+	 					label="Search Questions"
+				  		value={this.state.searchVal}
+			  			onChange={(event) => this.filterFor(event.target.value)}
+			  			margin="dense"
+			  			variant="outlined"
+						InputProps={{
+							endAdornment: (
+								<InputAdornment position="end">
+									<IconButton aria-label="Toggle password visibility" onClick={() => this.setState({searchVal: ''})}>
+										<Close/>
+									</IconButton>
+								</InputAdornment>
+							)
+						}}
+					>
+						 <IconButton onClick={() => this.setState({searchVal: ''})} className={classes.deleteSearch}>
+							 <Close fontSize="default" color="black"/>
+						 </IconButton>
+					 </TextField>
 					<QuestionList
 						questions={messages}
-						upvoteThisMessage={this.upvoteThisMessage}
-						unUpvoteThisMessage={this.unUpvoteThisMessage}
-						postResponseHandler={this.postResponseHandler}
-						handleDeleteMessage={this.handleDeleteMessage}
-						handleEditMessage={this.handleEditMessage}
-						handleDeleteResponse={this.handleDeleteResponse}
+						searchVal={this.state.searchVal}
 					/>
 					<form onSubmit={(e) => this.postChatMessageHandler(e, this.state.message)} className={classes.postQuestion}>
 						<FormControl margin="normal" fullWidth required>
