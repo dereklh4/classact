@@ -17,7 +17,7 @@ class WebSocketService {
 
   addCallbacks(initChatCallback,errorMessageCallback,newMessageCallback,upvotedMessageCallback,unUpvotedMessageCallback,
           newResponseCallback,editResponseCallback,deleteResponseCallback,editMessageCallback,deleteMessageCallback,
-          upvotedResponseCallback,unUpvotedResponseCallback,pinnedMessageCallback, savedMessageCallback) {
+          upvotedResponseCallback,unUpvotedResponseCallback,pinnedMessageCallback, savedMessageCallback, unSavedMessageCallback) {
     this.callbacks['init_chat'] = initChatCallback;
     this.callbacks['error_message'] = errorMessageCallback;
 
@@ -31,8 +31,9 @@ class WebSocketService {
     this.callbacks['deleted_message'] = deleteMessageCallback;
     this.callbacks['upvoted_response'] = upvotedResponseCallback;
     this.callbacks['un_upvoted_response'] = unUpvotedResponseCallback;
-    this.callbacks['saved_message'] = savedMessageCallback
-    this.callbacks['pinned_message'] = pinnedMessageCallback
+    this.callbacks['saved_message'] = savedMessageCallback;
+    this.callbacks['pinned_message'] = pinnedMessageCallback;
+    this.callbacks['un_saved_message'] = unSavedMessageCallback
   }
 
   connect(chatroom_url) {
@@ -148,6 +149,10 @@ class WebSocketService {
   
   saveMessage(in_message_id) {
     this._sendMessage({command: 'save_message', message_id: in_message_id})
+  }
+
+  unSaveMessage(in_message_id) {
+    this._sendMessage({command: 'un_save_message', message_id: in_message_id}) 
   }
 
 
