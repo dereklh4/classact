@@ -38,7 +38,7 @@ class AnswerListBasic extends Component {
         WebSocketInstance.editResponse(this.props.message_id, this.state.responseId, text, true);
     }
     render() {
-        const {answers, classes, deleteResponse, currUser, user} = this.props;
+        const {answers, classes, deleteResponse, currUser} = this.props;
         return (
             <div>
                 <EditField
@@ -77,7 +77,7 @@ class AnswerListBasic extends Component {
                                 <Typography className={classes.answerText}>
                                     {answer.text}
                                 </Typography>
-                                {currUser === user ? (
+                                {currUser === answer.user ? (
                                 <div>
                                 <EditButton editMessage={() => this.openEditResponseClick(answer.response_id, answer.text)} give={1}/>
                                 <DeleteButton deleteMessage={() => deleteResponse(answer.response_id)} give={1}/>
