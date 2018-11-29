@@ -15,9 +15,7 @@ import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Close from '@material-ui/icons/Close';
-import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import InputLabel from '@material-ui/core/InputLabel';
 
 class Chatroom extends Component {
 	constructor(props) {
@@ -180,8 +178,12 @@ class Chatroom extends Component {
 	}
 
 	pinnedMessage(content) {
-		console.log("Pinned message:")
-		console.log(content)
+		const messages = this.state.messages;
+		const index = messages.findIndex((message) => message.id === content.message_id);
+		const updatedMessages = [...this.state.messages]
+		const newMessage = Object.assign(updatedMessages[index], {pinned: content.pinned})
+		updatedMessages[index] = newMessage
+		this.setState({messages: updatedMessages})
 	}
 
 	savedMessage(content) {
@@ -254,6 +256,7 @@ class Chatroom extends Component {
 					<QuestionList
 						questions={messages}
 						searchVal={this.state.searchVal}
+						permission={this.props.location.state.permission}
 					/>
 					<form onSubmit={(e) => this.postChatMessageHandler(e, this.state.message)} className={classes.postQuestion}>
 						<FormControl margin="normal" fullWidth required>

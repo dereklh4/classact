@@ -136,7 +136,7 @@ class TileBasic extends Component {
                            <CardActions>
                                   <Button
                                       type="submit"
-                                      onClick={() => history.push(routes.CHATROOM + "?url=" + url, {url: url})}
+                                      onClick={() => history.push(routes.CHATROOM + "?url=" + url, {url: url, permission: permission})}
                                       fullWidth className={classes.submit}
                                       variant="contained"
                                   >

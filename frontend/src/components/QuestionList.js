@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Question} from './Question'
+import _ from 'lodash';
 import withStyles from '@material-ui/core/styles/withStyles';
 import {QUESTION_STYLE} from '../constants/styles';
 
@@ -31,11 +32,11 @@ class QuestionListBasic extends Component {
         this.setState({key: key})
     }
     render() {
-        const {questions, classes, searchVal} = this.props;
+        const {questions, classes, searchVal, permission} = this.props;
         const filteredQuestions = questions.filter(question => question.text.includes(searchVal))
         return (
             <div className={classes.questionContainer}>
-                {filteredQuestions.map(question =>
+                {_.sortBy(filteredQuestions, 'pinned').reverse().map(question =>
                     <Question
                         question={question.text}
                         id={question.id}
@@ -47,6 +48,8 @@ class QuestionListBasic extends Component {
                         currUser={this.state.currUser}
                         open={this.state.key === question.id}
                         setOpen={this.changeOpen}
+                        permission={permission}
+                        pinned={question.pinned}
                     />
                 )}
                 {(filteredQuestions.length === 0 && questions.length !== 0) ? <div className={classes.sorry}>Sorry, no questions matched your search</div> : null}

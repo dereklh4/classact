@@ -208,7 +208,10 @@ export const QUESTION_STYLE = theme => ({
         paddingRight: 5,
         marginRight: 12,
         marginLeft: 10
-
+    },
+    pinnedText: {
+        borderRight: '2px solid #d4a338',
+        borderBottom: '2px solid #d4a338',
     },
     questionSummaryText: {
         color: '#505050',
