@@ -16,6 +16,8 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Close from '@material-ui/icons/Close';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 
 class Chatroom extends Component {
 	constructor(props) {
@@ -26,6 +28,7 @@ class Chatroom extends Component {
 			messages: [],
 			chatName: '',
 			searchVal: '',
+			sortBy: "default",
 		};
 
       var params = queryString.parse(this.props.location.search)
@@ -34,7 +37,7 @@ class Chatroom extends Component {
     									this.errorMessage.bind(this),
     									this.newMessage.bind(this),
     									this.upvotedMessage.bind(this),
-										this.unUpvotedMessage.bind(this),
+											this.unUpvotedMessage.bind(this),
     									this.newResponse.bind(this),
     									this.editResponse.bind(this),
     									this.deleteResponse.bind(this),
@@ -213,8 +216,24 @@ class Chatroom extends Component {
 	filterFor = (value) => {
 		this.setState({searchVal: value});
 	}
+	sort = event => {
+		this.setState({[event.target.name]: event.target.value});
+	}
+
+	sortMessages(messages) {
+		if (this.state.sortBy === "default") {
+			messages.sort((a,b) => (a.pinned - b.pinned));
+		}
+		else if (this.state.sortBy === "upvotes") {
+			messages.sort((a,b) => (b.upvotes - a.upvotes));
+		} else if (this.state.sortBy === "username") {
+			messages.sort((a,b) => (a.user > b.user));
+		}
+		return messages;
+	}
+
   render() {
-    const messages = this.state.messages;
+  const messages = this.sortMessages(this.state.messages);
 	const {classes} = this.props;
     return (
 		<React.Fragment>
@@ -258,6 +277,22 @@ class Chatroom extends Component {
 							 <Close fontSize="default" color="black"/>
 						 </IconButton>
 					 </TextField>
+					 <FormControl className={classes.sortByForm}>
+					 <Typography>
+						 Sort By:
+					 </Typography>
+						<Select
+							value={this.state.sortBy}
+							onChange={this.sort}
+							displayEmpty
+							name="sortBy"
+							className={classes.selectEmpty}
+						>
+							<MenuItem value="default">Default</MenuItem>
+							<MenuItem value="upvotes">Upvotes</MenuItem>
+							<MenuItem value="username">Username</MenuItem>
+						</Select>
+					</FormControl>
 					<QuestionList
 						questions={messages}
 						searchVal={this.state.searchVal}

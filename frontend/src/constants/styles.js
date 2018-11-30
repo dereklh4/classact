@@ -136,7 +136,12 @@ export const QUESTION_STYLE = theme => ({
         marginTop: 8,
         width: '100%',
         overflow: 'auto',
-        maxHeight: 300,
+        maxHeight: 600,
+    },
+    sortByForm: {
+      width: '25%',
+      marginLeft: '75%',
+      textAlign: 'right',
     },
     layout: {
         width: 'auto',
@@ -220,6 +225,11 @@ export const QUESTION_STYLE = theme => ({
         marginRight: 12,
         marginLeft: 10
     },
+    questionSummaryText: {
+        color: '#505050',
+        fontWeight: 'bold',
+        width: '70%'
+    },
     pinnedText: {
         borderRight: '2px solid #d4a338',
         borderBottom: '2px solid #d4a338',
@@ -242,16 +252,13 @@ export const QUESTION_STYLE = theme => ({
         margin: '10px 15px 10px 15px'
     },
     editButton: {
-        padding: '0px!important',
-        border: '1px solid #dfdfdf',
+        padding: '3px!important',
     },
     editResponseButton: {
 
     },
     deleteButton: {
-        padding: '0px!important',
-        marginLeft: 10,
-        border: '1px solid #dfdfdf',
+        padding: '3px!important',
     },
     deleteResponseButton: {
 
@@ -418,7 +425,7 @@ export const RESPONSE_STYLE = theme => ({
         fontSize: 15,
         fontWeight: 'bold',
         color: 'white',
-        backgroundColor: '#2196f3'
+        backgroundColor: '#3f51b5'
     },
     list: {
         listStyleImage: 'url(../images/ListArrow.png)',
