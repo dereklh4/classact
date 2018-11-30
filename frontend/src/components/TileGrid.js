@@ -15,7 +15,7 @@ const TileGridBasic = ({classes, onPlusClick, courses, onRemoveCourse}) =>
                 <Tile
                     name={a.classroom.title}
                     url={a.classroom.url}
-                    numenrolled={a.classroom.enrolled}
+                    numenrolled={a.student_count}
                     onRemoveCourse={onRemoveCourse}
                     key={a.classroom.url}
                     permission={a.permission}
