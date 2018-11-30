@@ -46,7 +46,8 @@ class Chatroom extends Component {
     									this.pinnedMessage.bind(this),
     									this.savedMessage.bind(this),
     									this.unSavedMessage.bind(this),
-    									this.resolvedMessage.bind(this))
+    									this.resolvedMessage.bind(this),
+    									this.endorsedResponse.bind(this))
 
     };
 
@@ -202,6 +203,11 @@ class Chatroom extends Component {
 	resolvedMessage(content) {
 		console.log("Resolved message:")
 		console.log(content)
+	}
+
+	endorsedResponse(content) {
+		console.log("Endorsed response:")
+		console.log(content)	
 	}
 
   	postChatMessageHandler = (e, text) => {

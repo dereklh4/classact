@@ -50,6 +50,10 @@ class UserPinMessage(models.Model):
 	message = models.ForeignKey(Message,on_delete=models.CASCADE)
 	classroom = models.ForeignKey(Classroom,on_delete=models.CASCADE)
 
+class EndorseResponse(models.Model):
+	response = models.ForeignKey(Response,on_delete=models.CASCADE)
+	classroom = models.ForeignKey(Classroom,on_delete=models.CASCADE)
+
 class UserSaveQuestion(models.Model):
 	user = models.ForeignKey(User,on_delete=models.CASCADE)
 	message = models.ForeignKey(Message,on_delete=models.CASCADE)
