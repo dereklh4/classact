@@ -137,7 +137,7 @@ class ChatConsumer(WebsocketConsumer):
 	def response_to_json(self, response):
 		response_upvotes = UserResponseUpvotes.objects.filter(response=response)
 		upvoted_by_user = len(response_upvotes.filter(user=self.scope["user"])) >= 1
-		endorsed = len(UserEndorseResponse.objects.filter(response=response)) >= 1
+		endorsed = len(EndorseResponse.objects.filter(response=response)) >= 1
 		
 		user_image = ""
 		try:
