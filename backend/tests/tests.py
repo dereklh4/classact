@@ -247,6 +247,7 @@ class ChatroomTests(APITestCase):
 		data = {'title': 'software engineering'}
 		response = self.client.post(PREFIX + 'classroom/', data, format='json')
 		url = response.data["url"]
+		self.url = url
 		print(Classroom.objects.get().url)
 
 		#custom initialization since not actually going to connect to channel
@@ -335,6 +336,23 @@ class ChatroomTests(APITestCase):
 		message = Message.objects.get()
 		self.assertEqual(message.text,"new text")
 
+		data = {'email': 'john_hansen@gmail.com',
+			'password1':'f!re8all18',
+			'password2':'f!re8all18',
+			"first_name":"John",
+			"last_name":"Hansen"
+		}
+		response = self.client.post(PREFIX + 'auth/registration/', data, format='json')
+
+		data = {"url":self.url}
+		response = self.client.post(PREFIX + 'classroom/join/', data, format='json')
+
+		try:
+			self.consumer.edit_message({'message_id': message.id, 'text': "Other user edit test"})
+			self.fail("User should not have access to other users messages")
+		except:
+			pass
+
 	def test_edit_response(self):
 		self.consumer.post_message({"text":"hello world"})
 
@@ -346,4 +364,47 @@ class ChatroomTests(APITestCase):
 		response = Response.objects.get()
 		self.assertEqual(response.text,"new response")
 
+	def test_anonymous(self):
+		self.consumer.post_message({'text': "Not anonymous"})
+		message = Message.objects.get()
 
+		self.assertEqual(message.anonymous, False)
+
+		self.consumer.post_response({"text":"Also not anonymous","message_id":message.id})
+		response = Response.objects.get()
+
+		self.assertEqual(response.anonymous, False)
+
+		self.consumer.edit_message({'message_id': message.id, 'text': "Anonymous now", 'anonymous': True})
+		message = Message.objects.get()
+		self.assertEqual(message.anonymous, True)
+
+		self.consumer.edit_response({"text":"Anonymous True","message_id":message.id,"response_id":response.id, 'anonymous': True})
+		response = Response.objects.get()
+		self.assertEqual(response.anonymous, True)
+
+	def test_resolve_message(self):
+		self.consumer.post_message({'text': "Message to be resolved"})
+		message = Message.objects.get()
+		self.assertEqual(message.resolved, False)
+
+		self.consumer.resolve_message({'message_id': message.id})
+		message = Message.objects.get()
+		self.assertEqual(message.resolved, True)
+
+		data = {'email': 'john_hansen@gmail.com',
+			'password1':'f!re8all18',
+			'password2':'f!re8all18',
+			"first_name":"John",
+			"last_name":"Hansen"
+		}
+		response = self.client.post(PREFIX + 'auth/registration/', data, format='json')
+
+		data = {"url":self.url}
+		response = self.client.post(PREFIX + 'classroom/join/', data, format='json')
+
+		try:
+			self.consumer.resolve_message({'message_id': message.id})
+			self.fail("User should not have sufficient permission")
+		except:
+			pass
