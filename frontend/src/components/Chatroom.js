@@ -18,6 +18,8 @@ import Close from '@material-ui/icons/Close';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 class Chatroom extends Component {
 	constructor(props) {
@@ -29,6 +31,7 @@ class Chatroom extends Component {
 			chatName: '',
 			searchVal: '',
 			sortBy: "default",
+			anonymousChecked: false,
 		};
 
       var params = queryString.parse(this.props.location.search)
@@ -232,6 +235,10 @@ class Chatroom extends Component {
 		return messages;
 	}
 
+	handleChangeAnonymous = name => event => {
+		this.setState({ [name]: event.target.checked});
+	};
+
   render() {
   const messages = this.sortMessages(this.state.messages);
 	const {classes} = this.props;
@@ -320,6 +327,16 @@ class Chatroom extends Component {
 							>
 								Post New Question
 							</Button>
+							<FormControlLabel
+								control={
+									<Switch
+										checked={this.state.anonymousChecked}
+										onChange={this.handleChangeAnonymous('anonymousChecked')}
+										value="anonymousChecked"
+										color="primary"/>
+								}
+							label="Post Anonymous"
+						/>
 						</FormControl>
 					</form>
 				</Paper>
