@@ -22,10 +22,10 @@ class Upvotes extends Component {
         WebSocketInstance.pinMessage(this.props.id);
     }
     render() {
-        const {upvotedByUser, classes, permission, pinned} = this.props;
+        const {upvotedByUser, classes, permission, pinned, isResponse} = this.props;
         return (
                 <div>
-                    {permission <= 1 ?
+                    {permission <= 1 || isResponse ?
                         (
                             <IconButton
                                 onClick={() => this.handleUpvoteClick(upvotedByUser)}

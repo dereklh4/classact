@@ -67,6 +67,7 @@ class AnswerListBasic extends Component {
                                     upvotedByUser={answer.upvoted_by_user}
                                     unUpvoteThisMessage={this.unUpvoteResponse}
                                     upvoteThisMessage={this.upvoteResponse}
+                                    isResponse={true}
                                 />
                                 <Typography className={classes.upvotesText}>
                                     {answer.upvotes}
