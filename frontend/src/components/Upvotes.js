@@ -32,9 +32,9 @@ class Upvotes extends Component {
                                 className={classes.upvoteButton}
                             >
                                 {upvotedByUser ?
-                                <ThumbsUpFilled fontSize="small" color="primary"/>
+                                <ThumbsUpFilled fontSize="small" style={{color: 'blue'}}/>
                                 :
-                                <ThumbsUp fontSize="small" color="primary"/>
+                                <ThumbsUp fontSize="small" style={{color: 'blue'}}/>
                                 }
                             </IconButton>
                         ) :
@@ -45,9 +45,9 @@ class Upvotes extends Component {
                                 disabled={pinned}
                             >
                                 {pinned ?
-                                <Whatshot fontSize="default" color="action"/>
+                                <Whatshot fontSize="default" style={{color: 'blue'}}/>
                                 :
-                                <WhatshotOutlined fontSize="default" color="action"/>
+                                <WhatshotOutlined fontSize="default" style={{color: 'blue'}}/>
                                 }
                             </IconButton>
                         )

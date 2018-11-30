@@ -245,17 +245,11 @@ export const QUESTION_STYLE = theme => ({
         padding: '0px!important',
         border: '1px solid #dfdfdf',
     },
-    editResponseButton: {
-
-    },
     deleteButton: {
         padding: '0px!important',
         marginLeft: 10,
         border: '1px solid #dfdfdf',
     },
-    deleteResponseButton: {
-
-    }
 });
 export const CA_STYLE = {
   width: '60px',
@@ -292,12 +286,7 @@ export const CARD_STYLE = theme => ({
         }
     },
     settingButton: {
-        height: '5px',
-        width: '35px',
-        marginRight: '5px',
-        '&:hover': {
-            backgroundColor: '#2d46d1'
-        },
+        padding: '0px!important',
     },
     submit: {
         marginTop: theme.spacing.unit,
