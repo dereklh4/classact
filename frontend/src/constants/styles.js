@@ -105,6 +105,14 @@ export const HOME_STYLE = theme => ({
     }
 })
 export const QUESTION_STYLE = theme => ({
+    listRoot: {
+        width: '100%',
+        maxWidth: 360,
+        backgroundColor: theme.palette.background.paper,
+        position: 'relative',
+        overflow: 'auto',
+        maxHeight: 200,
+    },
     chatName: {
         textAlign: 'center',
         fontSize: 50,
@@ -161,7 +169,7 @@ export const QUESTION_STYLE = theme => ({
     settingsAndRooms: {
         width: '20%',
         marginRight: theme.spacing.unit * 4,
-                border: '1px solid #dfdfdf',
+        border: '1px solid #dfdfdf',
     },
     settingsText: {
         textAlign: 'center',
