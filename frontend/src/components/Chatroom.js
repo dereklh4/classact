@@ -194,13 +194,21 @@ class Chatroom extends Component {
 	}
 
 	savedMessage(content) {
-		console.log("Saved message:")
-		console.log(content)
+		const messages = this.state.messages;
+		const index = messages.findIndex((message) => message.id === content.message_id);
+		const updatedMessages = [...this.state.messages]
+		const newMessage = Object.assign(updatedMessages[index], {saved_by_user: content.saved})
+		updatedMessages[index] = newMessage
+		this.setState({messages: updatedMessages})
 	}
 
 	unSavedMessage(content) {
-		console.log("Unsaved message:")
-		console.log(content)
+		const messages = this.state.messages;
+		const index = messages.findIndex((message) => message.id === content.message_id);
+		const updatedMessages = [...this.state.messages]
+		const newMessage = Object.assign(updatedMessages[index], {saved_by_user: content.saved})
+		updatedMessages[index] = newMessage
+		this.setState({messages: updatedMessages})
 	}
 
   	postChatMessageHandler = (e, text) => {

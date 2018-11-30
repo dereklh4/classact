@@ -15,6 +15,10 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+import Flag from '@material-ui/icons/Flag';
+import Create from '@material-ui/icons/Create';
+import RemoveCircle from '@material-ui/icons/RemoveCircle'
 
 class AnswerListBasic extends Component {
     constructor(props) {
@@ -50,9 +54,21 @@ class AnswerListBasic extends Component {
     handleCloseMenu = () => {
       this.setState( {anchorEl: null});
     };
+    handleEdit = (response_id, text) => {
+      this.openEditResponseClick(response_id, text);
+      this.setState( {anchorEl: null});
+    }
+    handleDelete = (response_id) => {
+      this.props.deleteResponse(response_id);
+      this.setState( {anchorEl: null});
+    }
+    handleEndorse = () => {
+      alert("Endorsing");
+      this.setState( {anchorEl: null});
+    }
 
     render() {
-        const {answers, classes, deleteResponse, currUser} = this.props;
+        const {answers, classes, deleteResponse, currUser, permission} = this.props;
         const {anchorEl} = this.state;
 
         return (
@@ -100,6 +116,8 @@ class AnswerListBasic extends Component {
                                       aria-owns={anchorEl ? 'question-options-menu' : undefined}
                                       aria-haspopup="true"
                                       onClick={this.handleOpenMenu}
+                                      disableRipple="true"
+                                      className={classes.threeVerticalDot}
                                     >
                                       <MoreVertIcon />
                                     </IconButton>
@@ -109,12 +127,33 @@ class AnswerListBasic extends Component {
                                       open={Boolean(anchorEl)}
                                       onClose={this.handleCloseMenu}
                                     >
-                                      <MenuItem onClick={this.handleClose}>
-                                        <EditButton editMessage={() => this.openEditResponseClick(answer.response_id, answer.text)} give={1}/>
-                                      </MenuItem>
-                                      <MenuItem onClick={this.handleClose}>
-                                        <DeleteButton deleteMessage={() => deleteResponse(answer.response_id)} give={1}/>
-                                      </MenuItem>
+                                    {currUser === answer.user ? (
+                                      <div>
+                                        <Tooltip title="Edit Reponse">
+                                          <MenuItem onClick={() => this.handleEdit(answer.response_id, answer.text)}>
+                                            <IconButton className={classes.menuIcon}>
+                                              <Create fontSize="default" color="primary"/>
+                                            </IconButton>
+                                          </MenuItem>
+                                        </Tooltip>
+                                        <Tooltip title="Delete Response">
+                                          <MenuItem onClick={() => this.handleDelete(answer.response_id)}>
+                                            <IconButton className={classes.menuIcon}>
+                                              <RemoveCircle fontSize="default" color="secondary"/>
+                                            </IconButton>
+                                          </MenuItem>
+                                        </Tooltip>
+                                      </div>
+                                    ) : null}
+                                    {permission > 1 ? (
+                                      <Tooltip title="Endorse Response">
+                                        <MenuItem onClick={this.handleEndorse}>
+                                          <IconButton className={classes.menuIcon}>
+                                            <Flag fontSize="default" color="primary"/>
+                                          </IconButton>
+                                        </MenuItem>
+                                      </Tooltip>
+                                    ) : null}
                                   </Menu>
                                 </div>
                                 )

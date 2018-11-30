@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import {AnswerList} from './AnswerList'
 import WebSocketInstance from '../services/WebSocket'
 import classNames from 'classnames';
-import {DeleteButton} from './DeleteButton'
-import {EditButton} from './EditButton'
 import {EditField} from './EditField'
 import Upvotes from './Upvotes'
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -21,6 +19,12 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import IconButton from '@material-ui/core/IconButton';
 import Flag from '@material-ui/icons/Flag';
+import RemoveCircle from '@material-ui/icons/RemoveCircle';
+import Create from '@material-ui/icons/Create';
+import Tooltip from '@material-ui/core/Tooltip';
+import Done from '@material-ui/icons/Done';
+import StarFilled from '@material-ui/icons/Star';
+import Star from '@material-ui/icons/StarOutlined';
 
 class QuestionBasic extends Component {
     constructor(props) {
@@ -93,8 +97,26 @@ class QuestionBasic extends Component {
       this.deleteMessage();
     };
 
+    handleResolved = () => {
+      this.setState( {anchorEl: null});
+      alert("RESOLVED");
+    };
+    handlePin = () => {
+      this.setState( {anchorEl: null});
+      WebSocketInstance.pinMessage(this.props.id);
+    };
+    handleSave = () => {
+      this.setState( {anchorEl: null});
+      WebSocketInstance.saveMessage(this.props.id);
+    };
+    handleUnsave = () => {
+      this.setState( {anchorEl: null});
+      WebSocketInstance.unSaveMessage(this.props.id);
+    };
+
+
     render() {
-        const {currUser, user, question, classes, id, upvotes, upvotedByUser, answers, permission, pinned} = this.props;
+        const {currUser, user, question, classes, id, upvotes, upvotedByUser, savedByUser, answers, permission, pinned} = this.props;
         const {anchorEl} = this.state;
         var questionShortened = question;
         if (question.length > 45) {
@@ -124,11 +146,9 @@ class QuestionBasic extends Component {
                         })}>
                             {upvotes}
                         </Typography>
-
                         <Typography className={classes.questionSummaryText}>
                             {questionShortened}
                         </Typography>
-                        {currUser === user ? (
                           <div>
                               <IconButton
                                 aria-label="Options"
@@ -136,6 +156,7 @@ class QuestionBasic extends Component {
                                 aria-haspopup="true"
                                 onClick={this.handleOpenMenu}
                                 disableRipple="true"
+                                className={classes.threeVerticalDot}
                               >
                                 <MoreVertIcon />
                               </IconButton>
@@ -145,22 +166,59 @@ class QuestionBasic extends Component {
                                 open={Boolean(anchorEl)}
                                 onClose={this.handleCloseMenu}
                               >
-                                  <MenuItem onClick={this.handleEdit}>
-                                    <EditButton/>
-                                  </MenuItem>
-                                  <MenuItem onClick={this.handleDelete}>
-                                    <DeleteButton/>
-                                  </MenuItem>
-                                  <MenuItem onClick={this.handlePin}>
-                                    <IconButton>
-                                      <Flag/>
-                                    </IconButton>
-                                  </MenuItem>
+                                {currUser === user ? (
+                                  <div>
+                                    <Tooltip title="Edit Question">
+                                      <MenuItem onClick={this.handleEdit}>
+                                        <IconButton className={classes.menuIcon}>
+                                          <Create fontSize="default" color="primary"/>
+                                        </IconButton>
+                                      </MenuItem>
+                                    </Tooltip>
+                                    <Tooltip title="Delete Question">
+                                      <MenuItem onClick={this.handleDelete}>
+                                        <IconButton className={classes.menuIcon}>
+                                          <RemoveCircle fontSize="default" color="secondary"/>
+                                        </IconButton>
+                                      </MenuItem>
+                                    </Tooltip>
+                                    <Tooltip title="Mark As Resolved">
+                                      <MenuItem onClick={this.handleResolved}>
+                                        <IconButton className={classes.menuIcon}>
+                                          <Done fontSize="default" color="primary"/>
+                                        </IconButton>
+                                      </MenuItem>
+                                    </Tooltip>
+                                  </div>
+                                ) : null}
+                                {permission > 1 ? (
+                                  <Tooltip title="Pin Question">
+                                    <MenuItem onClick={this.handlePin}>
+                                      <IconButton className={classes.menuIcon}>
+                                        <Flag fontSize="default" color="primary"/>
+                                      </IconButton>
+                                    </MenuItem>
+                                  </Tooltip>
+                                ) : null}
+                                {savedByUser ? (
+                                  <Tooltip title="Unsave Question">
+                                    <MenuItem onClick={this.handleUnsave}>
+                                      <IconButton className={classes.menuIcon}>
+                                        <StarFilled fontSize="default" style={{color: "#dbff00"}}/>
+                                      </IconButton>
+                                    </MenuItem>
+                                  </Tooltip>
+                                ) : (
+                                  <Tooltip title="Save Question">
+                                    <MenuItem onClick={this.handleSave}>
+                                      <IconButton className={classes.menuIcon}>
+                                        <Star fontSize="default" style={{color: "black"}}/>
+                                      </IconButton>
+                                    </MenuItem>
+                                  </Tooltip>
+                                )}
                               </Menu>
                           </div>
-                            ) :
-                            null
-                        }
                         </div>
                     <ExpansionPanel expanded={this.props.open} onChange={(event, expanded) => this.handlePanelOpen(expanded)}>
                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon className={classes.expandIcon}/>} className={classes.expanded}/>
@@ -173,7 +231,7 @@ class QuestionBasic extends Component {
                                     {user}
                                 </Typography>
                             </div>
-                            <AnswerList answers={answers} user={user} currUser={currUser} deleteResponse={this.deleteResponse} message_id={id}/>
+                            <AnswerList answers={answers} user={user} currUser={currUser} deleteResponse={this.deleteResponse} message_id={id} permission={permission}/>
                             <form onSubmit={this.onSubmit} className={classes.questionForm}>
                                 <FormControl margin="normal" fullWidth required>
                                     <TextField

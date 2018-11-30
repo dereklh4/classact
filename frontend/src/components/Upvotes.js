@@ -17,41 +17,20 @@ class Upvotes extends Component {
             this.props.upvoteThisMessage(this.props.id);
         }
     }
-    handlePinClick = () => {
-        WebSocketInstance.upvoteMessage(this.props.id)
-        WebSocketInstance.pinMessage(this.props.id);
-    }
     render() {
         const {upvotedByUser, classes, permission, pinned} = this.props;
         return (
                 <div>
-                    {permission <= 1 ?
-                        (
-                            <IconButton
-                                onClick={() => this.handleUpvoteClick(upvotedByUser)}
-                                className={classes.upvoteButton}
-                            >
-                                {upvotedByUser ?
-                                <ThumbsUpFilled fontSize="small" color="primary"/>
-                                :
-                                <ThumbsUp fontSize="small" color="primary"/>
-                                }
-                            </IconButton>
-                        ) :
-                        (
-                            <IconButton
-                                onClick={() => this.handlePinClick()}
-                                className={classes.pinButton}
-                                disabled={pinned}
-                            >
-                                {pinned ?
-                                <Whatshot fontSize="default" color="action"/>
-                                :
-                                <WhatshotOutlined fontSize="default" color="action"/>
-                                }
-                            </IconButton>
-                        )
-                    }
+                    <IconButton
+                        onClick={() => this.handleUpvoteClick(upvotedByUser)}
+                        className={classes.upvoteButton}
+                    >
+                        {upvotedByUser ?
+                        <ThumbsUpFilled fontSize="small" color="primary"/>
+                        :
+                        <ThumbsUp fontSize="small" color="primary"/>
+                        }
+                    </IconButton>
                 </div>
         );
     }

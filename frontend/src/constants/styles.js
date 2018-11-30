@@ -55,7 +55,7 @@ export const HOME_STYLE = theme => ({
     },
     words: {
         paddingLeft: theme.spacing.unit,
-        paddingRight: theme.spacing.unit * 30,
+        paddingRight: theme.spacing.unit,
         width: '100%'
     },
     buttons: {
@@ -239,6 +239,9 @@ export const QUESTION_STYLE = theme => ({
         fontWeight: 'bold',
         width: '70%'
     },
+    questionInfoText: {
+        borderLeft: '4px solid #3f51b5',
+    },
     details: {
         display: 'flex',
         flexDirection: 'column',
@@ -262,7 +265,14 @@ export const QUESTION_STYLE = theme => ({
     },
     deleteResponseButton: {
 
-    }
+    },
+    threeVerticalDot: {
+        marginRight: '0px',
+        padding: '0px!important',
+    },
+    menuIcon: {
+        padding: '3px!important',
+    },
 });
 export const CA_STYLE = {
   width: '60px',
@@ -448,6 +458,12 @@ export const RESPONSE_STYLE = theme => ({
     },
     answerText: {
         width: '65%',
-
-    }
+    },
+    threeVerticalDot: {
+        marginRight: '0px',
+        padding: '0px!important',
+    },
+    menuIcon: {
+        padding: '3px!important',
+    },
 })

@@ -146,13 +146,13 @@ class WebSocketService {
   pinMessage(in_message_id) {
     this._sendMessage({command: 'pin_message', message_id: in_message_id})
   }
-  
+
   saveMessage(in_message_id) {
     this._sendMessage({command: 'save_message', message_id: in_message_id})
   }
 
   unSaveMessage(in_message_id) {
-    this._sendMessage({command: 'un_save_message', message_id: in_message_id}) 
+    this._sendMessage({command: 'un_save_message', message_id: in_message_id})
   }
 
 

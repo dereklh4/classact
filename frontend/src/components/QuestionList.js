@@ -44,6 +44,7 @@ class QuestionListBasic extends Component {
                         upvotes={question.upvotes}
                         user={question.user}
                         upvotedByUser={question.upvoted_by_user}
+                        savedByUser={question.saved_by_user}
                         answers= {question.responses}
                         currUser={this.state.currUser}
                         open={this.state.key === question.id}
