@@ -34,6 +34,9 @@ export const EDIT_QUESTION_STYLE = theme => ({
 export const CA_STYLE_HOME = {
     width: '150px',
   };
+  export const CA_STYLE_CHATROOM = {
+      width: '110px',
+    };
 
 export const HOME_STYLE = theme => ({
     homeIntro: {
@@ -54,26 +57,40 @@ export const HOME_STYLE = theme => ({
 
     },
     words: {
-        paddingLeft: theme.spacing.unit,
-        paddingRight: theme.spacing.unit * 30,
-        width: '100%'
+        paddingRight: theme.spacing.unit ,
+        width: '60%',
+        [theme.breakpoints.down('sm')]: {
+            visibility: 'hidden',
+            overflow: 'hidden',
+            width: '0%'
+        }
     },
     buttons: {
-        width: '100%',
+        width: '10%',
+        [theme.breakpoints.down('sm')]: {
+            width: '30%',
+        }
     },
     chatroomText: {
         fontSize: 100,
         color: 'white',
         lineHeight: '90%',
         fontWeight: 'bold',
-        paddingLeft: theme.spacing.unit * 10
     },
     homeText: {
         fontSize: 100,
         lineHeight: '90%',
         color: 'white',
         fontWeight: 'bold',
-        paddingLeft: theme.spacing.unit * 50
+        paddingLeft: '33%'
+    },
+    avatarDiv: {
+        width: '30%',
+        [theme.breakpoints.down('sm')]: {
+            width: '70%',
+            marginLeft: 'auto',
+            marginRight: 'auto'
+        }
     },
     avatar: {
         margin: '8px 90px 8px 70px',
@@ -94,7 +111,11 @@ export const HOME_STYLE = theme => ({
         marginBottom: theme.spacing.unit * 4,
         padding: 4,
         overflowX: 'scroll',
-        overflowY: 'hidden'
+        overflowY: 'hidden',
+        [theme.breakpoints.down('sm')]: {
+            overflow: 'auto',
+            overflowX: 'none'
+        }
     },
     ownerText: {
         paddingTop: 4,
@@ -102,6 +123,20 @@ export const HOME_STYLE = theme => ({
     }
 })
 export const QUESTION_STYLE = theme => ({
+    listRoot: {
+        width: '100%',
+        maxWidth: 360,
+        backgroundColor: theme.palette.background.paper,
+        position: 'relative',
+        overflow: 'auto',
+        maxHeight: 200,
+    },
+    chatName: {
+        textAlign: 'center',
+        fontSize: 50,
+        fontWeight: 'bold',
+        color: 'white'
+    },
     sorry: {
         textAlign: 'center'
     },
@@ -123,8 +158,8 @@ export const QUESTION_STYLE = theme => ({
     },
 
     avatar: {
-        width: 160,
-        height: 160,
+        width: 120,
+        height: 120,
         borderStyle: 'solid',
         boderWidth: 8,
         borderColor: '#3f51b5',
@@ -133,28 +168,48 @@ export const QUESTION_STYLE = theme => ({
         paddingRight: 20
     },
     questionContainer: {
-        marginTop: 10,
+        marginTop: 8,
         width: '100%',
         overflow: 'auto',
         maxHeight: 300,
     },
+    pinnedQuestionContainer: {
+        maxHeight: 450
+    },
     layout: {
         width: 'auto',
-        display: 'block',
-        marginLeft: theme.spacing.unit * 3,
-        marginRight: theme.spacing.unit * 3,
-        [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-            width: 600,
-            marginLeft: 'auto',
-            marginRight: 'auto'
-        }
+        display: 'flex',
+        flexDirection: 'row',
+        marginTop:  theme.spacing.unit * 2,
+        marginLeft: theme.spacing.unit * 4,
+        marginRight: theme.spacing.unit * 4,
+    },
+    settingsAndRooms: {
+        width: '20%',
+        marginRight: theme.spacing.unit * 4,
+        border: '1px solid #dfdfdf',
+    },
+    settingsText: {
+        textAlign: 'center',
+        fontWeight: 'bold',
+        color: 'white',
+        backgroundColor: '#2196f3',
+        padding: theme.spacing.unit * 2,
+        marginBottom:  theme.spacing.unit * 2,
+    },
+    chatBoxes: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     paper: {
-        marginTop: theme.spacing.unit * 5,
+        width: '47%',
+        marginTop: 0 ,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: `${theme.spacing.unit * 4}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`
+        padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit }px`
     },
     postQuestion: {
         width: '100%',
@@ -167,11 +222,20 @@ export const QUESTION_STYLE = theme => ({
             backgroundColor: '#2d46d1'
         },
     },
+    submit1: {
+        backgroundColor: '#3f51b5',
+        color: '#ffffff',
+        '&:hover': {
+            backgroundColor: '#2d46d1'
+        },
+        postion: 'absolute',
+    },
     expansionPanel: {
         marginTop: 3,
         borderWidth: 2,
         borderColor: '#3f51b5',
-        borderStyle: 'solid'
+        borderStyle: 'solid',
+        marginBottom: 10
     },
     questionHeader: {
         display: 'flex',
@@ -197,9 +261,13 @@ export const QUESTION_STYLE = theme => ({
         color: 'black',
     },
     upvoteButton: {
-        padding: '0px 3px 0px 0px'
+        padding: '0px!important',
+        border: '1px solid #dfdfdf',
     },
-
+    pinButton: {
+        padding: '0px!important',
+        border: '1px solid #dfdfdf',
+    },
     upvotesText: {
         color: '#505050',
         fontWeight: 'bold',
@@ -208,7 +276,10 @@ export const QUESTION_STYLE = theme => ({
         paddingRight: 5,
         marginRight: 12,
         marginLeft: 10
-
+    },
+    pinnedText: {
+        borderRight: '2px solid #d4a338',
+        borderBottom: '2px solid #d4a338',
     },
     questionSummaryText: {
         color: '#505050',
@@ -231,17 +302,11 @@ export const QUESTION_STYLE = theme => ({
         padding: '0px!important',
         border: '1px solid #dfdfdf',
     },
-    editResponseButton: {
-
-    },
     deleteButton: {
         padding: '0px!important',
         marginLeft: 10,
         border: '1px solid #dfdfdf',
     },
-    deleteResponseButton: {
-
-    }
 });
 export const CA_STYLE = {
   width: '60px',
@@ -269,21 +334,14 @@ export const FORM_STYLE = theme => ({
 export const CARD_STYLE = theme => ({
     layout_tiles: {
         width: 'auto',
-        marginLeft: theme.spacing.unit * 5,
-        marginRight: theme.spacing.unit * 5,
-        [theme.breakpoints.up(1400 + theme.spacing.unit * 3 * 2)]: {
+        [theme.breakpoints.up(1500 + theme.spacing.unit * 3 * 2)]: {
             width: 1350,
             marginLeft: 'auto',
             marginRight: 'auto'
         }
     },
     settingButton: {
-        height: '5px',
-        width: '35px',
-        marginRight: '5px',
-        '&:hover': {
-            backgroundColor: '#2d46d1'
-        },
+        padding: '0px!important',
     },
     submit: {
         marginTop: theme.spacing.unit,
@@ -299,7 +357,7 @@ export const CARD_STYLE = theme => ({
     },
     card: {
       height: '100%',
-      width: 325,
+      width: 295,
       display: 'flex',
       flexDirection: 'column',
     },

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {AnswerList} from './AnswerList'
 import WebSocketInstance from '../services/WebSocket'
+import classNames from 'classnames';
 import {DeleteButton} from './DeleteButton'
 import {EditButton} from './EditButton'
 import {EditField} from './EditField'
@@ -68,7 +69,7 @@ class QuestionBasic extends Component {
         }
     }
     render() {
-        const {currUser, user, question, classes, id, upvotes, upvotedByUser, answers} = this.props;
+        const {currUser, user, question, classes, id, upvotes, upvotedByUser, answers, permission, pinned} = this.props;
         var questionShortened = question;
         if (question.length > 45) {
             questionShortened = question.substr(0,44) + '...'
@@ -89,8 +90,12 @@ class QuestionBasic extends Component {
                             numUpvotes={upvotes}
                             unUpvoteThisMessage={this.unUpvoteMessage}
                             upvoteThisMessage={this.upvoteQuestion}
+                            permission={permission}
+                            pinned={pinned}
                         />
-                        <Typography className={classes.upvotesText}>
+                        <Typography className={classNames(classes.upvotesText, {
+                            [classes.pinnedText]: pinned === true
+                        })}>
                             {upvotes}
                         </Typography>
 

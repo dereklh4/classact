@@ -4,7 +4,7 @@ import {withRouter} from 'react-router-dom';
 import * as routes from '../constants/routes';
 import queryString from 'query-string';
 import {QuestionList} from './QuestionList';
-import {QUESTION_STYLE, CA_STYLE_HOME} from '../constants/styles';
+import {QUESTION_STYLE, CA_STYLE_CHATROOM} from '../constants/styles';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
@@ -15,9 +15,11 @@ import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Close from '@material-ui/icons/Close';
-import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import InputLabel from '@material-ui/core/InputLabel';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
 
 class Chatroom extends Component {
 	constructor(props) {
@@ -28,6 +30,8 @@ class Chatroom extends Component {
 			messages: [],
 			chatName: '',
 			searchVal: '',
+			searchValPinned: '',
+			courses: [],
 		};
 
       var params = queryString.parse(this.props.location.search)
@@ -45,7 +49,10 @@ class Chatroom extends Component {
     									this.upvotedResponse.bind(this),
     									this.unUpvotedResponse.bind(this),
     									this.pinnedMessage.bind(this),
-    									this.savedMessage.bind(this))
+    									this.savedMessage.bind(this),
+    									this.unSavedMessage.bind(this),
+    									this.resolvedMessage.bind(this),
+    									this.endorsedResponse.bind(this))
 
     };
 
@@ -66,6 +73,45 @@ class Chatroom extends Component {
 			this.setState({chatName: response[0].title});
 		})
 		.catch(error => this.setState({error: error}))
+		fetch('http://localhost:8000/api/auth/user/', {
+			method: 'GET',
+			headers: {
+				'Authorization': token,
+				'Content-Type': 'application/json',
+				'Accept': 'application/json'
+			},
+		})
+		.then(response => response.json())
+		.then(response => {
+			this.getCourses(response.email);
+		})
+		.catch(error => this.setState({error: error}))
+	}
+
+	getCourses = (email) => {
+		const token = 'Token ' + localStorage.getItem('token')
+		const url = 'http://localhost:8000/api/user/' + email + '/'
+		fetch(url, {
+			method: 'GET',
+			headers: {
+				'Authorization': token,
+				'Content-Type': 'application/json',
+				'Accept': 'application/json'
+			},
+		})
+		.then(response => response.json())
+		.then(response => {
+			this.setState({courses: response})
+		})
+		.catch(error => this.setState({error: error}))
+	}
+
+	changeCourse = (course) => {
+		WebSocketInstance.close();
+		WebSocketInstance.connect(course.classroom.url)
+		this.setState({chatName: course.classroom.title})
+		this.props.history.push(routes.CHATROOM + "?url=" + course.classroom.url, {url: course.classroom.url, permission: course.classroom.permission})
+
 	}
 
 	initChat(inMessages) {
@@ -180,13 +226,32 @@ class Chatroom extends Component {
 	}
 
 	pinnedMessage(content) {
-		console.log("Pinned message:")
-		console.log(content)
+		const messages = this.state.messages;
+		const index = messages.findIndex((message) => message.id === content.message_id);
+		const updatedMessages = [...this.state.messages]
+		const newMessage = Object.assign(updatedMessages[index], {pinned: content.pinned})
+		updatedMessages[index] = newMessage
+		this.setState({messages: updatedMessages})
 	}
 
 	savedMessage(content) {
 		console.log("Saved message:")
 		console.log(content)
+	}
+
+	unSavedMessage(content) {
+		console.log("Unsaved message:")
+		console.log(content)
+	}
+
+	resolvedMessage(content) {
+		console.log("Resolved message:")
+		console.log(content)
+	}
+
+	endorsedResponse(content) {
+		console.log("Endorsed response:")
+		console.log(content)	
 	}
 
   	postChatMessageHandler = (e, text) => {
@@ -202,11 +267,17 @@ class Chatroom extends Component {
 		WebSocketInstance.close();
 		this.props.history.push(routes.HOME)
 	}
-	filterFor = (value) => {
-		this.setState({searchVal: value});
+	filterFor = (value, isPinnedList) => {
+		if (isPinnedList) {
+			this.setState({searchValPinned: value});
+		}
+		else {
+			this.setState({searchVal: value});
+		}
 	}
   render() {
-    const messages = this.state.messages;
+    const {messages, courses} = this.state;
+	const updatedCourses = courses.filter(c => c.classroom.url !== this.props.location.state.url)
 	const {classes} = this.props;
     return (
 		<React.Fragment>
@@ -214,72 +285,129 @@ class Chatroom extends Component {
 			<div className={classes.chatIntro}>
 				<Paper className={classes.paperRoot} elevation={1}>
 					<Avatar className={classes.avatar}>
-						<img style={CA_STYLE_HOME} src={require('../images/ClassActLogo.png')} alt="CA Logo"/>
+						<img style={CA_STYLE_CHATROOM} src={require('../images/ClassActLogo.png')} alt="CA Logo"/>
 					</Avatar>
-				</Paper>
-			</div>
-			<Button
-				type="button"
-				onClick={this.handleHomeClick}
-				className={classes.submit}
-				fullWidth
-			>
-				Back To Home
-			</Button>
-			<main className={classes.layout}>
-				<Paper className={classes.paper}>
-					<Typography component="h1" variant="h5">
+					<Typography component="h1" variant="h5" className={classes.chatName}>
 						{this.state.chatName}
 					</Typography>
-					<TextField
-	 					label="Search Questions"
-				  		value={this.state.searchVal}
-			  			onChange={(event) => this.filterFor(event.target.value)}
-			  			margin="dense"
-			  			variant="outlined"
-						InputProps={{
-							endAdornment: (
-								<InputAdornment position="end">
-									<IconButton aria-label="Toggle password visibility" onClick={() => this.setState({searchVal: ''})}>
-										<Close/>
-									</IconButton>
-								</InputAdornment>
-							)
-						}}
-					>
-						 <IconButton onClick={() => this.setState({searchVal: ''})} className={classes.deleteSearch}>
-							 <Close fontSize="default" color="black"/>
-						 </IconButton>
-					 </TextField>
-					<QuestionList
-						questions={messages}
-						searchVal={this.state.searchVal}
-					/>
-					<form onSubmit={(e) => this.postChatMessageHandler(e, this.state.message)} className={classes.postQuestion}>
-						<FormControl margin="normal" fullWidth required>
-							<TextField
-								label="Enter Question"
-								multiline
-								rows="3"
-								value={this.state.message}
-								onChange={event => this.setState({message: event.target.value})}
-								type="text"
-								placeholder="Enter Question Here"
-								autoFocus
-								fullWidth
-								variant="outlined"
-							/>
-							<Button
-								disabled={this.state.message === ''}
-								type="submit"
-								fullWidth className={classes.submit}
-								variant="contained"
-							>
-								Post New Question
-							</Button>
-						</FormControl>
-					</form>
 				</Paper>
+			</div>
+
+			<main className={classes.layout}>
+				<div className={classes.settingsAndRooms}>
+					<Typography component="h1" variant="h5" className={classes.settingsText}>
+						Settings
+					</Typography>
+					<Button
+						type="button"
+						onClick={this.handleHomeClick}
+						className={classes.submit1}
+						fullWidth
+					>
+						Back To Home
+					</Button>
+					<div className={classes.otherRooms}>
+						<List
+							component="nav"
+        					subheader={<ListSubheader component="div">Other Chatrooms</ListSubheader>}
+        					className={classes.listRoot}
+						>
+							{updatedCourses.map(course =>
+								<ListItem key={course.classroom.url} button onClick={() => this.changeCourse(course)} className={classes.listItem}>
+									<ListItemText primary={course.classroom.title}/>
+								</ListItem>
+							)}
+						</List>
+					</div>
+				</div>
+				<div className={classes.chatBoxes}>
+					<Paper className={classes.paper}>
+						<Typography component="h1" variant="h5">
+							Ongoing Questions
+						</Typography>
+						<TextField
+							label="Search Questions"
+							value={this.state.searchVal}
+							onChange={(event) => this.filterFor(event.target.value, false)}
+							margin="dense"
+							variant="outlined"
+							InputProps={{
+								endAdornment: (
+									<InputAdornment position="end">
+										<IconButton aria-label="Toggle password visibility" onClick={() => this.setState({searchVal: ''})}>
+											<Close/>
+										</IconButton>
+									</InputAdornment>
+								)
+							}}
+						>
+							 <IconButton onClick={() => this.setState({searchVal: ''})} className={classes.deleteSearch}>
+								 <Close fontSize="default" color="black"/>
+							 </IconButton>
+						 </TextField>
+						<QuestionList
+							questions={messages}
+							searchVal={this.state.searchVal}
+							permission={this.props.location.state.permission}
+							pinned={false}
+						/>
+						<form onSubmit={(e) => this.postChatMessageHandler(e, this.state.message)} className={classes.postQuestion}>
+							<FormControl margin="normal" fullWidth required>
+								<TextField
+									label="Enter Question"
+									multiline
+									rows="3"
+									value={this.state.message}
+									onChange={event => this.setState({message: event.target.value})}
+									type="text"
+									placeholder="Enter Question Here"
+									autoFocus
+									fullWidth
+									variant="outlined"
+								/>
+								<Button
+									disabled={this.state.message === ''}
+									type="submit"
+									fullWidth className={classes.submit}
+									variant="contained"
+								>
+									Post New Question
+								</Button>
+							</FormControl>
+						</form>
+					</Paper>
+					<Paper className={classes.paper}>
+						<Typography component="h1" variant="h5">
+							Moderator Pinned Questions
+						</Typography>
+						<TextField
+							label="Search Pinned Questions"
+							value={this.state.searchValPinned}
+							onChange={(event) => this.filterFor(event.target.value, true)}
+							margin="dense"
+							variant="outlined"
+							InputProps={{
+								endAdornment: (
+									<InputAdornment position="end">
+										<IconButton aria-label="Toggle password visibility" onClick={() => this.setState({searchVal: ''})}>
+											<Close/>
+										</IconButton>
+									</InputAdornment>
+								)
+							}}
+						>
+							 <IconButton onClick={() => this.setState({searchValPinned: ''})} className={classes.deleteSearch}>
+								 <Close fontSize="default" color="black"/>
+							 </IconButton>
+						 </TextField>
+						<QuestionList
+							questions={messages}
+							searchVal={this.state.searchValPinned}
+							permission={this.props.location.state.permission}
+							pinned={true}
+						/>
+					</Paper>
+				</div>
 			</main>
 		</React.Fragment>
     );

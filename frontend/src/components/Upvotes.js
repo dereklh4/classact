@@ -1,12 +1,15 @@
 import React, {Component} from 'react';
 import IconButton from '@material-ui/core/IconButton';
+import WebSocketInstance from '../services/WebSocket'
 import ThumbsUp from '@material-ui/icons/ThumbUpOutlined'
 import ThumbsUpFilled from '@material-ui/icons/ThumbUp'
+import Whatshot from '@material-ui/icons/DoneRounded'
+import WhatshotOutlined from '@material-ui/icons/DoneOutlineRounded'
 import withStyles from '@material-ui/core/styles/withStyles';
 import {QUESTION_STYLE} from '../constants/styles';
 
 class Upvotes extends Component {
-    handleClick = (upvotedByUser) => {
+    handleUpvoteClick = (upvotedByUser) => {
         if (upvotedByUser) {
             this.props.unUpvoteThisMessage(this.props.id);
         }
@@ -14,19 +17,42 @@ class Upvotes extends Component {
             this.props.upvoteThisMessage(this.props.id);
         }
     }
+    handlePinClick = () => {
+        WebSocketInstance.upvoteMessage(this.props.id)
+        WebSocketInstance.pinMessage(this.props.id);
+    }
     render() {
-        const {upvotedByUser, classes} = this.props;
+        const {upvotedByUser, classes, permission, pinned, isResponse} = this.props;
         return (
-                <IconButton
-                    onClick={() => this.handleClick(upvotedByUser)}
-                    className={classes.upvoteButton}
-                >
-                    {upvotedByUser ?
-                    <ThumbsUpFilled fontSize="small" color="primary"/>
-                    :
-                    <ThumbsUp fontSize="small" color="primary"/>
+                <div>
+                    {permission <= 1 || isResponse ?
+                        (
+                            <IconButton
+                                onClick={() => this.handleUpvoteClick(upvotedByUser)}
+                                className={classes.upvoteButton}
+                            >
+                                {upvotedByUser ?
+                                <ThumbsUpFilled fontSize="small" style={{color: 'blue'}}/>
+                                :
+                                <ThumbsUp fontSize="small" style={{color: 'blue'}}/>
+                                }
+                            </IconButton>
+                        ) :
+                        (
+                            <IconButton
+                                onClick={() => this.handlePinClick()}
+                                className={classes.pinButton}
+                                disabled={pinned}
+                            >
+                                {pinned ?
+                                <Whatshot fontSize="default" style={{color: 'blue'}}/>
+                                :
+                                <WhatshotOutlined fontSize="default" style={{color: 'blue'}}/>
+                                }
+                            </IconButton>
+                        )
                     }
-                </IconButton>
+                </div>
         );
     }
 }
