@@ -56,7 +56,7 @@ class QuestionListBasic extends Component {
                         pinned={question.pinned}
                     />
                 )}
-                {(filteredQuestions.length === 0 && questions.length !== 0) ? <div className={classes.sorry}>Sorry, no questions matched your search</div> : null}
+                {(filteredQuestions.length === 0 && updatedQuestions.length !== 0) ? <div className={classes.sorry}>Sorry, no questions matched your search</div> : null}
             </div>
         );
     }

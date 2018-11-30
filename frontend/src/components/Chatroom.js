@@ -26,6 +26,7 @@ class Chatroom extends Component {
 			messages: [],
 			chatName: '',
 			searchVal: '',
+			searchValPinned: '',
 		};
 
       var params = queryString.parse(this.props.location.search)
@@ -210,8 +211,13 @@ class Chatroom extends Component {
 		WebSocketInstance.close();
 		this.props.history.push(routes.HOME)
 	}
-	filterFor = (value) => {
-		this.setState({searchVal: value});
+	filterFor = (value, isPinnedList) => {
+		if (isPinnedList) {
+			this.setState({searchValPinned: value});
+		}
+		else {
+			this.setState({searchVal: value});
+		}
 	}
   render() {
     const messages = this.state.messages;
@@ -250,9 +256,9 @@ class Chatroom extends Component {
 							Moderator Pinned Questions
 						</Typography>
 						<TextField
-		 					label="Search Questions"
-					  		value={this.state.searchVal}
-				  			onChange={(event) => this.filterFor(event.target.value)}
+		 					label="Search Pinned Questions"
+					  		value={this.state.searchValPinned}
+				  			onChange={(event) => this.filterFor(event.target.value, true)}
 				  			margin="dense"
 				  			variant="outlined"
 							InputProps={{
@@ -265,13 +271,13 @@ class Chatroom extends Component {
 								)
 							}}
 						>
-							 <IconButton onClick={() => this.setState({searchVal: ''})} className={classes.deleteSearch}>
+							 <IconButton onClick={() => this.setState({searchValPinned: ''})} className={classes.deleteSearch}>
 								 <Close fontSize="default" color="black"/>
 							 </IconButton>
 						 </TextField>
 						<QuestionList
 							questions={messages}
-							searchVal={this.state.searchVal}
+							searchVal={this.state.searchValPinned}
 							permission={this.props.location.state.permission}
 							pinned={true}
 						/>
@@ -283,7 +289,7 @@ class Chatroom extends Component {
 						<TextField
 							label="Search Questions"
 							value={this.state.searchVal}
-							onChange={(event) => this.filterFor(event.target.value)}
+							onChange={(event) => this.filterFor(event.target.value, false)}
 							margin="dense"
 							variant="outlined"
 							InputProps={{
