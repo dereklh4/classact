@@ -57,26 +57,40 @@ export const HOME_STYLE = theme => ({
 
     },
     words: {
-        paddingLeft: theme.spacing.unit,
-        paddingRight: theme.spacing.unit * 30,
-        width: '100%'
+        paddingRight: theme.spacing.unit ,
+        width: '60%',
+        [theme.breakpoints.down('sm')]: {
+            visibility: 'hidden',
+            overflow: 'hidden',
+            width: '0%'
+        }
     },
     buttons: {
-        width: '100%',
+        width: '10%',
+        [theme.breakpoints.down('sm')]: {
+            width: '30%',
+        }
     },
     chatroomText: {
         fontSize: 100,
         color: 'white',
         lineHeight: '90%',
         fontWeight: 'bold',
-        paddingLeft: theme.spacing.unit * 10
     },
     homeText: {
         fontSize: 100,
         lineHeight: '90%',
         color: 'white',
         fontWeight: 'bold',
-        paddingLeft: theme.spacing.unit * 50
+        paddingLeft: '33%'
+    },
+    avatarDiv: {
+        width: '30%',
+        [theme.breakpoints.down('sm')]: {
+            width: '70%',
+            marginLeft: 'auto',
+            marginRight: 'auto'
+        }
     },
     avatar: {
         margin: '8px 90px 8px 70px',
@@ -97,7 +111,11 @@ export const HOME_STYLE = theme => ({
         marginBottom: theme.spacing.unit * 4,
         padding: 4,
         overflowX: 'scroll',
-        overflowY: 'hidden'
+        overflowY: 'hidden',
+        [theme.breakpoints.down('sm')]: {
+            overflow: 'auto',
+            overflowX: 'none'
+        }
     },
     ownerText: {
         paddingTop: 4,
@@ -105,6 +123,14 @@ export const HOME_STYLE = theme => ({
     }
 })
 export const QUESTION_STYLE = theme => ({
+    listRoot: {
+        width: '100%',
+        maxWidth: 360,
+        backgroundColor: theme.palette.background.paper,
+        position: 'relative',
+        overflow: 'auto',
+        maxHeight: 200,
+    },
     chatName: {
         textAlign: 'center',
         fontSize: 50,
@@ -161,7 +187,7 @@ export const QUESTION_STYLE = theme => ({
     settingsAndRooms: {
         width: '20%',
         marginRight: theme.spacing.unit * 4,
-                border: '1px solid #dfdfdf',
+        border: '1px solid #dfdfdf',
     },
     settingsText: {
         textAlign: 'center',
@@ -308,9 +334,7 @@ export const FORM_STYLE = theme => ({
 export const CARD_STYLE = theme => ({
     layout_tiles: {
         width: 'auto',
-        marginLeft: theme.spacing.unit * 5,
-        marginRight: theme.spacing.unit * 5,
-        [theme.breakpoints.up(1400 + theme.spacing.unit * 3 * 2)]: {
+        [theme.breakpoints.up(1500 + theme.spacing.unit * 3 * 2)]: {
             width: 1350,
             marginLeft: 'auto',
             marginRight: 'auto'
@@ -333,7 +357,7 @@ export const CARD_STYLE = theme => ({
     },
     card: {
       height: '100%',
-      width: 325,
+      width: 295,
       display: 'flex',
       flexDirection: 'column',
     },

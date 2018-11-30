@@ -16,6 +16,10 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Close from '@material-ui/icons/Close';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
 
 class Chatroom extends Component {
 	constructor(props) {
@@ -27,6 +31,7 @@ class Chatroom extends Component {
 			chatName: '',
 			searchVal: '',
 			searchValPinned: '',
+			courses: [],
 		};
 
       var params = queryString.parse(this.props.location.search)
@@ -68,6 +73,45 @@ class Chatroom extends Component {
 			this.setState({chatName: response[0].title});
 		})
 		.catch(error => this.setState({error: error}))
+		fetch('http://localhost:8000/api/auth/user/', {
+			method: 'GET',
+			headers: {
+				'Authorization': token,
+				'Content-Type': 'application/json',
+				'Accept': 'application/json'
+			},
+		})
+		.then(response => response.json())
+		.then(response => {
+			this.getCourses(response.email);
+		})
+		.catch(error => this.setState({error: error}))
+	}
+
+	getCourses = (email) => {
+		const token = 'Token ' + localStorage.getItem('token')
+		const url = 'http://localhost:8000/api/user/' + email + '/'
+		fetch(url, {
+			method: 'GET',
+			headers: {
+				'Authorization': token,
+				'Content-Type': 'application/json',
+				'Accept': 'application/json'
+			},
+		})
+		.then(response => response.json())
+		.then(response => {
+			this.setState({courses: response})
+		})
+		.catch(error => this.setState({error: error}))
+	}
+
+	changeCourse = (course) => {
+		WebSocketInstance.close();
+		WebSocketInstance.connect(course.classroom.url)
+		this.setState({chatName: course.classroom.title})
+		this.props.history.push(routes.CHATROOM + "?url=" + course.classroom.url, {url: course.classroom.url, permission: course.classroom.permission})
+
 	}
 
 	initChat(inMessages) {
@@ -232,7 +276,8 @@ class Chatroom extends Component {
 		}
 	}
   render() {
-    const messages = this.state.messages;
+    const {messages, courses} = this.state;
+	const updatedCourses = courses.filter(c => c.classroom.url !== this.props.location.state.url)
 	const {classes} = this.props;
     return (
 		<React.Fragment>
@@ -261,39 +306,21 @@ class Chatroom extends Component {
 					>
 						Back To Home
 					</Button>
+					<div className={classes.otherRooms}>
+						<List
+							component="nav"
+        					subheader={<ListSubheader component="div">Other Chatrooms</ListSubheader>}
+        					className={classes.listRoot}
+						>
+							{updatedCourses.map(course =>
+								<ListItem key={course.classroom.url} button onClick={() => this.changeCourse(course)} className={classes.listItem}>
+									<ListItemText primary={course.classroom.title}/>
+								</ListItem>
+							)}
+						</List>
+					</div>
 				</div>
 				<div className={classes.chatBoxes}>
-					<Paper className={classes.paper}>
-						<Typography component="h1" variant="h5">
-							Moderator Pinned Questions
-						</Typography>
-						<TextField
-		 					label="Search Pinned Questions"
-					  		value={this.state.searchValPinned}
-				  			onChange={(event) => this.filterFor(event.target.value, true)}
-				  			margin="dense"
-				  			variant="outlined"
-							InputProps={{
-								endAdornment: (
-									<InputAdornment position="end">
-										<IconButton aria-label="Toggle password visibility" onClick={() => this.setState({searchVal: ''})}>
-											<Close/>
-										</IconButton>
-									</InputAdornment>
-								)
-							}}
-						>
-							 <IconButton onClick={() => this.setState({searchValPinned: ''})} className={classes.deleteSearch}>
-								 <Close fontSize="default" color="black"/>
-							 </IconButton>
-						 </TextField>
-						<QuestionList
-							questions={messages}
-							searchVal={this.state.searchValPinned}
-							permission={this.props.location.state.permission}
-							pinned={true}
-						/>
-					</Paper>
 					<Paper className={classes.paper}>
 						<Typography component="h1" variant="h5">
 							Ongoing Questions
@@ -348,6 +375,37 @@ class Chatroom extends Component {
 								</Button>
 							</FormControl>
 						</form>
+					</Paper>
+					<Paper className={classes.paper}>
+						<Typography component="h1" variant="h5">
+							Moderator Pinned Questions
+						</Typography>
+						<TextField
+							label="Search Pinned Questions"
+							value={this.state.searchValPinned}
+							onChange={(event) => this.filterFor(event.target.value, true)}
+							margin="dense"
+							variant="outlined"
+							InputProps={{
+								endAdornment: (
+									<InputAdornment position="end">
+										<IconButton aria-label="Toggle password visibility" onClick={() => this.setState({searchVal: ''})}>
+											<Close/>
+										</IconButton>
+									</InputAdornment>
+								)
+							}}
+						>
+							 <IconButton onClick={() => this.setState({searchValPinned: ''})} className={classes.deleteSearch}>
+								 <Close fontSize="default" color="black"/>
+							 </IconButton>
+						 </TextField>
+						<QuestionList
+							questions={messages}
+							searchVal={this.state.searchValPinned}
+							permission={this.props.location.state.permission}
+							pinned={true}
+						/>
 					</Paper>
 				</div>
 			</main>
