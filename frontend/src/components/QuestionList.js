@@ -32,8 +32,9 @@ class QuestionListBasic extends Component {
         this.setState({key: key})
     }
     render() {
-        const {questions, classes, searchVal, permission} = this.props;
-        const filteredQuestions = questions.filter(question => question.text.includes(searchVal))
+        const {questions, classes, searchVal, permission, pinned} = this.props;
+        const updatedQuestions = pinned ? questions.filter(question => question.pinned === true) : questions.filter(question => question.pinned === false)
+        const filteredQuestions = updatedQuestions.filter(question => question.text.includes(searchVal))
         return (
             <div className={classes.questionContainer}>
                 {_.sortBy(filteredQuestions, 'pinned').reverse().map(question =>
@@ -53,7 +54,7 @@ class QuestionListBasic extends Component {
                         pinned={question.pinned}
                     />
                 )}
-                {(filteredQuestions.length === 0 && questions.length !== 0) ? <div className={classes.sorry}>Sorry, no questions matched your search</div> : null}
+                {(filteredQuestions.length === 0 && updatedQuestions.length !== 0) ? <div className={classes.sorry}>Sorry, no questions matched your search</div> : null}
             </div>
         );
     }

@@ -99,9 +99,11 @@ class HomePage extends Component {
           <div className={classes.wholePage}>
                 <div className={classes.homeIntro}>
                     <Paper className={classes.paperRoot} elevation={1}>
-                        <Avatar className={classes.avatar}>
-                            <img style={CA_STYLE_HOME} src={require('../images/ClassActLogo.png')} alt="CA Logo"/>
-                        </Avatar>
+                        <div className={classes.avatarDiv}>
+                            <Avatar className={classes.avatar}>
+                                <img style={CA_STYLE_HOME} src={require('../images/ClassActLogo.png')} alt="CA Logo"/>
+                            </Avatar>
+                        </div>
                         <div className={classes.words}>
                             <Typography className={classes.chatroomText}> ClassAct </Typography>
                             <Typography className={classes.homeText}>Home</Typography>

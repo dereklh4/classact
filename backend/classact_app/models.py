@@ -28,6 +28,7 @@ class Message(models.Model):
 	text = models.CharField(max_length=1000)
 	creation_time = models.DateTimeField(auto_now=True)
 	anonymous = models.BooleanField(default=False)
+	resolved = models.BooleanField(default=False)
 
 class UserMessageUpvotes(models.Model):
 	user = models.ForeignKey(User,on_delete=models.CASCADE)
@@ -47,6 +48,10 @@ class UserResponseUpvotes(models.Model):
 class UserPinMessage(models.Model):
 	user = models.ForeignKey(User,on_delete=models.CASCADE)
 	message = models.ForeignKey(Message,on_delete=models.CASCADE)
+	classroom = models.ForeignKey(Classroom,on_delete=models.CASCADE)
+
+class EndorseResponse(models.Model):
+	response = models.ForeignKey(Response,on_delete=models.CASCADE)
 	classroom = models.ForeignKey(Classroom,on_delete=models.CASCADE)
 
 class UserSaveQuestion(models.Model):
