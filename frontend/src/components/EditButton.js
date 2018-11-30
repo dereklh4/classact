@@ -14,7 +14,7 @@ class EditButtonBasic extends Component {
                 <IconButton onClick={editMessage} className={classNames(classes.editButton, {
                     [classes.editResponseButton]: give === 1,
                 })}>
-                    <Create fontSize="default" style={{color: 'blue'}}/>
+                    <Create fontSize="default" color="primary"/>
                 </IconButton>
             </Tooltip>
         )

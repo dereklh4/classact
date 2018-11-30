@@ -14,7 +14,7 @@ class DeleteButtonBasic extends Component {
                 <IconButton onClick={deleteMessage} className={classNames(classes.deleteButton, {
                     [classes.deleteResponseButton]: give === 1,
                 })}>
-                    <RemoveCircle fontSize="default" style={{color: 'red'}}/>
+                    <RemoveCircle fontSize="default" color="secondary"/>
                 </IconButton>
             </Tooltip>
         )

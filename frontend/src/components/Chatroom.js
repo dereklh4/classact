@@ -4,7 +4,7 @@ import {withRouter} from 'react-router-dom';
 import * as routes from '../constants/routes';
 import queryString from 'query-string';
 import {QuestionList} from './QuestionList';
-import {QUESTION_STYLE, CA_STYLE_CHATROOM} from '../constants/styles';
+import {QUESTION_STYLE, CA_STYLE_HOME} from '../constants/styles';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
@@ -32,7 +32,6 @@ class Chatroom extends Component {
 			searchVal: '',
 			sortBy: "default",
 			anonymousChecked: false,
-			searchValPinned: '',
 		};
 
       var params = queryString.parse(this.props.location.search)
@@ -225,13 +224,8 @@ class Chatroom extends Component {
 		WebSocketInstance.close();
 		this.props.history.push(routes.HOME)
 	}
-	filterFor = (value, isPinnedList) => {
-		if (isPinnedList) {
-			this.setState({searchValPinned: value});
-		}
-		else {
-			this.setState({searchVal: value});
-		}
+	filterFor = (value) => {
+		this.setState({searchVal: value});
 	}
 	sort = event => {
 		this.setState({[event.target.name]: event.target.value});
@@ -262,142 +256,98 @@ class Chatroom extends Component {
 			<div className={classes.chatIntro}>
 				<Paper className={classes.paperRoot} elevation={1}>
 					<Avatar className={classes.avatar}>
-						<img style={CA_STYLE_CHATROOM} src={require('../images/ClassActLogo.png')} alt="CA Logo"/>
+						<img style={CA_STYLE_HOME} src={require('../images/ClassActLogo.png')} alt="CA Logo"/>
 					</Avatar>
-					<Typography component="h1" variant="h5" className={classes.chatName}>
-						{this.state.chatName}
-					</Typography>
 				</Paper>
 			</div>
-
+			<Button
+				type="button"
+				onClick={this.handleHomeClick}
+				className={classes.submit1}
+			>
+				Back To Home
+			</Button>
 			<main className={classes.layout}>
-				<div className={classes.settingsAndRooms}>
-					<Typography component="h1" variant="h5" className={classes.settingsText}>
-						Settings
+				<Paper className={classes.paper}>
+					<Typography component="h1" variant="h5">
+						{this.state.chatName}
 					</Typography>
-					<Button
-						type="button"
-						onClick={this.handleHomeClick}
-						className={classes.submit1}
-						fullWidth
+					<TextField
+	 					label="Search Questions"
+				  		value={this.state.searchVal}
+			  			onChange={(event) => this.filterFor(event.target.value)}
+			  			margin="dense"
+			  			variant="outlined"
+						InputProps={{
+							endAdornment: (
+								<InputAdornment position="end">
+									<IconButton aria-label="Toggle password visibility" onClick={() => this.setState({searchVal: ''})}>
+										<Close/>
+									</IconButton>
+								</InputAdornment>
+							)
+						}}
 					>
-						Back To Home
-					</Button>
-				</div>
-				<div className={classes.chatBoxes}>
-					<Paper className={classes.paper}>
-						<Typography component="h1" variant="h5">
-							Moderator Pinned Questions
-						</Typography>
-						<TextField
-		 					label="Search Pinned Questions"
-					  		value={this.state.searchValPinned}
-				  			onChange={(event) => this.filterFor(event.target.value, true)}
-				  			margin="dense"
-				  			variant="outlined"
-							InputProps={{
-								endAdornment: (
-									<InputAdornment position="end">
-										<IconButton aria-label="Toggle password visibility" onClick={() => this.setState({searchVal: ''})}>
-											<Close/>
-										</IconButton>
-									</InputAdornment>
-								)
-							}}
+						 <IconButton onClick={() => this.setState({searchVal: ''})} className={classes.deleteSearch}>
+							 <Close fontSize="default" color="black"/>
+						 </IconButton>
+					 </TextField>
+					 <FormControl className={classes.sortByForm}>
+					 <Typography>
+						 Sort By:
+					 </Typography>
+						<Select
+							value={this.state.sortBy}
+							onChange={this.sort}
+							displayEmpty
+							name="sortBy"
+							className={classes.selectEmpty}
 						>
-							 <IconButton onClick={() => this.setState({searchValPinned: ''})} className={classes.deleteSearch}>
-								 <Close fontSize="default" color="black"/>
-							 </IconButton>
-						 </TextField>
-						<QuestionList
-							questions={messages}
-							searchVal={this.state.searchValPinned}
-							permission={this.props.location.state.permission}
-							pinned={true}
-						/>
-					</Paper>
-					<Paper className={classes.paper}>
-						<Typography component="h1" variant="h5">
-							Ongoing Questions
-						</Typography>
-						<TextField
-							label="Search Questions"
-							value={this.state.searchVal}
-							onChange={(event) => this.filterFor(event.target.value, false)}
-							margin="dense"
-							variant="outlined"
-							InputProps={{
-								endAdornment: (
-									<InputAdornment position="end">
-										<IconButton aria-label="Toggle password visibility" onClick={() => this.setState({searchVal: ''})}>
-											<Close/>
-										</IconButton>
-									</InputAdornment>
-								)
-							}}
-						>
-							 <IconButton onClick={() => this.setState({searchVal: ''})} className={classes.deleteSearch}>
-								 <Close fontSize="default" color="black"/>
-							 </IconButton>
-						 </TextField>
-						 <FormControl className={classes.sortByForm}>
-						 <Typography>
-							 Sort By:
-						 </Typography>
-							<Select
-								value={this.state.sortBy}
-								onChange={this.sort}
-								displayEmpty
-								name="sortBy"
-								className={classes.selectEmpty}
+							<MenuItem value="default">Default</MenuItem>
+							<MenuItem value="upvotes">Upvotes</MenuItem>
+							<MenuItem value="username">Username</MenuItem>
+						</Select>
+					</FormControl>
+					<QuestionList
+						questions={messages}
+						searchVal={this.state.searchVal}
+						permission={this.props.location.state.permission}
+					/>
+					<form onSubmit={(e) => this.postChatMessageHandler(e, this.state.message)} className={classes.postQuestion}>
+						<FormControl margin="normal" fullWidth required>
+							<TextField
+								label="Enter Question"
+								multiline
+								rows="3"
+								value={this.state.message}
+								onChange={event => this.setState({message: event.target.value})}
+								type="text"
+								placeholder="Enter Question Here"
+								autoFocus
+								fullWidth
+								variant="outlined"
+							/>
+							<Button
+								disabled={this.state.message === ''}
+								type="submit"
+								fullWidth className={classes.submit}
+								variant="contained"
 							>
-								<MenuItem value="default">Default</MenuItem>
-								<MenuItem value="upvotes">Upvotes</MenuItem>
-								<MenuItem value="username">Username</MenuItem>
-							</Select>
-						</FormControl>
-						<QuestionList
-							questions={messages}
-							searchVal={this.state.searchVal}
-							permission={this.props.location.state.permission}
-							pinned={false}
+								Post New Question
+							</Button>
+							<FormControlLabel
+								control={
+									<Switch
+										checked={this.state.anonymousChecked}
+										onChange={this.handleChangeAnonymous('anonymousChecked')}
+										value="anonymousChecked"
+										color="primary"/>
+								}
+							label="Post Anonymous"
 						/>
-						<form onSubmit={(e) => this.postChatMessageHandler(e, this.state.message)} className={classes.postQuestion}>
-							<FormControl margin="normal" fullWidth required>
-								<TextField
-									label="Enter Question"
-									multiline
-									rows="3"
-									value={this.state.message}
-									onChange={event => this.setState({message: event.target.value})}
-									type="text"
-									placeholder="Enter Question Here"
-									autoFocus
-									fullWidth
-									variant="outlined"
-								/>
-								<Button
-									disabled={this.state.message === ''}
-									type="submit"
-									fullWidth className={classes.submit}
-									variant="contained"
-								>
-									Post New Question
-								</Button>
-								<FormControlLabel
-									control={
-										<Switch
-											checked={this.state.anonymousChecked}
-											onChange={this.handleChangeAnonymous('anonymousChecked')}
-											value="anonymousChecked"
-											color="primary"/>
-									}
-								label="Post Anonymous"
-								/>
-								</FormControl>
-						</form>
-					</Paper>
-				</div>
+						</FormControl>
+					</form>
+				</Paper>
 			</main>
 		</React.Fragment>
     );

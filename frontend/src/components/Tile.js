@@ -3,7 +3,6 @@ import {withRouter} from 'react-router-dom';
 import {EditField} from './EditField'
 import * as routes from '../constants/routes';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -100,11 +99,12 @@ class TileBasic extends Component {
                                 titleTypographyProps={{ align: 'center' }}
                                 className={classes.cardHeader}
                                 action={
-                                    <IconButton
+                                    <Button
+                                        variant="fab"
                                         onClick={this.openSettings}
                                         className={classes.settingButton}>
-                                          <SettingsIcon fontSize="default"/>
-                                    </IconButton>
+                                          <SettingsIcon fontSize="small"/>
+                                    </Button>
                                 }
                             />
 
