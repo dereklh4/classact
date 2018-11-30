@@ -128,6 +128,7 @@ class ChatConsumer(WebsocketConsumer):
 			'upvotes':len(message_upvotes),
 			'upvoted_by_user':upvoted_by_user,
 			'anonymous':message.anonymous,
+			'resolved' :message.resolved,
 			'saved_by_user':saved_by_user,
 			'pinned':pinned,
 			'responses': list(map(lambda x: self.response_to_json(x), responses))
@@ -177,9 +178,14 @@ class ChatConsumer(WebsocketConsumer):
 
 		text = data['text']
 
-		#anonymous = data['anonymous']
+		anonymous = True
+		try:
+			anonymous = data['anonymous']
+		except:
+			anonymous = False
 
-		message = Message.objects.create(user=user, text=text, classroom=classroom, anonymous=False)
+
+		message = Message.objects.create(user=user, text=text, classroom=classroom, anonymous=anonymous)
 		print(str(message.id))
 
 		self._fire_event("new_message",self.message_to_json(message))
@@ -189,7 +195,11 @@ class ChatConsumer(WebsocketConsumer):
 
 		text = data['text']
 
-		#anonymous = data['anonymous']
+		anonymous = True
+		try: 
+			anonymous = data['anonymous']
+		except:
+			anonymous = False
 
 		message_id = data['message_id']
 
@@ -199,13 +209,15 @@ class ChatConsumer(WebsocketConsumer):
 			self._error_message("Message does not exist")
 
 		message.text = text
-		message.anonymous = False
+		message.anonymous = anonymous
+		print(str(message.anonymous))
 		message.save()
 
 		self._fire_event("edited_message",
 							{
 								"message_id": message_id,
 								"text": text,
+								"anonymous": anonymous
 							}
 						)
 
@@ -273,7 +285,11 @@ class ChatConsumer(WebsocketConsumer):
 
 		text = data['text']
 
-		#anonymous = data['anonymous']
+		anonymous = True
+		try: 
+			anonymous = data['anonymous']
+		except:
+			anonymous = False
 
 		message_id = data["message_id"]
 		try:
@@ -281,7 +297,7 @@ class ChatConsumer(WebsocketConsumer):
 		except:
 			self._error_message("Not a valid message id")
 
-		response = Response.objects.create(user=user, message=message, text=text, anonymous=False)
+		response = Response.objects.create(user=user, message=message, text=text, anonymous=anonymous)
 
 		self._fire_event("new_response",self.response_to_json(response))
 
@@ -290,7 +306,11 @@ class ChatConsumer(WebsocketConsumer):
 
 		text = data['text']
 
-		#anonymous = data['anonymous']
+		anonymous = True
+		try: 
+			anonymous = data['anonymous']
+		except:
+			anonymous = False
 
 		message_id = data["message_id"]
 
@@ -307,7 +327,7 @@ class ChatConsumer(WebsocketConsumer):
 			self._error_message("Response does not exist")
 
 		response.text = text
-		#response.anonymous = anonymous
+		response.anonymous = anonymous
 		response.save()
 
 		self._fire_event("edited_response",self.response_to_json(response))
@@ -457,6 +477,29 @@ class ChatConsumer(WebsocketConsumer):
 							}
 						)
 
+	def resolve_message(self, data):
+		user, classroom = self._validate_user()
+
+		user_in_classroom = UserInClassroom.objects.get(user=user, classroom=classroom)
+		if user_in_classroom.permission != 3:
+			raise APIException("ERROR: User does not have sufficient permissions")
+			
+		message_id = data["message_id"]
+		try:
+			message = Message.objects.get(id=message_id)
+		except:
+			self._error_message("Message does not exist")
+
+		message.resolved = True
+		message.save()
+
+		self._fire_event("resolved_message", 
+							{
+								"message_id":message.id,
+								"resolved":True
+							}
+						)
+
 	## COMMANDS
 
 	commands = {
@@ -473,7 +516,8 @@ class ChatConsumer(WebsocketConsumer):
 		'edit_response': edit_response,
 		'pin_message':pin_message,
 		'save_message':save_message,
-		'un_save_message':un_save_message
+		'un_save_message':un_save_message,
+		'resolve_message':resolve_message
 	}
 
 	## EVENT HANDLERS
@@ -521,4 +565,7 @@ class ChatConsumer(WebsocketConsumer):
 		self.send(text_data=json.dumps(event))
 
 	def un_saved_message(self,event):
+		self.send(text_data=json.dumps(event))
+
+	def resolved_message(self,event):
 		self.send(text_data=json.dumps(event))
