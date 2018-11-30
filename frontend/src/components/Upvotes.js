@@ -18,7 +18,7 @@ class Upvotes extends Component {
         }
     }
     render() {
-        const {upvotedByUser, classes, permission, pinned} = this.props;
+        const {upvotedByUser, classes, permission, pinned, isResponse} = this.props;
         return (
                 <div>
                     <IconButton

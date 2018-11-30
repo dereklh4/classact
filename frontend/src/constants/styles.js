@@ -34,6 +34,9 @@ export const EDIT_QUESTION_STYLE = theme => ({
 export const CA_STYLE_HOME = {
     width: '150px',
   };
+  export const CA_STYLE_CHATROOM = {
+      width: '110px',
+    };
 
 export const HOME_STYLE = theme => ({
     homeIntro: {
@@ -102,6 +105,12 @@ export const HOME_STYLE = theme => ({
     }
 })
 export const QUESTION_STYLE = theme => ({
+    chatName: {
+        textAlign: 'center',
+        fontSize: 50,
+        fontWeight: 'bold',
+        color: 'white'
+    },
     sorry: {
         textAlign: 'center'
     },
@@ -123,8 +132,8 @@ export const QUESTION_STYLE = theme => ({
     },
 
     avatar: {
-        width: 160,
-        height: 160,
+        width: 120,
+        height: 120,
         borderStyle: 'solid',
         boderWidth: 8,
         borderColor: '#3f51b5',
@@ -143,23 +152,43 @@ export const QUESTION_STYLE = theme => ({
       marginLeft: '75%',
       textAlign: 'right',
     },
+    pinnedQuestionContainer: {
+        maxHeight: 450
+    },
     layout: {
         width: 'auto',
-        display: 'block',
-        marginLeft: theme.spacing.unit * 3,
-        marginRight: theme.spacing.unit * 3,
-        [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-            width: 600,
-            marginLeft: 'auto',
-            marginRight: 'auto'
-        }
+        display: 'flex',
+        flexDirection: 'row',
+        marginTop:  theme.spacing.unit * 2,
+        marginLeft: theme.spacing.unit * 4,
+        marginRight: theme.spacing.unit * 4,
+    },
+    settingsAndRooms: {
+        width: '20%',
+        marginRight: theme.spacing.unit * 4,
+                border: '1px solid #dfdfdf',
+    },
+    settingsText: {
+        textAlign: 'center',
+        fontWeight: 'bold',
+        color: 'white',
+        backgroundColor: '#2196f3',
+        padding: theme.spacing.unit * 2,
+        marginBottom:  theme.spacing.unit * 2,
+    },
+    chatBoxes: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     paper: {
+        width: '47%',
         marginTop: 0 ,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`
+        padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit }px`
     },
     postQuestion: {
         width: '100%',
@@ -178,7 +207,7 @@ export const QUESTION_STYLE = theme => ({
         '&:hover': {
             backgroundColor: '#2d46d1'
         },
-        postion: 'absolute'
+        postion: 'absolute',
     },
     expansionPanel: {
         marginTop: 3,
@@ -211,10 +240,12 @@ export const QUESTION_STYLE = theme => ({
         color: 'black',
     },
     upvoteButton: {
-        padding: '0px 3px 0px 0px'
+        padding: '0px!important',
+        border: '1px solid #dfdfdf',
     },
     pinButton: {
-        padding: '0px 3px 2px 0px'
+        padding: '0px!important',
+        border: '1px solid #dfdfdf',
     },
     upvotesText: {
         color: '#505050',
@@ -256,9 +287,6 @@ export const QUESTION_STYLE = theme => ({
     },
     editButton: {
         padding: '3px!important',
-    },
-    editResponseButton: {
-
     },
     deleteButton: {
         padding: '3px!important',
@@ -309,12 +337,7 @@ export const CARD_STYLE = theme => ({
         }
     },
     settingButton: {
-        height: '5px',
-        width: '35px',
-        marginRight: '5px',
-        '&:hover': {
-            backgroundColor: '#2d46d1'
-        },
+        padding: '0px!important',
     },
     submit: {
         marginTop: theme.spacing.unit,
