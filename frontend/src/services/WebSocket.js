@@ -17,7 +17,8 @@ class WebSocketService {
 
   addCallbacks(initChatCallback,errorMessageCallback,newMessageCallback,upvotedMessageCallback,unUpvotedMessageCallback,
           newResponseCallback,editResponseCallback,deleteResponseCallback,editMessageCallback,deleteMessageCallback,
-          upvotedResponseCallback,unUpvotedResponseCallback,pinnedMessageCallback, savedMessageCallback, unSavedMessageCallback, resolvedMessageCallback) {
+          upvotedResponseCallback,unUpvotedResponseCallback,pinnedMessageCallback, savedMessageCallback, unSavedMessageCallback, 
+          resolvedMessageCallback, endorsedResponseCallback) {
     this.callbacks['init_chat'] = initChatCallback;
     this.callbacks['error_message'] = errorMessageCallback;
 
@@ -35,6 +36,7 @@ class WebSocketService {
     this.callbacks['pinned_message'] = pinnedMessageCallback;
     this.callbacks['un_saved_message'] = unSavedMessageCallback;
     this.callbacks["resolved_message"] = resolvedMessageCallback;
+    this.callbacks["endorsed_response"] = endorsedResponseCallback;
   }
 
   connect(chatroom_url) {
@@ -160,6 +162,9 @@ class WebSocketService {
     this._sendMessage({command: 'resolve_message', message_id: in_message_id})
   }
 
+  endorseResponse(in_message_id, in_response_id) {
+    this._sendMessage({command: 'endorse_response', message_id: in_message_id, response_id: in_response_id})
+  }
 
   _sendMessage(data) {
     try {
