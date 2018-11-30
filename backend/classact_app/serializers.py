@@ -85,10 +85,14 @@ class UserInClassroomViewSerializer(serializers.ModelSerializer):
 	permission = serializers.IntegerField()
 	classroom = ClassroomViewSerializer
 	user = serializers.EmailField()
+	student_count = serializers.SerializerMethodField()
+
+	def get_student_count(self,validated_data):
+		return len(UserInClassroom.objects.filter(classroom=validated_data.classroom))
 
 	class Meta:
 		model = UserInClassroom
-		fields = ('user','classroom','permission')
+		fields = ('user','classroom','permission','student_count')
 		depth = 2
 
 class UserImageSerializer(serializers.ModelSerializer):
