@@ -427,7 +427,7 @@ class ChatConsumer(WebsocketConsumer):
 		user, classroom = self._validate_user()
 		user_in_classroom = UserInClassroom.objects.get(user=user, classroom=classroom)
 		#assuming user must be teacher/moderator to endorse
-		if user_in_classroom.permission != 3:
+		if user_in_classroom.permission < 2:
 			raise APIException("ERROR: User does not have sufficient permissions")
 
 		message_id = data["message_id"]
@@ -442,14 +442,14 @@ class ChatConsumer(WebsocketConsumer):
 		except:
 			self._error_message("Response does not exist")
 
-		if len(UserEndorseResponse.objects.filter(user=user, response=response)) == 0:
-			UserEndorseResponse.objects.create(user=user, response=response, classroom=classroom)
+		if len(EndorseResponse.objects.filter(response=response)) == 0:
+			EndorseResponse.objects.create(response=response, classroom=classroom)
 		else:
-			self._error_message("User " + user.username + " already endorsed that response")
+			self._error_message("Response has already been endorsed")
 		self._fire_event("endorsed_response",
 							{
 								"response_id":response_id,
-								"pinned":True
+								"endorsed":True
 							}
 						)
 
