@@ -311,37 +311,6 @@ class Chatroom extends Component {
 				<div className={classes.chatBoxes}>
 					<Paper className={classes.paper}>
 						<Typography component="h1" variant="h5">
-							Moderator Pinned Questions
-						</Typography>
-						<TextField
-		 					label="Search Pinned Questions"
-					  		value={this.state.searchValPinned}
-				  			onChange={(event) => this.filterFor(event.target.value, true)}
-				  			margin="dense"
-				  			variant="outlined"
-							InputProps={{
-								endAdornment: (
-									<InputAdornment position="end">
-										<IconButton aria-label="Toggle password visibility" onClick={() => this.setState({searchVal: ''})}>
-											<Close/>
-										</IconButton>
-									</InputAdornment>
-								)
-							}}
-						>
-							 <IconButton onClick={() => this.setState({searchValPinned: ''})} className={classes.deleteSearch}>
-								 <Close fontSize="default" color="black"/>
-							 </IconButton>
-						 </TextField>
-						<QuestionList
-							questions={messages}
-							searchVal={this.state.searchValPinned}
-							permission={this.props.location.state.permission}
-							pinned={true}
-						/>
-					</Paper>
-					<Paper className={classes.paper}>
-						<Typography component="h1" variant="h5">
 							Ongoing Questions
 						</Typography>
 						<TextField
@@ -394,6 +363,37 @@ class Chatroom extends Component {
 								</Button>
 							</FormControl>
 						</form>
+					</Paper>
+					<Paper className={classes.paper}>
+						<Typography component="h1" variant="h5">
+							Moderator Pinned Questions
+						</Typography>
+						<TextField
+							label="Search Pinned Questions"
+							value={this.state.searchValPinned}
+							onChange={(event) => this.filterFor(event.target.value, true)}
+							margin="dense"
+							variant="outlined"
+							InputProps={{
+								endAdornment: (
+									<InputAdornment position="end">
+										<IconButton aria-label="Toggle password visibility" onClick={() => this.setState({searchVal: ''})}>
+											<Close/>
+										</IconButton>
+									</InputAdornment>
+								)
+							}}
+						>
+							 <IconButton onClick={() => this.setState({searchValPinned: ''})} className={classes.deleteSearch}>
+								 <Close fontSize="default" color="black"/>
+							 </IconButton>
+						 </TextField>
+						<QuestionList
+							questions={messages}
+							searchVal={this.state.searchValPinned}
+							permission={this.props.location.state.permission}
+							pinned={true}
+						/>
 					</Paper>
 				</div>
 			</main>
