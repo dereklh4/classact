@@ -22,7 +22,7 @@ urlpatterns = [
     url(r'classroom/leave/$', views.ClassroomLeaveView.as_view()),
     url(r'classroom/enable/$', views.ClassroomEnableView.as_view()),
     url(r'classroom/disable/$', views.ClassroomDisableView.as_view()),
-	url(r'classroom/users/$', views.UserInClassroomList.as_view()),
+	url(r'classroom/users/$', views.UsersInClassroomList.as_view()),
     url(r'classroom/(?P<url>.*)/$', views.ClassroomView.as_view()),
 
     url(r'user/image/$', views.UserImageListView.as_view()), #for posting an image, and getting list of user images
