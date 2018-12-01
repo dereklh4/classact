@@ -15,7 +15,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import Flag from '@material-ui/icons/Flag';
+import Flag from '@material-ui/icons/TurnedIn';
 import Create from '@material-ui/icons/Create';
 import RemoveCircle from '@material-ui/icons/RemoveCircle'
 
@@ -143,7 +143,7 @@ class AnswerListBasic extends Component {
                                       <Tooltip title="Endorse Response">
                                         <MenuItem onClick={() => this.handleEndorse(answer.response_id)}>
                                           <IconButton className={classes.menuIcon}>
-                                            <Flag fontSize="default" color="primary"/>
+                                            <Flag fontSize="default" style={{color: "#e9cf08"}}/>
                                           </IconButton>
                                         </MenuItem>
                                       </Tooltip>
