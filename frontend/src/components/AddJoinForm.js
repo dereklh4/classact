@@ -99,7 +99,7 @@ class JoinClassForm extends Component {
        .then(response => response.json())
        .then(response => {
            if (response.status !== undefined && response.status === "SUCCESS") {
-               history.push(routes.CHATROOM + "?url=" + response.url, {state: response.url});
+               history.push(routes.CHATROOM + "?url=" + response.url, {url: response.url, permission: 1});
             }
            else {
                throw Error(ERROR_JOIN_MESSAGE)
@@ -168,7 +168,7 @@ class AddClassForm extends Component {
        .then(response => response.json())
        .then(response => {
            if (response.status !== undefined && response.status === "SUCCESS") {
-               history.push(routes.CHATROOM + "?url=" + response.url, {url: response.url});
+               history.push(routes.CHATROOM + "?url=" + response.url, {url: response.url, permission: 3});
             }
            else {
                throw Error(ERROR_ADD_MESSAGE)

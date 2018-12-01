@@ -131,7 +131,6 @@ class QuestionBasic extends Component {
                             numUpvotes={upvotes}
                             unUpvoteThisMessage={this.unUpvoteMessage}
                             upvoteThisMessage={this.upvoteQuestion}
-                            permission={permission}
                             pinned={pinned}
                         />
                         <Typography className={classNames(classes.upvotesText, {
@@ -184,7 +183,7 @@ class QuestionBasic extends Component {
                                               </Tooltip>
                                           ) :
                                           null
-                                        }      
+                                        }
                                       </div>
                                     ) :
                                         null
@@ -231,7 +230,14 @@ class QuestionBasic extends Component {
                                     {question}
                                 </Typography>
                             </div>
-                            <AnswerList answers={answers} user={user} currUser={currUser} deleteResponse={this.deleteResponse} message_id={id}/>
+                            <AnswerList
+                                answers={answers}
+                                permission={permission}
+                                user={user}
+                                currUser={currUser}
+                                deleteResponse={this.deleteResponse}
+                                message_id={id}
+                            />
                             <form onSubmit={this.onSubmit} className={classes.questionForm}>
                                 <FormControl margin="normal" fullWidth required>
                                     <TextField

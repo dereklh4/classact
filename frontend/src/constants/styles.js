@@ -459,6 +459,13 @@ export const INTRO_STYLE = theme => ({
 });
 
 export const RESPONSE_STYLE = theme => ({
+    menuIcon: {
+        padding: '3px!important',
+    },
+    threeVerticalDot: {
+        marginRight: '0px',
+        padding: '0px!important',
+    },
     topAnswerText: {
         width: '100%',
         padding: "10px 20px 10px 20px",
