@@ -111,7 +111,7 @@ class Chatroom extends Component {
 	changeCourse = (course) => {
 		WebSocketInstance.close();
 		WebSocketInstance.connect(course.classroom.url)
-		this.setState({chatName: course.classroom.title})
+		this.setState({chatName: course.classroom.title, messageScreen: false})
 		this.props.history.push(routes.CHATROOM + "?url=" + course.classroom.url, {url: course.classroom.url, permission: course.classroom.permission})
 
 	}
