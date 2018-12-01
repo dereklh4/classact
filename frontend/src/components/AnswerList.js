@@ -61,7 +61,7 @@ class AnswerListBasic extends Component {
         WebSocketInstance.endorseResponse(this.props.message_id, response_id)
     }
     render() {
-        const {answers, classes, currUser, permission} = this.props;
+        const {answers, classes, currUser, permission, savedMode} = this.props;
         const {anchorEl} = this.state;
         return (
             <div>
@@ -86,13 +86,18 @@ class AnswerListBasic extends Component {
                     <List dense>
                         {_.sortBy(_.sortBy(answers, ['hour', 'minute', 'second']).reverse(), 'endorsed').reverse().map(answer =>
                             <ListItem key={answer.response_id} className={classes.listItem}>
-                                <Upvotes
-                                    id={answer.response_id}
-                                    upvotedByUser={answer.upvoted_by_user}
-                                    unUpvoteThisMessage={this.unUpvoteResponse}
-                                    upvoteThisMessage={this.upvoteResponse}
-                                    isResponse={true}
-                                />
+                                {savedMode === true ? (
+                                    null
+                                ) : (
+                                    <Upvotes
+                                        id={answer.response_id}
+                                        upvotedByUser={answer.upvoted_by_user}
+                                        unUpvoteThisMessage={this.unUpvoteResponse}
+                                        upvoteThisMessage={this.upvoteResponse}
+                                        isResponse={true}
+                                    />
+                                )}
+
                                 <Typography className={classNames(classes.upvotesText, {
                                     [classes.upvotesTextEndorsed]: answer.endorsed === true
                                 })}>
@@ -104,7 +109,7 @@ class AnswerListBasic extends Component {
                                 <Typography className={classes.answerText}>
                                     {answer.text}
                                 </Typography>
-                                {currUser === answer.user ? (
+                                {savedMode === false ? (
                                   <div>
                                     <IconButton
                                       aria-label="Options"

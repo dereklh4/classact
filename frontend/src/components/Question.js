@@ -106,7 +106,21 @@ class QuestionBasic extends Component {
         }
     }
     render() {
-        const {currUser, user, question, classes, id, upvotes, upvotedByUser, savedByUser, answers, permission, pinned, resolved} = this.props;
+        const {
+            currUser,
+            user,
+            question,
+            classes,
+            id,
+            upvotes,
+            upvotedByUser,
+            savedByUser,
+            answers,
+            permission,
+            pinned,
+            resolved,
+            savedMode,
+        } = this.props;
         const {anchorEl} = this.state;
         var questionShortened = question;
         if (question.length > 45) {
@@ -125,14 +139,18 @@ class QuestionBasic extends Component {
                     [classes.expansionPanelResolved]: resolved === true
                 })}>
                     <div className={classes.questionHeader}>
-                        <Upvotes
-                            id={id}
-                            upvotedByUser={upvotedByUser}
-                            numUpvotes={upvotes}
-                            unUpvoteThisMessage={this.unUpvoteMessage}
-                            upvoteThisMessage={this.upvoteQuestion}
-                            pinned={pinned}
-                        />
+                        {savedMode === true ? (
+                            null
+                        ):(
+                            <Upvotes
+                                id={id}
+                                upvotedByUser={upvotedByUser}
+                                numUpvotes={upvotes}
+                                unUpvoteThisMessage={this.unUpvoteMessage}
+                                upvoteThisMessage={this.upvoteQuestion}
+                                pinned={pinned}
+                            />
+                        )}
                         <Typography className={classNames(classes.upvotesText, {
                             [classes.pinnedText]: pinned === true
                         })}>
@@ -157,7 +175,7 @@ class QuestionBasic extends Component {
                                 open={Boolean(anchorEl)}
                                 onClose={this.handleClose}
                             >
-                                {currUser === user || permission > 1 ? (
+                                {savedMode === false && (currUser === user || permission > 1) ? (
                                     <div>
                                           <Tooltip title="Edit Question">
                                               <MenuItem onClick={this.openEditMessageClick}>
@@ -189,7 +207,7 @@ class QuestionBasic extends Component {
                                         null
                                 }
                                 {
-                                    permission > 1 && pinned === false ? (
+                                    savedMode === false && permission > 1 && pinned === false ? (
                                         <Tooltip title="Pin Question">
                                             <MenuItem onClick={this.pinMessage}>
                                                 <IconButton className={classes.menuIcon}>
@@ -237,30 +255,38 @@ class QuestionBasic extends Component {
                                 currUser={currUser}
                                 deleteResponse={this.deleteResponse}
                                 message_id={id}
+                                savedMode={savedMode}
                             />
-                            <form onSubmit={this.onSubmit} className={classes.questionForm}>
-                                <FormControl margin="normal" fullWidth required>
-                                    <TextField
-                                        label="Enter Answer"
-                                        multiline
-                                        rows="3"
-        								value={this.state.userAnswer}
-        								onChange={event => this.setState({userAnswer: event.target.value})}
-        								type="text"
-        								placeholder="Enter Answer Here"
-                                        fullWidth
-                                        variant="outlined"
-        							/>
-                                    <Button
-                                        disabled={this.state.userAnswer === ''}
-                                        type="submit"
-                                        fullWidth className={classes.submit}
-                                        variant="contained"
-                                    >
-                                        Answer
-                                    </Button>
-                                </FormControl>
-                            </form>
+                            {savedMode === true ? (
+                                null
+                            ) : (
+                                <div>
+                                    <form onSubmit={this.onSubmit} className={classes.questionForm}>
+                                        <FormControl margin="normal" fullWidth required>
+                                            <TextField
+                                                label="Enter Answer"
+                                                multiline
+                                                rows="3"
+                                                value={this.state.userAnswer}
+                                                onChange={event => this.setState({userAnswer: event.target.value})}
+                                                type="text"
+                                                placeholder="Enter Answer Here"
+                                                fullWidth
+                                                variant="outlined"
+                                            />
+                                            <Button
+                                                disabled={this.state.userAnswer === ''}
+                                                type="submit"
+                                                fullWidth className={classes.submit}
+                                                variant="contained"
+                                            >
+                                                Answer
+                                            </Button>
+                                        </FormControl>
+                                    </form>
+                                </div>
+                            )
+                            }
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
                 </div>
