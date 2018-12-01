@@ -54,6 +54,7 @@ class QuestionListBasic extends Component {
                         setOpen={this.changeOpen}
                         permission={permission}
                         pinned={question.pinned}
+                        savedByUser={question.saved_by_user}
                     />
                 )}
                 {(filteredQuestions.length === 0 && updatedQuestions.length !== 0) ? <div className={classes.sorry}>Sorry, no questions matched your search</div> : null}

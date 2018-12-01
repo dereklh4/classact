@@ -86,6 +86,24 @@ class Chatroom extends Component {
 			this.getCourses(response.email);
 		})
 		.catch(error => this.setState({error: error}))
+		const data = {
+			url: this.props.location.state.url
+		}
+		fetch('http://localhost:8000/api/classroom/users', {
+			method: 'GET',
+			headers: {
+				'Authorization': token,
+				'Content-Type': 'application/json',
+				'Accept': 'application/json'
+			},
+			data: JSON.stringify(data)
+		})
+		.then(response => response.json())
+		.then(response => {
+			console.log('yo')
+			console.log(response);
+		})
+		.catch(error => this.setState({error: error}))
 	}
 
 	getCourses = (email) => {
@@ -251,7 +269,7 @@ class Chatroom extends Component {
 
 	endorsedResponse(content) {
 		console.log("Endorsed response:")
-		console.log(content)	
+		console.log(content)
 	}
 
   	postChatMessageHandler = (e, text) => {

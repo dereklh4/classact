@@ -16,6 +16,17 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import IconButton from '@material-ui/core/IconButton';
+import Flag from '@material-ui/icons/Flag';
+import RemoveCircle from '@material-ui/icons/RemoveCircle';
+import Create from '@material-ui/icons/Create';
+import Tooltip from '@material-ui/core/Tooltip';
+import Done from '@material-ui/icons/Done';
+import StarFilled from '@material-ui/icons/Star';
+import Star from '@material-ui/icons/StarOutlined';
 
 class QuestionBasic extends Component {
     constructor(props) {
@@ -23,8 +34,16 @@ class QuestionBasic extends Component {
         this.state = {
             userAnswer: '',
             edit: false,
+            anchorEl: null,
         };
     }
+
+    handleClick = (event) => {
+        this.setState({ anchorEl: event.currentTarget });
+    }
+    handleClose = () => {
+        this.setState({ anchorEl: null });
+    };
     onSubmit = (event) => {
         WebSocketInstance.postResponse(this.props.id, this.state.userAnswer)
         this.setState({userAnswer:''})
