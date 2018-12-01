@@ -123,6 +123,16 @@ export const HOME_STYLE = theme => ({
     }
 })
 export const QUESTION_STYLE = theme => ({
+    menuIcon: {
+        padding: '3px!important',
+    },
+    threeVerticalDot: {
+        marginRight: '0px',
+        padding: '0px!important',
+    },
+    otherRooms: {
+        width: '100%',
+    },
     listRoot: {
         width: '100%',
         maxWidth: 360,
@@ -185,6 +195,9 @@ export const QUESTION_STYLE = theme => ({
         marginRight: theme.spacing.unit * 4,
     },
     settingsAndRooms: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
         width: '20%',
         marginRight: theme.spacing.unit * 4,
         border: '1px solid #dfdfdf',
@@ -194,6 +207,7 @@ export const QUESTION_STYLE = theme => ({
         fontWeight: 'bold',
         color: 'white',
         backgroundColor: '#2196f3',
+        width: '100%',
         padding: theme.spacing.unit * 2,
         marginBottom:  theme.spacing.unit * 2,
     },
@@ -202,6 +216,12 @@ export const QUESTION_STYLE = theme => ({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between'
+    },
+    singleSavedBox: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center'
     },
     paper: {
         width: '47%',
@@ -228,14 +248,22 @@ export const QUESTION_STYLE = theme => ({
         '&:hover': {
             backgroundColor: '#2d46d1'
         },
+        width: '90%',
         postion: 'absolute',
+        margin: theme.spacing.unit,
     },
     expansionPanel: {
         marginTop: 3,
         borderWidth: 2,
-        borderColor: '#3f51b5',
+        borderColor: 'red',
         borderStyle: 'solid',
         marginBottom: 10
+    },
+    expansionPanelEntries: {
+        borderColor: 'blue'
+    },
+    expansionPanelResolved: {
+        borderColor: 'green'
     },
     questionHeader: {
         display: 'flex',
@@ -446,6 +474,13 @@ export const INTRO_STYLE = theme => ({
 });
 
 export const RESPONSE_STYLE = theme => ({
+    menuIcon: {
+        padding: '3px!important',
+    },
+    threeVerticalDot: {
+        marginRight: '0px',
+        padding: '0px!important',
+    },
     topAnswerText: {
         width: '100%',
         padding: "10px 20px 10px 20px",
@@ -476,6 +511,10 @@ export const RESPONSE_STYLE = theme => ({
         marginRight: 12,
         marginLeft: 10
 
+    },
+    upvotesTextEndorsed: {
+        borderRight: '2px solid #d4a338',
+        borderBottom: '2px solid #d4a338',
     },
     avatar: {
         backgroundColor: 'white'

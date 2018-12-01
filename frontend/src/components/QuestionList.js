@@ -33,14 +33,14 @@ class QuestionListBasic extends Component {
         this.setState({key: key})
     }
     render() {
-        const {questions, classes, searchVal, permission, pinned} = this.props;
+        const {questions, classes, searchVal, permission, pinned, savedMode} = this.props;
         const updatedQuestions = pinned ? questions.filter(question => question.pinned === true) : questions.filter(question => question.pinned === false)
         const filteredQuestions = updatedQuestions.filter(question => question.text.includes(searchVal))
         return (
             <div className={classNames(classes.questionContainer , {
                 [classes.pinnedQuestionContainer]: pinned === true
             })}>
-                {_.sortBy(filteredQuestions, ['year', 'month', 'day', 'hour', 'minute', 'second']).map(question =>
+                {_.sortBy(_.sortBy(filteredQuestions, ['year', 'month', 'day', 'hour', 'minute', 'second']).reverse(), 'resolved').reverse().map(question =>
                     <Question
                         question={question.text}
                         id={question.id}
@@ -54,6 +54,9 @@ class QuestionListBasic extends Component {
                         setOpen={this.changeOpen}
                         permission={permission}
                         pinned={question.pinned}
+                        savedByUser={question.saved_by_user}
+                        resolved={question.resolved}
+                        savedMode={savedMode}
                     />
                 )}
                 {(filteredQuestions.length === 0 && updatedQuestions.length !== 0) ? <div className={classes.sorry}>Sorry, no questions matched your search</div> : null}

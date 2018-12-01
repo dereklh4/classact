@@ -30,8 +30,10 @@ class Chatroom extends Component {
 			messages: [],
 			chatName: '',
 			searchVal: '',
+			searchSaved: '',
 			searchValPinned: '',
 			courses: [],
+			messageScreen: false,
 		};
 
       var params = queryString.parse(this.props.location.search)
@@ -109,7 +111,7 @@ class Chatroom extends Component {
 	changeCourse = (course) => {
 		WebSocketInstance.close();
 		WebSocketInstance.connect(course.classroom.url)
-		this.setState({chatName: course.classroom.title})
+		this.setState({chatName: course.classroom.title, messageScreen: false})
 		this.props.history.push(routes.CHATROOM + "?url=" + course.classroom.url, {url: course.classroom.url, permission: course.classroom.permission})
 
 	}
@@ -235,23 +237,44 @@ class Chatroom extends Component {
 	}
 
 	savedMessage(content) {
-		console.log("Saved message:")
-		console.log(content)
+		const messages = this.state.messages;
+		const index = messages.findIndex((message) => message.id === content.message_id);
+		const updatedMessages = [...this.state.messages]
+		const newMessage = Object.assign(updatedMessages[index], {saved_by_user: content.saved})
+		updatedMessages[index] = newMessage
+		this.setState({messages: updatedMessages})
 	}
 
 	unSavedMessage(content) {
-		console.log("Unsaved message:")
-		console.log(content)
+		const messages = this.state.messages;
+		const index = messages.findIndex((message) => message.id === content.message_id);
+		const updatedMessages = [...this.state.messages]
+		const newMessage = Object.assign(updatedMessages[index], {saved_by_user: content.saved})
+		updatedMessages[index] = newMessage
+		this.setState({messages: updatedMessages})
 	}
 
 	resolvedMessage(content) {
-		console.log("Resolved message:")
-		console.log(content)
+		const messages = this.state.messages;
+		const index = messages.findIndex((message) => message.id === content.message_id);
+		const updatedMessages = [...this.state.messages]
+		const newMessage = Object.assign(updatedMessages[index], {resolved: content.resolved})
+		updatedMessages[index] = newMessage
+		this.setState({messages: updatedMessages})
 	}
 
 	endorsedResponse(content) {
-		console.log("Endorsed response:")
-		console.log(content)	
+		console.log(content)
+		const messages = this.state.messages;
+		const messageIndex = messages.findIndex((message) => message.id === content.message_id)
+		const updatedMessages = [...this.state.messages]
+		const responses = updatedMessages[messageIndex].responses
+		const responseIndex = responses.findIndex((r) => r.response_id === content.response_id)
+		const newResponse = Object.assign(updatedMessages[messageIndex].responses[responseIndex], {endorsed: content.endorsed})
+		responses[responseIndex] = newResponse
+		const newMessage = Object.assign(updatedMessages[messageIndex], {responses: responses})
+		updatedMessages[messageIndex] = newMessage
+		this.setState({messages: updatedMessages})
 	}
 
   	postChatMessageHandler = (e, text) => {
@@ -276,7 +299,7 @@ class Chatroom extends Component {
 		}
 	}
   render() {
-    const {messages, courses} = this.state;
+    const {messages, courses, messageScreen} = this.state;
 	const updatedCourses = courses.filter(c => c.classroom.url !== this.props.location.state.url)
 	const {classes} = this.props;
     return (
@@ -302,9 +325,19 @@ class Chatroom extends Component {
 						type="button"
 						onClick={this.handleHomeClick}
 						className={classes.submit1}
-						fullWidth
 					>
 						Back To Home
+					</Button>
+					<Button
+						type="button"
+						onClick={() => this.setState({messageScreen: !messageScreen})}
+						className={classes.submit1}
+					>
+						{messageScreen === true ? (
+							'View Current Questions'
+						) : (
+							'View Saved Questions'
+						)}
 					</Button>
 					<div className={classes.otherRooms}>
 						<List
@@ -320,94 +353,134 @@ class Chatroom extends Component {
 						</List>
 					</div>
 				</div>
-				<div className={classes.chatBoxes}>
-					<Paper className={classes.paper}>
-						<Typography component="h1" variant="h5">
-							Ongoing Questions
-						</Typography>
-						<TextField
-							label="Search Questions"
-							value={this.state.searchVal}
-							onChange={(event) => this.filterFor(event.target.value, false)}
-							margin="dense"
-							variant="outlined"
-							InputProps={{
-								endAdornment: (
-									<InputAdornment position="end">
-										<IconButton aria-label="Toggle password visibility" onClick={() => this.setState({searchVal: ''})}>
-											<Close/>
-										</IconButton>
-									</InputAdornment>
-								)
-							}}
-						>
-							 <IconButton onClick={() => this.setState({searchVal: ''})} className={classes.deleteSearch}>
-								 <Close fontSize="default" color="black"/>
-							 </IconButton>
-						 </TextField>
-						<QuestionList
-							questions={messages}
-							searchVal={this.state.searchVal}
-							permission={this.props.location.state.permission}
-							pinned={false}
-						/>
-						<form onSubmit={(e) => this.postChatMessageHandler(e, this.state.message)} className={classes.postQuestion}>
-							<FormControl margin="normal" fullWidth required>
-								<TextField
-									label="Enter Question"
-									multiline
-									rows="3"
-									value={this.state.message}
-									onChange={event => this.setState({message: event.target.value})}
-									type="text"
-									placeholder="Enter Question Here"
-									autoFocus
-									fullWidth
-									variant="outlined"
-								/>
-								<Button
-									disabled={this.state.message === ''}
-									type="submit"
-									fullWidth className={classes.submit}
-									variant="contained"
-								>
-									Post New Question
-								</Button>
-							</FormControl>
-						</form>
-					</Paper>
-					<Paper className={classes.paper}>
-						<Typography component="h1" variant="h5">
-							Moderator Pinned Questions
-						</Typography>
-						<TextField
-							label="Search Pinned Questions"
-							value={this.state.searchValPinned}
-							onChange={(event) => this.filterFor(event.target.value, true)}
-							margin="dense"
-							variant="outlined"
-							InputProps={{
-								endAdornment: (
-									<InputAdornment position="end">
-										<IconButton aria-label="Toggle password visibility" onClick={() => this.setState({searchVal: ''})}>
-											<Close/>
-										</IconButton>
-									</InputAdornment>
-								)
-							}}
-						>
-							 <IconButton onClick={() => this.setState({searchValPinned: ''})} className={classes.deleteSearch}>
-								 <Close fontSize="default" color="black"/>
-							 </IconButton>
-						 </TextField>
-						<QuestionList
-							questions={messages}
-							searchVal={this.state.searchValPinned}
-							permission={this.props.location.state.permission}
-							pinned={true}
-						/>
-					</Paper>
-				</div>
+				{messageScreen === true ? (
+					<div className={classes.singleSavedBox}>
+						<Paper className={classes.paper}>
+							<Typography component="h1" variant="h5">
+								Saved Questions
+							</Typography>
+							<TextField
+								label="Search Saved Questions"
+								value={this.state.searchSaved}
+								onChange={(event) => this.setState({savedSearch: event.target.value})}
+								margin="dense"
+								variant="outlined"
+								InputProps={{
+									endAdornment: (
+										<InputAdornment position="end">
+											<IconButton aria-label="Toggle password visibility" onClick={() => this.setState({searchVal: ''})}>
+												<Close/>
+											</IconButton>
+										</InputAdornment>
+									)
+								}}
+							>
+								 <IconButton onClick={() => this.setState({savedSearch: ''})} className={classes.deleteSearch}>
+									 <Close fontSize="default" color="black"/>
+								 </IconButton>
+							 </TextField>
+							<QuestionList
+								questions={messages.filter(message => message.saved_by_user === true)}
+								searchVal={this.state.searchValPinned}
+								permission={this.props.location.state.permission}
+								pinned={false}
+								savedMode={true}
+							/>
+						</Paper>
+					</div>
+				) : (
+					<div className={classes.chatBoxes}>
+						<Paper className={classes.paper}>
+							<Typography component="h1" variant="h5">
+								Ongoing Questions
+							</Typography>
+							<TextField
+								label="Search Questions"
+								value={this.state.searchVal}
+								onChange={(event) => this.filterFor(event.target.value, false)}
+								margin="dense"
+								variant="outlined"
+								InputProps={{
+									endAdornment: (
+										<InputAdornment position="end">
+											<IconButton aria-label="Toggle password visibility" onClick={() => this.setState({searchVal: ''})}>
+												<Close/>
+											</IconButton>
+										</InputAdornment>
+									)
+								}}
+							>
+								 <IconButton onClick={() => this.setState({searchVal: ''})} className={classes.deleteSearch}>
+									 <Close fontSize="default" color="black"/>
+								 </IconButton>
+							 </TextField>
+							<QuestionList
+								questions={messages}
+								searchVal={this.state.searchVal}
+								permission={this.props.location.state.permission}
+								pinned={false}
+								savedMode={false}
+							/>
+							<form onSubmit={(e) => this.postChatMessageHandler(e, this.state.message)} className={classes.postQuestion}>
+								<FormControl margin="normal" fullWidth required>
+									<TextField
+										label="Enter Question"
+										multiline
+										rows="3"
+										value={this.state.message}
+										onChange={event => this.setState({message: event.target.value})}
+										type="text"
+										placeholder="Enter Question Here"
+										autoFocus
+										fullWidth
+										variant="outlined"
+									/>
+									<Button
+										disabled={this.state.message === ''}
+										type="submit"
+										fullWidth className={classes.submit}
+										variant="contained"
+									>
+										Post New Question
+									</Button>
+								</FormControl>
+							</form>
+						</Paper>
+						<Paper className={classes.paper}>
+							<Typography component="h1" variant="h5">
+								Moderator Pinned Questions
+							</Typography>
+							<TextField
+								label="Search Pinned Questions"
+								value={this.state.searchValPinned}
+								onChange={(event) => this.filterFor(event.target.value, true)}
+								margin="dense"
+								variant="outlined"
+								InputProps={{
+									endAdornment: (
+										<InputAdornment position="end">
+											<IconButton aria-label="Toggle password visibility" onClick={() => this.setState({searchVal: ''})}>
+												<Close/>
+											</IconButton>
+										</InputAdornment>
+									)
+								}}
+							>
+								 <IconButton onClick={() => this.setState({searchValPinned: ''})} className={classes.deleteSearch}>
+									 <Close fontSize="default" color="black"/>
+								 </IconButton>
+							 </TextField>
+							<QuestionList
+								questions={messages}
+								searchVal={this.state.searchValPinned}
+								permission={this.props.location.state.permission}
+								pinned={true}
+								savedMode={false}
+							/>
+						</Paper>
+					</div>
+				)}
+
 			</main>
 		</React.Fragment>
     );
