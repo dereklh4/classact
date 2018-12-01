@@ -86,24 +86,6 @@ class Chatroom extends Component {
 			this.getCourses(response.email);
 		})
 		.catch(error => this.setState({error: error}))
-		const data = {
-			url: this.props.location.state.url
-		}
-		fetch('http://localhost:8000/api/classroom/users', {
-			method: 'GET',
-			headers: {
-				'Authorization': token,
-				'Content-Type': 'application/json',
-				'Accept': 'application/json'
-			},
-			data: JSON.stringify(data)
-		})
-		.then(response => response.json())
-		.then(response => {
-			console.log('yo')
-			console.log(response);
-		})
-		.catch(error => this.setState({error: error}))
 	}
 
 	getCourses = (email) => {
@@ -253,18 +235,30 @@ class Chatroom extends Component {
 	}
 
 	savedMessage(content) {
-		console.log("Saved message:")
-		console.log(content)
+		const messages = this.state.messages;
+		const index = messages.findIndex((message) => message.id === content.message_id);
+		const updatedMessages = [...this.state.messages]
+		const newMessage = Object.assign(updatedMessages[index], {saved_by_user: content.saved})
+		updatedMessages[index] = newMessage
+		this.setState({messages: updatedMessages})
 	}
 
 	unSavedMessage(content) {
-		console.log("Unsaved message:")
-		console.log(content)
+		const messages = this.state.messages;
+		const index = messages.findIndex((message) => message.id === content.message_id);
+		const updatedMessages = [...this.state.messages]
+		const newMessage = Object.assign(updatedMessages[index], {saved_by_user: content.saved})
+		updatedMessages[index] = newMessage
+		this.setState({messages: updatedMessages})
 	}
 
 	resolvedMessage(content) {
-		console.log("Resolved message:")
-		console.log(content)
+		const messages = this.state.messages;
+		const index = messages.findIndex((message) => message.id === content.message_id);
+		const updatedMessages = [...this.state.messages]
+		const newMessage = Object.assign(updatedMessages[index], {resolved: content.resolved})
+		updatedMessages[index] = newMessage
+		this.setState({messages: updatedMessages})
 	}
 
 	endorsedResponse(content) {

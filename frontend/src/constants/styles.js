@@ -123,6 +123,13 @@ export const HOME_STYLE = theme => ({
     }
 })
 export const QUESTION_STYLE = theme => ({
+    menuIcon: {
+        padding: '3px!important',
+    },
+    threeVerticalDot: {
+        marginRight: '0px',
+        padding: '0px!important',
+    },
     listRoot: {
         width: '100%',
         maxWidth: 360,
@@ -233,9 +240,15 @@ export const QUESTION_STYLE = theme => ({
     expansionPanel: {
         marginTop: 3,
         borderWidth: 2,
-        borderColor: '#3f51b5',
+        borderColor: 'red',
         borderStyle: 'solid',
         marginBottom: 10
+    },
+    expansionPanelEntries: {
+        borderColor: 'blue'
+    },
+    expansionPanelResolved: {
+        borderColor: 'green'
     },
     questionHeader: {
         display: 'flex',

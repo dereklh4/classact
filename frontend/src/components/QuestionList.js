@@ -40,7 +40,7 @@ class QuestionListBasic extends Component {
             <div className={classNames(classes.questionContainer , {
                 [classes.pinnedQuestionContainer]: pinned === true
             })}>
-                {_.sortBy(filteredQuestions, ['year', 'month', 'day', 'hour', 'minute', 'second']).map(question =>
+                {_.sortBy(_.sortBy(filteredQuestions, ['year', 'month', 'day', 'hour', 'minute', 'second']).reverse(), 'resolved').reverse().map(question =>
                     <Question
                         question={question.text}
                         id={question.id}
@@ -55,6 +55,7 @@ class QuestionListBasic extends Component {
                         permission={permission}
                         pinned={question.pinned}
                         savedByUser={question.saved_by_user}
+                        resolved={question.resolved}
                     />
                 )}
                 {(filteredQuestions.length === 0 && updatedQuestions.length !== 0) ? <div className={classes.sorry}>Sorry, no questions matched your search</div> : null}

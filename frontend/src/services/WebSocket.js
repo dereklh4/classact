@@ -17,7 +17,7 @@ class WebSocketService {
 
   addCallbacks(initChatCallback,errorMessageCallback,newMessageCallback,upvotedMessageCallback,unUpvotedMessageCallback,
           newResponseCallback,editResponseCallback,deleteResponseCallback,editMessageCallback,deleteMessageCallback,
-          upvotedResponseCallback,unUpvotedResponseCallback,pinnedMessageCallback, savedMessageCallback, unSavedMessageCallback, 
+          upvotedResponseCallback,unUpvotedResponseCallback,pinnedMessageCallback, savedMessageCallback, unSavedMessageCallback,
           resolvedMessageCallback, endorsedResponseCallback) {
     this.callbacks['init_chat'] = initChatCallback;
     this.callbacks['error_message'] = errorMessageCallback;
@@ -149,13 +149,13 @@ class WebSocketService {
   pinMessage(in_message_id) {
     this._sendMessage({command: 'pin_message', message_id: in_message_id})
   }
-  
+
   saveMessage(in_message_id) {
     this._sendMessage({command: 'save_message', message_id: in_message_id})
   }
 
   unSaveMessage(in_message_id) {
-    this._sendMessage({command: 'un_save_message', message_id: in_message_id}) 
+    this._sendMessage({command: 'un_save_message', message_id: in_message_id})
   }
 
   resolveMessage(in_message_id) {
