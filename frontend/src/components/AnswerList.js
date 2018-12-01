@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import WebSocketInstance from '../services/WebSocket'
 import withStyles from '@material-ui/core/styles/withStyles';
+import classNames from 'classnames';
 import {EditField} from './EditField'
 import Upvotes from './Upvotes'
 import {RESPONSE_STYLE} from '../constants/styles';
@@ -55,9 +56,9 @@ class AnswerListBasic extends Component {
         this.props.deleteResponse(response_id);
         this.setState( {anchorEl: null});
     }
-    handleEndorse = () => {
-        alert("Endorsing");
+    handleEndorse = (response_id) => {
         this.setState( {anchorEl: null});
+        WebSocketInstance.endorseResponse(this.props.message_id, response_id)
     }
     render() {
         const {answers, classes, currUser, permission} = this.props;
@@ -83,7 +84,7 @@ class AnswerListBasic extends Component {
                         </Typography>
                     </div>
                     <List dense>
-                        {_.sortBy(answers, ['hour', 'minute', 'second']).reverse().map(answer =>
+                        {_.sortBy(_.sortBy(answers, ['hour', 'minute', 'second']).reverse(), 'endorsed').reverse().map(answer =>
                             <ListItem key={answer.response_id} className={classes.listItem}>
                                 <Upvotes
                                     id={answer.response_id}
@@ -92,7 +93,9 @@ class AnswerListBasic extends Component {
                                     upvoteThisMessage={this.upvoteResponse}
                                     isResponse={true}
                                 />
-                                <Typography className={classes.upvotesText}>
+                                <Typography className={classNames(classes.upvotesText, {
+                                    [classes.upvotesTextEndorsed]: answer.endorsed === true
+                                })}>
                                     {answer.upvotes}
                                 </Typography>
                                 <Avatar className={classes.avatar}>
@@ -123,22 +126,22 @@ class AnswerListBasic extends Component {
                                         <Tooltip title="Edit Reponse">
                                           <MenuItem onClick={() => this.openEditResponseClick(answer.response_id, answer.text)}>
                                             <IconButton className={classes.menuIcon}>
-                                              <Create fontSize="default" color="primary"/>
+                                              <Create fontSize="default" style={{color: 'blue'}}/>
                                             </IconButton>
                                           </MenuItem>
                                         </Tooltip>
                                         <Tooltip title="Delete Response">
                                           <MenuItem onClick={() => this.handleDelete(answer.response_id)}>
                                             <IconButton className={classes.menuIcon}>
-                                              <RemoveCircle fontSize="default" color="secondary"/>
+                                              <RemoveCircle fontSize="default" style={{color: 'red'}}/>
                                             </IconButton>
                                           </MenuItem>
                                         </Tooltip>
                                       </div>
                                     ) : null}
-                                    {permission > 1 ? (
+                                    {permission > 1 && answer.endorsed === false ? (
                                       <Tooltip title="Endorse Response">
-                                        <MenuItem onClick={this.handleEndorse}>
+                                        <MenuItem onClick={() => this.handleEndorse(answer.response_id)}>
                                           <IconButton className={classes.menuIcon}>
                                             <Flag fontSize="default" color="primary"/>
                                           </IconButton>

@@ -497,6 +497,10 @@ export const RESPONSE_STYLE = theme => ({
         marginLeft: 10
 
     },
+    upvotesTextEndorsed: {
+        borderRight: '2px solid #d4a338',
+        borderBottom: '2px solid #d4a338',
+    },
     avatar: {
         backgroundColor: 'white'
     },

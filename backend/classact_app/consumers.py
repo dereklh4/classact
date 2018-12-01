@@ -107,7 +107,7 @@ class ChatConsumer(WebsocketConsumer):
 		responses = Response.objects.filter(message=message)
 		pinned = len(UserPinMessage.objects.filter(message=message)) >= 1
 		saved_by_user = len(UserSaveQuestion.objects.filter(user=self.scope["user"],message=message)) >= 1
-		
+
 		user_image = ""
 		try:
 			user_image = UserImage.objects.get(user=message.user).image.url
@@ -138,7 +138,7 @@ class ChatConsumer(WebsocketConsumer):
 		response_upvotes = UserResponseUpvotes.objects.filter(response=response)
 		upvoted_by_user = len(response_upvotes.filter(user=self.scope["user"])) >= 1
 		endorsed = len(EndorseResponse.objects.filter(response=response)) >= 1
-		
+
 		user_image = ""
 		try:
 			user_image = UserImage.objects.get(user=response.user).image.url
@@ -198,7 +198,7 @@ class ChatConsumer(WebsocketConsumer):
 		text = data['text']
 
 		anonymous = True
-		try: 
+		try:
 			anonymous = data['anonymous']
 		except:
 			anonymous = False
@@ -288,7 +288,7 @@ class ChatConsumer(WebsocketConsumer):
 		text = data['text']
 
 		anonymous = True
-		try: 
+		try:
 			anonymous = data['anonymous']
 		except:
 			anonymous = False
@@ -309,7 +309,7 @@ class ChatConsumer(WebsocketConsumer):
 		text = data['text']
 
 		anonymous = True
-		try: 
+		try:
 			anonymous = data['anonymous']
 		except:
 			anonymous = False
@@ -468,6 +468,7 @@ class ChatConsumer(WebsocketConsumer):
 			self._error_message("Response has already been endorsed")
 		self._fire_event("endorsed_response",
 							{
+								"message_id":message_id,
 								"response_id":response_id,
 								"endorsed":True
 							}
@@ -515,7 +516,7 @@ class ChatConsumer(WebsocketConsumer):
 		user_in_classroom = UserInClassroom.objects.get(user=user, classroom=classroom)
 		if user_in_classroom.permission != 3:
 			raise APIException("ERROR: User does not have sufficient permissions")
-			
+
 		message_id = data["message_id"]
 		try:
 			message = Message.objects.get(id=message_id)
@@ -525,7 +526,7 @@ class ChatConsumer(WebsocketConsumer):
 		message.resolved = True
 		message.save()
 
-		self._fire_event("resolved_message", 
+		self._fire_event("resolved_message",
 							{
 								"message_id":message.id,
 								"resolved":True
@@ -596,7 +597,7 @@ class ChatConsumer(WebsocketConsumer):
 
 	def endorsed_response(self,event):
 		self.send(text_data=json.dumps(event))
-	
+
 	def saved_message(self,event):
 		self.send(text_data=json.dumps(event))
 

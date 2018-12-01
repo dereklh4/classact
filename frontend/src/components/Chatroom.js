@@ -262,8 +262,17 @@ class Chatroom extends Component {
 	}
 
 	endorsedResponse(content) {
-		console.log("Endorsed response:")
 		console.log(content)
+		const messages = this.state.messages;
+		const messageIndex = messages.findIndex((message) => message.id === content.message_id)
+		const updatedMessages = [...this.state.messages]
+		const responses = updatedMessages[messageIndex].responses
+		const responseIndex = responses.findIndex((r) => r.response_id === content.response_id)
+		const newResponse = Object.assign(updatedMessages[messageIndex].responses[responseIndex], {endorsed: content.endorsed})
+		responses[responseIndex] = newResponse
+		const newMessage = Object.assign(updatedMessages[messageIndex], {responses: responses})
+		updatedMessages[messageIndex] = newMessage
+		this.setState({messages: updatedMessages})
 	}
 
   	postChatMessageHandler = (e, text) => {
