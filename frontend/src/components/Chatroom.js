@@ -362,7 +362,7 @@ class Chatroom extends Component {
 							<TextField
 								label="Search Saved Questions"
 								value={this.state.searchSaved}
-								onChange={(event) => this.setState({savedSearch: event.target.value})}
+								onChange={(event) => this.setState({searchSaved: event.target.value})}
 								margin="dense"
 								variant="outlined"
 								InputProps={{
