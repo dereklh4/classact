@@ -304,7 +304,7 @@ class UsersInClassroomList(generics.ListAPIView):
 		url = request.data['url']
 
 		try:
-			classroom = Classroom.objects.get(url = url)
+			classroom = Classroom.objects.get(url=url)
 		except:
 			raise APIException("ERROR: Classroom does not exist")
 
