@@ -297,6 +297,19 @@ class UserClassroomList(generics.ListAPIView):
 
 		queryset = UserInClassroom.objects.filter(user=user)
 		return queryset
+		
+class UsersInClassroomList(generics.ListAPIView):
+	serializer_class = UserInClassroomViewSerializer
+	def get_queryset(self):
+		url = self.kwargs['url']
+
+		try:
+			classroom = Classroom.objects.get(url=url)
+		except:
+			raise APIException("ERROR: Classroom does not exist")
+
+		queryset = UserInClassroom.objects.filter(classroom=classroom)
+		return queryset
 
 class UserImageListView(mixins.ListModelMixin,
 				mixins.CreateModelMixin,
