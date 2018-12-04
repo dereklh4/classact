@@ -86,27 +86,6 @@ class Chatroom extends Component {
 			this.getCourses(response.email);
 		})
 		.catch(error => this.setState({error: error}))
-		//ADDED TEST CODE FROM JOSH BEGINS HERE
-		const data = {
-            url: this.props.location.state.url
-        }
-        console.log(data)
-        fetch('http://localhost:8000/api/classroom/users', {
-            method: 'GET',
-            headers: {
-                'Authorization': token,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            data: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(response => {
-            console.log('yo')
-            console.log(response);
-        })
-        .catch(error => this.setState({error: error}))
-        //ENDS
 	}
 
 	getCourses = (email) => {
