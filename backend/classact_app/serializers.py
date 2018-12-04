@@ -92,7 +92,7 @@ class UserInClassroomViewSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = UserInClassroom
-		fields = ('user','classroom','permission','student_count','url')
+		fields = ('user','classroom','permission','student_count')
 		depth = 2
 
 class UserImageSerializer(serializers.ModelSerializer):

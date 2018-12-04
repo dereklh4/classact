@@ -301,7 +301,7 @@ class UserClassroomList(generics.ListAPIView):
 class UsersInClassroomList(generics.ListAPIView):
 	serializer_class = UserInClassroomViewSerializer
 	def get_queryset(self):
-		url = request.data['url']
+		url = self.kwargs['url']
 
 		try:
 			classroom = Classroom.objects.get(url=url)
