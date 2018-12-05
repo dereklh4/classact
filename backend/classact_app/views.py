@@ -308,8 +308,14 @@ class UsersInClassroomList(generics.ListAPIView):
 		except:
 			raise APIException("ERROR: Classroom does not exist")
 
-		queryset = UserInClassroom.objects.filter(classroom=classroom)
+		#queryset = UserInClassroom.objects.filter(classroom=classroom)
+		
+		queryset = []
+		for user_in_class in UserInClassroom.objects.filter(classroom=classroom)
+			queryset.append(user_in_class.user.email)
+
 		return queryset
+
 
 class UserImageListView(mixins.ListModelMixin,
 				mixins.CreateModelMixin,
