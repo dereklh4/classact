@@ -325,7 +325,7 @@ class Chatroom extends Component {
 		};
 		console.log(data)
 		fetch('http://localhost:8000/api/classroom/permission-update/', {
-			method: 'POST',
+			method: 'OPTIONS',
 			headers: {
 				'Authorization': token,
 				'Content-Type': 'application/json',
@@ -354,7 +354,7 @@ class Chatroom extends Component {
 			new_permission: 1
 		};
 		fetch('http://localhost:8000/api/classroom/permission-update/', {
-			method: 'POST',
+			method: 'OPTIONS',
 			headers: {
 				'Authorization': token,
 				'Content-Type': 'application/json',

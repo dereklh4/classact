@@ -181,13 +181,16 @@ class UserInClassroomList(generics.ListAPIView):
 
 class PermissionUpdateView(generics.CreateAPIView):
 	permission_classes = (IsAuthenticated,)
+	serializer_class = PermissionUpdateSerializer
 
 	def get_serializer_class(self):
 		return PermissionUpdateSerializer
 
 	def post(self, request, *args, **kwargs):
 		"""Changes permission of given user in given class"""
-		serializer_class = PermissionUpdateSerializer
+
+		if not ("url" in request.data and "user_email" in request.data and "new_permission" in request.data):
+			raise APIException("ERROR: Missing required data. Need 'url','user_email', and 'new_permission'")
 
 		url = request.data['url']
 		try:
