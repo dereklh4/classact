@@ -149,7 +149,8 @@ export const QUESTION_STYLE = theme => ({
         backgroundColor: theme.palette.background.paper,
         position: 'relative',
         overflow: 'auto',
-        maxHeight: 200,
+        height: 115,
+        maxHeight: 115,
     },
     moderatorsToDemote: {
         marginLeft: '2.5%',
@@ -162,7 +163,8 @@ export const QUESTION_STYLE = theme => ({
         backgroundColor: theme.palette.background.paper,
         position: 'relative',
         overflow: 'auto',
-        maxHeight: 200,
+        maxHeight: 115,
+        height: 115,
     },
     listRoot: {
         width: '100%',
@@ -170,7 +172,8 @@ export const QUESTION_STYLE = theme => ({
         backgroundColor: theme.palette.background.paper,
         position: 'relative',
         overflow: 'auto',
-        maxHeight: 200,
+        maxHeight: 115,
+        height: 115,
     },
     chatName: {
         textAlign: 'center',

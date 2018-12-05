@@ -22,7 +22,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 
 
-//TODO: Fix @wisc.edu
 class Chatroom extends Component {
 	constructor(props) {
     	super(props);
@@ -37,6 +36,7 @@ class Chatroom extends Component {
 			courses: [],
 			messageScreen: false,
 			users: [],
+			url: ''
 		};
 
       var params = queryString.parse(this.props.location.search)
@@ -103,7 +103,7 @@ class Chatroom extends Component {
 		.then(response => response.json())
 		.then(response => {
 			this.setState({users: response})
-			console.log(response)
+			this.setState({url: this.props.location.state.url})
 		})
 		.catch(error => this.setState({error: error}))
 	}
@@ -319,13 +319,12 @@ class Chatroom extends Component {
 	handlePromoteStudent = (user) => {
 		const token = 'Token ' + localStorage.getItem('token')
 		const data = {
-		  	url: this.props.location.state.url + '@wisc.edu',
+		  	url: this.state.url,
 		  	user_email: user,
 		  	new_permission: 2
 		};
 		console.log(data)
-		const url = 'http://localhost:8000/api/classroom/permission-update/'
-		fetch(url, {
+		fetch('http://localhost:8000/api/classroom/permission-update/', {
 			method: 'POST',
 			headers: {
 				'Authorization': token,
@@ -350,12 +349,11 @@ class Chatroom extends Component {
 	handleDemoteModerator = (user) => {
 		const token = 'Token ' + localStorage.getItem('token')
 		const data = {
-			url: this.props.location.state.url + '@wisc.edu',
+			url: this.state.url,
 			user_email: user,
 			new_permission: 1
 		};
-		const url = 'http://localhost:8000/api/classroom/permission-update/'
-		fetch(url, {
+		fetch('http://localhost:8000/api/classroom/permission-update/', {
 			method: 'POST',
 			headers: {
 				'Authorization': token,
