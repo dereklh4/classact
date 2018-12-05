@@ -131,7 +131,38 @@ export const QUESTION_STYLE = theme => ({
         padding: '0px!important',
     },
     otherRooms: {
+        width: '95%',
+        border: '1px solid #3f51b5',
+    },
+    promoteBox: {
+        width: '100%'
+    },
+    studentsToPromote: {
+        marginLeft: '2.5%',
+        width: '95%',
+        border: '1px solid #3f51b5',
+        marginBottom: theme.spacing.unit
+    },
+    studentsRoot: {
         width: '100%',
+        maxWidth: 360,
+        backgroundColor: theme.palette.background.paper,
+        position: 'relative',
+        overflow: 'auto',
+        maxHeight: 200,
+    },
+    moderatorsToDemote: {
+        marginLeft: '2.5%',
+        width: '95%',
+        border: '1px solid #3f51b5',
+    },
+    moderatorsRoot: {
+        width: '100%',
+        maxWidth: 360,
+        backgroundColor: theme.palette.background.paper,
+        position: 'relative',
+        overflow: 'auto',
+        maxHeight: 200,
     },
     listRoot: {
         width: '100%',
