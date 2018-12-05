@@ -84,7 +84,7 @@ class ClassroomEnableSerializer(serializers.ModelSerializer):
 class UserInClassroomViewSerializer(serializers.ModelSerializer):
 	permission = serializers.IntegerField()
 	classroom = ClassroomViewSerializer
-	user = serializers.EmailField()
+	user = serializers.EmailField(source="user.email")
 	student_count = serializers.SerializerMethodField()
 
 	def get_student_count(self,validated_data):
