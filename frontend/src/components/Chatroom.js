@@ -21,6 +21,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 
+
 class Chatroom extends Component {
 	constructor(props) {
     	super(props);
@@ -34,6 +35,8 @@ class Chatroom extends Component {
 			searchValPinned: '',
 			courses: [],
 			messageScreen: false,
+			users: [],
+			url: ''
 		};
 
       var params = queryString.parse(this.props.location.search)
@@ -86,6 +89,21 @@ class Chatroom extends Component {
 		.then(response => response.json())
 		.then(response => {
 			this.getCourses(response.email);
+		})
+		.catch(error => this.setState({error: error}))
+		const newUrl = 'http://localhost:8000/api/classroom/users/' + this.props.location.state.url + '/'
+		fetch(newUrl, {
+			method: 'GET',
+			headers: {
+				'Authorization': token,
+				'Content-Type': 'application/json',
+				'Accept': 'application/json'
+			},
+		})
+		.then(response => response.json())
+		.then(response => {
+			this.setState({users: response})
+			this.setState({url: this.props.location.state.url})
 		})
 		.catch(error => this.setState({error: error}))
 	}
@@ -298,6 +316,65 @@ class Chatroom extends Component {
 			this.setState({searchVal: value});
 		}
 	}
+	handlePromoteStudent = (user) => {
+		const token = 'Token ' + localStorage.getItem('token')
+		const data = {
+		  	url: this.state.url,
+		  	user_email: user,
+		  	new_permission: 2
+		};
+		console.log(data)
+		fetch('http://localhost:8000/api/classroom/permission-update/', {
+			method: 'OPTIONS',
+			headers: {
+				'Authorization': token,
+				'Content-Type': 'application/json',
+				'Accept': 'application/json'
+			},
+			data: JSON.stringify(data)
+		})
+		.then(response => response.json())
+		.then(response => {
+			console.log(response)
+			const users = this.state.users;
+			const index = users.findIndex((userPerson) => userPerson.user === user);
+			const updatedUsers = [...this.state.users]
+			const newUser = Object.assign(updatedUsers[index], {permission: 2})
+			updatedUsers[index] = newUser
+			this.setState({users: updatedUsers})
+			alert('yaa')
+		})
+		.catch(error => this.setState({error: error}))
+	}
+	handleDemoteModerator = (user) => {
+		const token = 'Token ' + localStorage.getItem('token')
+		const data = {
+			url: this.state.url,
+			user_email: user,
+			new_permission: 1
+		};
+		fetch('http://localhost:8000/api/classroom/permission-update/', {
+			method: 'OPTIONS',
+			headers: {
+				'Authorization': token,
+				'Content-Type': 'application/json',
+				'Accept': 'application/json'
+			},
+			data: JSON.stringify(data)
+		})
+		.then(response => response.json())
+		.then(response => {
+			console.log(response)
+			const users = this.state.users;
+			const index = users.findIndex((userPerson) => userPerson.user === user);
+			const updatedUsers = [...this.state.users]
+			const newUser = Object.assign(updatedUsers[index], {permission: 1})
+			updatedUsers[index] = newUser
+			this.setState({users: updatedUsers})
+			alert('yaa')
+		})
+		.catch(error => this.setState({error: error}))
+	}
   render() {
     const {messages, courses, messageScreen} = this.state;
 	const updatedCourses = courses.filter(c => c.classroom.url !== this.props.location.state.url)
@@ -328,6 +405,38 @@ class Chatroom extends Component {
 					>
 						Back To Home
 					</Button>
+					{this.props.location.state.permission === 3 ? (
+						<div className={classes.promoteBox}>
+							<div className={classes.studentsToPromote}>
+								<List
+									component="nav"
+		        					subheader={<ListSubheader component="div">Students</ListSubheader>}
+		        					className={classes.studentsRoot}
+								>
+									{this.state.users.filter(user => user.permission < 2).map(user =>
+										<ListItem key={user.user} button onClick={() => this.handlePromoteStudent(user.user)} className={classes.studentItem}>
+											<ListItemText primary={user.user}/>
+										</ListItem>
+									)}
+								</List>
+							</div>
+							<div className={classes.moderatorsToDemote}>
+								<List
+									component="nav"
+									subheader={<ListSubheader component="div">Moderators</ListSubheader>}
+									className={classes.moderatorsRoot}
+								>
+									{this.state.users.filter(user => user.permission === 2).map(user =>
+										<ListItem key={user.user} button onClick={() => this.handleDemoteModerator(user.user)} className={classes.moderatorItem}>
+											<ListItemText primary={user.user}/>
+										</ListItem>
+									)}
+								</List>
+							</div>
+						</div>
+					) : (
+						null
+					)}
 					<Button
 						type="button"
 						onClick={() => this.setState({messageScreen: !messageScreen})}
