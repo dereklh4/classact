@@ -7,7 +7,7 @@ The backend requires python 3.6 or higher to run. You can install the required p
 pip install -r requirements.txt 
 
 ```
-The requirements.txt file specifies the required packages for this project.
+"pip" will have to be changed to "pip3" in the command if you have multiple versions of python on your computer. The requirements.txt file specifies the required packages for this project.
 
 Next, apply the migrations (which actually creates the database)
 ```
