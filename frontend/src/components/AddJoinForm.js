@@ -80,7 +80,7 @@ class JoinClassForm extends Component {
        const {history, courses} = this.props;
        const index = courses.findIndex((course) => course.classroom.url === classID)
        if (index >= 0) {
-           history.push(routes.CHATROOM + "?url=" + classID, {state: classID});
+           history.push(routes.CHATROOM + "?url=" + classID, {url: classID, permission: courses[index].permission});
            return;
        }
        const data = {
