@@ -126,7 +126,7 @@ class AnswerListBasic extends Component {
                                       open={Boolean(anchorEl)}
                                       onClose={this.handleCloseMenu}
                                     >
-                                    {currUser === answer.user ? (
+                                    {currUser === answer.user || permission > 1 ? (
                                       <div>
                                         <Tooltip title="Edit Reponse">
                                           <MenuItem onClick={() => this.openEditResponseClick(answer.response_id, answer.text)}>

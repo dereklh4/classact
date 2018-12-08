@@ -206,7 +206,7 @@ class ChatConsumer(WebsocketConsumer):
 		message_id = data['message_id']
 
 		try:
-			message = Message.objects.get(user=user, id=message_id)
+			message = Message.objects.get(id=message_id)
 		except:
 			self._error_message("Message does not exist")
 
@@ -229,7 +229,7 @@ class ChatConsumer(WebsocketConsumer):
 		message_id = data['message_id']
 
 		try:
-			message = Message.objects.get(user=user, id=message_id)
+			message = Message.objects.get(id=message_id)
 		except:
 			self._error_message("Message does not exist")
 
@@ -324,7 +324,7 @@ class ChatConsumer(WebsocketConsumer):
 			self._error_message("Not a valid message id")
 
 		try:
-			response = Response.objects.get(user=user, id=response_id)
+			response = Response.objects.get(id=response_id)
 		except:
 			self._error_message("Response does not exist")
 
@@ -347,7 +347,7 @@ class ChatConsumer(WebsocketConsumer):
 			self._error_message("Not a valid message id")
 
 		try:
-			response = Response.objects.get(user=user, id=response_id)
+			response = Response.objects.get( id=response_id)
 		except:
 			self._error_message("Response does not exist")
 
@@ -373,7 +373,7 @@ class ChatConsumer(WebsocketConsumer):
 			self._error_message("Not a valid message id")
 
 		try:
-			response = Response.objects.get(user=user, id=response_id)
+			response = Response.objects.get(id=response_id)
 		except:
 			self._error_message("Response does not exist")
 
@@ -404,7 +404,7 @@ class ChatConsumer(WebsocketConsumer):
 			self._error_message("Not a valid message id")
 
 		try:
-			response = Response.objects.get(user=user, id=response_id)
+			response = Response.objects.get(id=response_id)
 		except:
 			self._error_message("Response does not exist")
 
@@ -425,7 +425,7 @@ class ChatConsumer(WebsocketConsumer):
 	def pin_message(self,data):
 		user, classroom = self._validate_user()
 		user_in_classroom = UserInClassroom.objects.get(user=user, classroom=classroom)
-		if user_in_classroom.permission != 3:
+		if user_in_classroom.permission < 2:
 			raise APIException("ERROR: User does not have sufficient permissions")
 		message_id = data["message_id"]
 		try:
@@ -458,7 +458,7 @@ class ChatConsumer(WebsocketConsumer):
 
 		response_id = data["response_id"]
 		try:
-			response = Response.objects.get(user=user, id=response_id)
+			response = Response.objects.get(id=response_id)
 		except:
 			self._error_message("Response does not exist")
 
@@ -514,7 +514,7 @@ class ChatConsumer(WebsocketConsumer):
 		user, classroom = self._validate_user()
 
 		user_in_classroom = UserInClassroom.objects.get(user=user, classroom=classroom)
-		if user_in_classroom.permission != 3:
+		if user_in_classroom.permission < 2:
 			raise APIException("ERROR: User does not have sufficient permissions")
 
 		message_id = data["message_id"]
