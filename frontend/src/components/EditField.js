@@ -15,6 +15,7 @@ class EditFieldBasic extends Component {
         super(props);
         this.state = {
             modifiedMessage: '',
+            isNew: true,
         };
     }
 
@@ -61,8 +62,8 @@ class EditFieldBasic extends Component {
                                  label="Edit"
                                  multiline
                                  rows="3"
-                                 value={this.state.modifiedMessage}
-                                 onChange={event => this.setState({modifiedMessage: event.target.value})}
+                                 value={this.state.modifiedMessage === '' && this.state.isNew === true ? originalMessage: this.state.modifiedMessage}
+                                 onChange={event => this.setState({modifiedMessage: event.target.value, isNew: false})}
                                  type="text"
                                  placeholder={originalMessage}
                                  fullWidth
