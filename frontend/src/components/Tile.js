@@ -140,7 +140,7 @@ class TileBasic extends Component {
                                       fullWidth className={classes.submit}
                                       variant="contained"
                                   >
-                                          Enter: {name}
+                                          Enter: {changed ? changedName : name}
                                   </Button>
                           </CardActions>
                       </Card>
