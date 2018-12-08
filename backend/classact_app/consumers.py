@@ -514,8 +514,6 @@ class ChatConsumer(WebsocketConsumer):
 		user, classroom = self._validate_user()
 
 		user_in_classroom = UserInClassroom.objects.get(user=user, classroom=classroom)
-		if user_in_classroom.permission < 2:
-			raise APIException("ERROR: User does not have sufficient permissions")
 
 		message_id = data["message_id"]
 		try:
