@@ -342,7 +342,6 @@ class Chatroom extends Component {
 			const newUser = Object.assign(updatedUsers[index], {permission: 2})
 			updatedUsers[index] = newUser
 			this.setState({users: updatedUsers})
-			alert('yaa')
 		})
 		.catch(error => this.setState({error: error}))
 	}
@@ -371,7 +370,6 @@ class Chatroom extends Component {
 			const newUser = Object.assign(updatedUsers[index], {permission: 1})
 			updatedUsers[index] = newUser
 			this.setState({users: updatedUsers})
-			alert('yaa')
 		})
 		.catch(error => this.setState({error: error}))
 	}
