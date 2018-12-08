@@ -53,6 +53,8 @@ class ClassroomView(generics.ListAPIView):
 		time = datetime.now()
 
 		title = request.data['title']
+		if not any(c.isalnum() for c in title):
+			raise APIException("Class title needs to have at least one character or number")
 
 		classroom = Classroom.objects.create(title = title, 
 			creation_time = time, enabled = True)
