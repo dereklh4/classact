@@ -124,7 +124,7 @@ class TileBasic extends Component {
 
                             <CardContent className={classes.cardContent}>
                                   <Typography className={classes.tileText}>
-                                      URL: {url}
+                                      Class ID: {url}
                                   </Typography>
                                   <Typography className={classes.tileText}>
                                       Number Enrolled: {numenrolled}
