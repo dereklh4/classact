@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import {SignInLink} from './SignIn';
 import * as routes from '../constants/routes';
 import {CA_STYLE, INTRO_STYLE} from '../constants/styles';
 import Avatar from '@material-ui/core/Avatar';
@@ -28,6 +29,7 @@ const PasswordForgetPage = ({classes}) =>
                     Password Forget
                 </Typography>
                 <PasswordForgetForm classes={classes}/>
+                <SignInLink/>
             </Paper>
         </main>
     </React.Fragment>
