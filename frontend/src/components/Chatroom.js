@@ -325,17 +325,16 @@ class Chatroom extends Component {
 		};
 		console.log(data)
 		fetch('http://localhost:8000/api/classroom/permission-update/', {
-			method: 'OPTIONS',
+			method: 'POST',
 			headers: {
 				'Authorization': token,
 				'Content-Type': 'application/json',
 				'Accept': 'application/json'
 			},
-			data: JSON.stringify(data)
+			body: JSON.stringify(data)
 		})
 		.then(response => response.json())
 		.then(response => {
-			console.log(response)
 			const users = this.state.users;
 			const index = users.findIndex((userPerson) => userPerson.user === user);
 			const updatedUsers = [...this.state.users]
@@ -353,17 +352,16 @@ class Chatroom extends Component {
 			new_permission: 1
 		};
 		fetch('http://localhost:8000/api/classroom/permission-update/', {
-			method: 'OPTIONS',
+			method: 'POST',
 			headers: {
 				'Authorization': token,
 				'Content-Type': 'application/json',
 				'Accept': 'application/json'
 			},
-			data: JSON.stringify(data)
+			body: JSON.stringify(data)
 		})
 		.then(response => response.json())
 		.then(response => {
-			console.log(response)
 			const users = this.state.users;
 			const index = users.findIndex((userPerson) => userPerson.user === user);
 			const updatedUsers = [...this.state.users]
